@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bitácora CETIS 50 - Talleres | PRUEBA</title>
+<style>
+:root{--azul:#0b3d6e;--fondo:#eef2f6;--verde:#1a7a3a}
+*{box-sizing:border-box}body{font-family:Inter,Arial,sans-serif;margin:0;background:var(--fondo)}
+.top{background:linear-gradient(135deg,#0b3d6e,#1670b8);color:#fff;padding:22px 16px}.wrap{max-width:1000px;margin:0 auto}
+.top h1{margin:0;font-size:26px}.top p{margin:6px 0 0;opacity:.92}
+.card{background:#fff;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 16px rgba(0,0,0,.07)}
+h3{margin:0 0 10px;color:var(--azul)}label{font-size:13px;font-weight:700}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d0d7de;border-radius:10px;margin:6px 0 10px;font-size:15px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.btn{background:var(--azul);color:#fff;border:0;padding:12px 18px;border-radius:10px;cursor:pointer;font-weight:700}.btn.sec{background:#eef1f4;color:#111}.btn.verde{background:var(--verde)}
+.badge{background:#e7f3ff;color:#0b3d6e;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.item{border:1px solid #e8ecef;border-radius:14px;padding:14px;margin-bottom:10px;background:#fcfdff}
+.muted{color:#666;font-size:13px}.tabs{display:flex;gap:10px;flex-wrap:wrap}.tabs button{border:1px solid #d0d7de;background:#fff;padding:10px 16px;border-radius:20px;cursor:pointer;font-weight:700}.tabs button.act{background:var(--azul);color:#fff}
+.filtros{display:flex;gap:8px;flex-wrap:wrap}.filtros button{border:1px solid #d0d7de;background:#fff;padding:8px 14px;border-radius:20px;cursor:pointer}.filtros button.act{background:var(--azul);color:#fff}
+.prueba{background:#fff3cd;padding:10px;border-radius:10px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid #eee;padding:8px;text-align:left}
+</style></head><body>
+<div class="top"><div class="wrap"><h1>📋 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Taller de Programación I al V, Soporte y Mantenimiento</p><p style="font-size:18px;font-weight:700;margin-top:10px">Mariano Matamoros y Guridi</p></div></div>
+<div class="wrap">
+<div class="card"><div class="prueba">🧪 <b>VERSIÓN PRUEBA</b> — Esta NO es la Buena. Cuando te guste, me dices y la pasamos a la Buena.</div>
+<div class="tabs" style="margin-top:12px"><button id="tabAdmin" class="act" onclick="mostrar('admin')">👨‍💼 Soy Administrador</button><button id="tabEnc" onclick="mostrar('enc')">🧑‍🔧 Soy Encargado de Taller</button><button onclick="mostrar('ver')">👀 Solo quiero ver</button></div></div>
+
+<!-- ADMIN -->
+<div class="card" id="secAdmin"><h3>👨‍💼 Apartado Administrador</h3><p class="muted">Solo tú. Aquí das de alta encargados con su número de ID.</p>
+<div class="grid2"><input id="pass" type="password" placeholder="Contraseña de administrador"><button class="btn" onclick="entrarAdmin()">Entrar como administrador</button></div><p id="modoAdmin" class="muted">No has entrado como administrador.</p>
+<div id="adminPanel" style="display:none">
+<h4>➕ Dar de alta Encargado de Taller</h4>
+<div class="grid2"><div><label>Número de ID (ej: ENC-001)</label><input id="nuevoID" placeholder="ENC-001"></div><div><label>Nombre del encargado</label><input id="nuevoNombre" placeholder="Nombre completo"></div></div>
+<label>Taller asignado</label><select id="nuevoTaller"><option>TP1 - Taller de Programación I</option><option>TP2 - Taller de Programación II</option><option>TP3 - Taller de Programación III</option><option>TP4 - Taller de Programación IV</option><option>TP5 - Taller de Programación V</option><option>TS - Taller de Soporte</option><option>TM - Taller de Mantenimiento</option></select>
+<button class="btn verde" onclick="altaEncargado()">Dar de alta encargado ✅</button>
+<h4 style="margin-top:16px">📋 Encargados dados de alta</h4><div id="listaEnc"></div>
+<h4 style="margin-top:16px">✏️ Nueva entrada como Administrador</h4>
+<div class="grid2"><div><label>Taller</label><select id="tallerAdmin"><option>TP1 - Taller de Programación I</option><option>TP2 - Taller de Programación II</option><option>TP3 - Taller de Programación III</option><option>TP4 - Taller de Programación IV</option><option>TP5 - Taller de Programación V</option><option>TS - Taller de Soporte</option><option>TM - Taller de Mantenimiento</option></select></div><div><label>Fecha</label><input id="fechaAdmin" type="date"></div></div>
+<div class="grid2"><div><label>Responsable</label><input id="respAdmin" placeholder="Nombre"></div><div><label>Número de PCs</label><input id="pcsAdmin" type="number" value="30"></div></div>
+<label>Actividad / Reporte</label><textarea id="actAdmin" rows="3"></textarea><label>Observaciones</label><textarea id="obsAdmin" rows="2"></textarea>
+<button class="btn" onclick="guardar('Administrador')">Guardar como Administrador ✅</button>
+</div></div>
+
+<!-- ENCARGADO -->
+<div class="card" id="secEnc" style="display:none"><h3>🧑‍🔧 Apartado Encargado de Taller</h3><p class="muted">Entra con el número de ID que te dio el administrador. No necesitas la contraseña de administrador.</p>
+<div class="grid2"><input id="idEnc" placeholder="Tu número de ID, ej: ENC-001"><button class="btn" onclick="entrarEncargado()">Entrar con mi ID</button></div><p id="modoEnc" class="muted">No has entrado como encargado.</p>
+<div id="encPanel" style="display:none">
+<div class="grid2"><div><label>Taller</label><select id="tallerEnc"><option>TP1 - Taller de Programación I</option><option>TP2 - Taller de Programación II</option><option>TP3 - Taller de Programación III</option><option>TP4 - Taller de Programación IV</option><option>TP5 - Taller de Programación V</option><option>TS - Taller de Soporte</option><option>TM - Taller de Mantenimiento</option></select></div><div><label>Fecha</label><input id="fechaEnc" type="date"></div></div>
+<div class="grid2"><div><label>Tu nombre</label><input id="respEnc" placeholder="Se llena con tu ID" readonly></div><div><label>Número de PCs</label><input id="pcsEnc" type="number" value="30"></div></div>
+<label>Actividad / Reporte</label><textarea id="actEnc" rows="3" placeholder="Qué se hizo, qué falló, qué se reparó..."></textarea><label>Observaciones</label><textarea id="obsEnc" rows="2"></textarea>
+<button class="btn verde" onclick="guardar('Encargado')">Subir mi reporte ✅</button>
+</div></div>
+
+<!-- LISTA -->
+<div class="card"><h3>📚 Entradas guardadas</h3><div class="filtros" id="filtros"></div><div style="margin-top:12px"><button class="btn sec" onclick="cargar()">↻ Actualizar lista</button></div><div id="lista" style="margin-top:14px"></div></div>
+</div>
+<script src="config.js"></script>
+<script>
+let esAdmin=false, encargado=null;
+const TALLERES=["TP1 - Taller de Programación I","TP2 - Taller de Programación II","TP3 - Taller de Programación III","TP4 - Taller de Programación IV","TP5 - Taller de Programación V","TS - Taller de Soporte","TM - Taller de Mantenimiento"];
+let filtroActual="";
+document.getElementById('fechaAdmin').value=new Date().toISOString().slice(0,10);
+document.getElementById('fechaEnc').value=new Date().toISOString().slice(0,10);
+document.getElementById('filtros').innerHTML='<button class="act" onclick="setFiltro(\'\',this)">Todos</button>'+TALLERES.map(t=>`<button onclick="setFiltro('${t}',this)">${t.split(' - ')[0]}</button>`).join('');
+function mostrar(c){document.getElementById('secAdmin').style.display=c=='admin'?'block':'none';document.getElementById('secEnc').style.display=c=='enc'?'block':'none';document.getElementById('tabAdmin').classList.toggle('act',c=='admin');document.getElementById('tabEnc').classList.toggle('act',c=='enc');if(c=='ver'){document.getElementById('secAdmin').style.display='block';document.getElementById('secEnc').style.display='block';}}
+function setFiltro(v,el){filtroActual=v;document.querySelectorAll('.filtros button').forEach(b=>b.classList.remove('act'));el.classList.add('act');cargar();}
+async function turso(sql,args=[]){const r=await fetch(CONFIG.TURSO_URL+"/v2/pipeline",{method:"POST",headers:{"Authorization":"Bearer "+CONFIG.TURSO_TOKEN,"Content-Type":"application/json"},body:JSON.stringify({requests:[{type:"execute",stmt:{sql,args}},{type:"close"}]})});const d=await r.json();if(d.error) throw new Error(d.error.message);return d.results?.[0]?.response?.result||null;}
+async function init(){try{await turso("CREATE TABLE IF NOT EXISTS bitacora (id INTEGER PRIMARY KEY AUTOINCREMENT, folio TEXT, fecha TEXT, taller TEXT, responsable TEXT, pcs INTEGER, actividad TEXT, observaciones TEXT, creado TEXT, autor_tipo TEXT, autor_id TEXT)");await turso("CREATE TABLE IF NOT EXISTS encargados (id TEXT PRIMARY KEY, nombre TEXT, taller TEXT, activo INTEGER DEFAULT 1)");cargar();cargarEnc();}catch(e){document.getElementById('lista').textContent="Error: "+e.message+" — Revisa config.js";}}
+function entrarAdmin(){if(document.getElementById('pass').value===CONFIG.ADMIN_PASS){esAdmin=true;document.getElementById('adminPanel').style.display='block';document.getElementById('modoAdmin').textContent="✅ Entraste como Administrador";}else alert("Contraseña incorrecta");}
+async function altaEncargado(){if(!esAdmin) return alert("Solo administrador");const id=document.getElementById('nuevoID').value.trim().toUpperCase();const nom=document.getElementById('nuevoNombre').value.trim();if(!id||!nom) return alert("Pon ID y nombre");await turso("INSERT OR REPLACE INTO encargados (id,nombre,taller,activo) VALUES (?,?,?,1)",[{type:"text",value:id},{type:"text",value:nom},{type:"text",value:document.getElementById('nuevoTaller').value}]);alert("Encargado dado de alta ✅ ID: "+id);cargarEnc();}
+async function cargarEnc(){try{const r=await turso("SELECT * FROM encargados ORDER BY id");const rows=r?.rows||[];const cols=(r?.cols||[]).map(c=>c.name);const ix=n=>cols.indexOf(n);document.getElementById('listaEnc').innerHTML=rows.length?`<table><tr><th>ID</th><th>Nombre</th><th>Taller</th></tr>`+rows.map(row=>{const g=i=>row[ix(i)]?.value??"";return `<tr><td><b>${g('id')}</b></td><td>${g('nombre')}</td><td>${g('taller')}</td></tr>`}).join("")+`</table>`:"<p class='muted'>Todavía no has dado de alta encargados.</p>";}catch(e){}}
+async function entrarEncargado(){const id=document.getElementById('idEnc').value.trim().toUpperCase();if(!id) return alert("Escribe tu ID");try{const r=await turso("SELECT * FROM encargados WHERE id=? AND activo=1",[{type:"text",value:id}]);const rows=r?.rows||[];if(!rows.length) return alert("Ese ID no existe o no está activo. Pídele al administrador que te dé de alta.");const cols=(r?.cols||[]).map(c=>c.name);const ix=n=>cols.indexOf(n);encargado={id:rows[0][ix('id')].value,nombre:rows[0][ix('nombre')].value,taller:rows[0][ix('taller')].value};document.getElementById('encPanel').style.display='block';document.getElementById('modoEnc').textContent="✅ Entraste como "+encargado.nombre+" ("+encargado.id+" - "+encargado.taller+")";document.getElementById('respEnc').value=encargado.nombre;document.getElementById('tallerEnc').value=encargado.taller;}catch(e){alert(e.message);}}
+async function guardar(tipo){let taller,fecha,resp,pcs,act,obs,autorId="ADMIN";if(tipo=='Administrador'){if(!esAdmin) return alert("Solo administrador");taller=document.getElementById('tallerAdmin').value;fecha=document.getElementById('fechaAdmin').value;resp=document.getElementById('respAdmin').value;pcs=document.getElementById('pcsAdmin').value;act=document.getElementById('actAdmin').value;obs=document.getElementById('obsAdmin').value;}else{if(!encargado) return alert("Primero entra con tu ID");taller=document.getElementById('tallerEnc').value;fecha=document.getElementById('fechaEnc').value;resp=encargado.nombre;pcs=document.getElementById('pcsEnc').value;act=document.getElementById('actEnc').value;obs=document.getElementById('obsEnc').value;autorId=encargado.id;}const folio="F-"+fecha+"-"+Date.now().toString().slice(-4);await turso("INSERT INTO bitacora (folio,fecha,taller,responsable,pcs,actividad,observaciones,creado,autor_tipo,autor_id) VALUES (?,?,?,?,?,?,?,?,?,?)",[{type:"text",value:folio},{type:"text",value:fecha},{type:"text",value:taller},{type:"text",value:resp},{type:"integer",value:String(pcs||30)},{type:"text",value:act},{type:"text",value:obs},{type:"text",value:new Date().toLocaleString()},{type:"text",value:tipo},{type:"text",value:autorId}]);alert("Guardado ✅ Folio "+folio);cargar();}
+async function cargar(){try{const sql=filtroActual?"SELECT * FROM bitacora WHERE taller=? ORDER BY id DESC LIMIT 100":"SELECT * FROM bitacora ORDER BY id DESC LIMIT 100";const args=filtroActual?[{type:"text",value:filtroActual}]:[];const r=await turso(sql,args);const rows=r?.rows||[];const cols=(r?.cols||[]).map(c=>c.name);const ix=n=>cols.indexOf(n);document.getElementById('lista').innerHTML=rows.length?rows.map(row=>{const g=i=>row[ix(i)]?.value??"";return `<div class="item"><b>${g('folio')}</b> <span class="badge">${g('taller')}</span> <span class="badge" style="background:#e8f5e9;color:#1a7a3a">${g('autor_tipo')||'Administrador'} ${g('autor_id')&&g('autor_id')!=='ADMIN'?'• '+g('autor_id'):''}</span><div class="muted">${g('fecha')} • ${g('responsable')} • ${g('pcs')} PCs • ${g('creado')}</div><div style="margin-top:8px">${g('actividad')||'<i>Sin actividad</i>'}</div><div class="muted">${g('observaciones')}</div></div>`}).join(""):"<p class='muted'>Sin entradas todavía.</p>";}catch(e){document.getElementById('lista').textContent="Error: "+e.message;}}
+init();
+</script></body></html>
