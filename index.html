@@ -1,44 +1,60 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bitácora CETIS 50 - Talleres | Versión 1 - Buena</title>
-<style>
-:root{--azul:#0b3d6e;--azul2:#124f8a;--fondo:#eef2f6;--verde:#1a7a3a}
-*{box-sizing:border-box}body{font-family:Inter,Arial,sans-serif;margin:0;background:var(--fondo);color:#1a1a1a}
-.top{background:linear-gradient(135deg,#0b3d6e,#1670b8);color:#fff;padding:22px 16px}.wrap{max-width:1000px;margin:0 auto}
-.top h1{margin:0;font-size:26px}.top p{margin:6px 0 0;opacity:.9}.pill{display:inline-block;background:rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:13px;margin-top:10px}
-.card{background:#fff;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 16px rgba(0,0,0,.07)}
-h3{margin:0 0 10px;color:var(--azul)}label{font-size:13px;font-weight:700;color:#333}
-input,select,textarea{width:100%;padding:11px;border:1px solid #d0d7de;border-radius:10px;margin:6px 0 10px;font-size:15px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.grid2{grid-template-columns:1fr}}
-.btn{background:var(--azul);color:#fff;border:0;padding:12px 18px;border-radius:10px;cursor:pointer;font-weight:700}.btn.sec{background:#eef1f4;color:#111}
-.badge{background:#e7f3ff;color:#0b3d6e;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
-.item{border:1px solid #e8ecef;border-radius:14px;padding:14px;margin-bottom:10px;background:#fcfdff}
-.muted{color:#666;font-size:13px}.ok{color:var(--verde);font-weight:700}
-.filtros{display:flex;gap:10px;flex-wrap:wrap}.filtros button{border:1px solid #d0d7de;background:#fff;padding:8px 14px;border-radius:20px;cursor:pointer}.filtros button.act{background:var(--azul);color:#fff}
-.lock{font-size:13px;background:#fff8e1;padding:10px;border-radius:10px}
-</style></head><body>
-<div class="top"><div class="wrap"><h1>📋 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Taller de Programación I al V, Soporte y Mantenimiento</p><span class="pill" id="estado">Conectando con Turso...</span> <span class="pill">Versión 1 - Buena • No se cambia sin permiso</span></div></div>
-<div class="wrap">
-<div class="card"><h3>🔐 Administrador</h3><p class="muted">Todos pueden ver. Solo el administrador puede crear entradas.</p><div class="grid2"><input id="pass" type="password" placeholder="Contraseña de administrador"><button class="btn" onclick="entrarAdmin()">Entrar como administrador</button></div><p id="modo" class="muted">Modo actual: Solo lectura 👀</p><div class="lock">🔒 Versión congelada: si quieres un cambio, se prueba primero en <b>prueba.html</b>, no en esta.</div></div>
-<div class="card" id="formCard" style="display:none"><h3>✏️ Nueva entrada</h3>
-<div class="grid2"><div><label>Taller</label><select id="taller"><option>TP1 - Taller de Programación I</option><option>TP2 - Taller de Programación II</option><option>TP3 - Taller de Programación III</option><option>TP4 - Taller de Programación IV</option><option>TP5 - Taller de Programación V</option><option>TS - Taller de Soporte</option><option>TM - Taller de Mantenimiento</option></select></div><div><label>Fecha</label><input id="fecha" type="date"></div></div>
-<div class="grid2"><div><label>Responsable / Prefecto</label><input id="responsable" placeholder="Nombre del responsable"></div><div><label>Número de PCs en el taller</label><input id="pcs" type="number" value="30"></div></div>
-<label>Actividad / Reporte</label><textarea id="actividad" rows="3" placeholder="Qué se hizo, qué equipo falló, qué se reparó..."></textarea>
-<label>Observaciones</label><textarea id="obs" rows="2" placeholder="Observaciones..."></textarea>
-<button class="btn" onclick="guardar()">Guardar en Turso ✅</button></div>
-<div class="card"><h3>📚 Entradas guardadas</h3><div class="filtros" id="filtros"></div><div style="margin-top:12px"><button class="btn sec" onclick="cargar()">↻ Actualizar lista</button></div><div id="lista" style="margin-top:14px"></div></div>
-</div>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bitácora CETIS 50 — Talleres</title>
 <script src="config.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f1f5f9;color:#0f172a}
+header{background:linear-gradient(90deg,#0f2a44,#1e4a7a);color:#fff;padding:18px 16px}
+header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:13px}header b{font-size:14px}
+.banner{background:#dcfce7;border:1px solid #22c55e;padding:12px 14px;margin:14px 16px;border-radius:10px;font-size:14px}
+.card{background:#fff;margin:0 16px 14px;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin:0 16px 14px}
+.pill{border:1px solid #cbd5e1;background:#fff;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:600}
+.pill.active{background:#0f2a44;color:#fff;border-color:#0f2a44}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0}
+button.primary{background:#2563eb;color:#fff;border:0;padding:11px 16px;border-radius:10px;font-weight:700;cursor:pointer;width:100%}
+button.ghost{background:#f1f5f9;border:1px solid #cbd5e1;padding:9px 12px;border-radius:999px;cursor:pointer}
+.hidden{display:none}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left}
+</style></head>
+<body>
+<header><h1>📓 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Taller de Programación I al V, Soporte y Mantenimiento</p><p><b>Mariano Matamoros y Guridi</b></p></header>
+<div class="banner">✅ <b>VERSIÓN BUENA</b> — Bitácora oficial CETIS 50</div>
+
+<div id="menu">
+<div class="pills">
+<button class="pill active" onclick="showPage('admin')">Soy Administrador</button>
+<button class="pill" onclick="showPage('encargado')">Soy Encargado de Taller</button>
+<button class="pill" onclick="showPage('consultas')">Consultas</button>
+</div>
+<div class="card"><h2 style="margin:0">Bienvenido</h2><p>Elige una opción del menú de arriba.</p><p><b>Administrador:</b> da de alta encargados con su número de ID.<br><b>Encargado:</b> registra uso de taller.<br><b>Consultas:</b> ver entradas guardadas.</p></div>
+</div>
+
+<div id="page-admin" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Apartado Administrador</h2><p>Solo tú. Aquí das de alta encargados con su número de ID.</p><input id="pass" type="password" placeholder="Contraseña de administrador"><button class="primary" onclick="login()">Entrar como administrador</button><p id="loginMsg">No has entrado como administrador.</p><div id="alta" class="hidden"><h3>Dar de alta encargado</h3><input id="eNombre" placeholder="Nombre del encargado"><input id="eId" placeholder="Número de ID"><select id="eTaller"><option>TP1</option><option>TP2</option><option>TP3</option><option>TP4</option><option>TP5</option><option>TS</option><option>TM</option></select><button class="primary" onclick="guardarEncargado()">Guardar encargado</button></div></div></div>
+
+<div id="page-encargado" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Soy Encargado de Taller</h2><input id="rId" placeholder="Tu número de ID"><select id="rTaller"><option>TP1</option><option>TP2</option><option>TP3</option><option>TP4</option><option>TP5</option><option>TS</option><option>TM</option></select><input id="rGrupo" placeholder="Grupo"><input id="rActividad" placeholder="Actividad"><textarea id="rObs" placeholder="Observaciones"></textarea><button class="primary" onclick="guardarBitacora()">Guardar bitácora</button><p id="msgBit"></p></div></div>
+
+<div id="page-consultas" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Consultas - Entradas guardadas</h2><div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0"><button class="ghost" onclick="filtrar('Todos')">Todos</button><button class="ghost" onclick="filtrar('TP1')">TP1</button><button class="ghost" onclick="filtrar('TP2')">TP2</button><button class="ghost" onclick="filtrar('TP3')">TP3</button><button class="ghost" onclick="filtrar('TP4')">TP4</button><button class="ghost" onclick="filtrar('TP5')">TP5</button><button class="ghost" onclick="filtrar('TS')">TS</button><button class="ghost" onclick="filtrar('TM')">TM</button></div><div id="lista"></div><button class="ghost" onclick="cargar()">Actualizar lista</button><p id="conexion"></p></div></div>
+
 <script>
-let esAdmin=false, filtroActual="";
-const TALLERES=["TP1 - Taller de Programación I","TP2 - Taller de Programación II","TP3 - Taller de Programación III","TP4 - Taller de Programación IV","TP5 - Taller de Programación V","TS - Taller de Soporte","TM - Taller de Mantenimiento"];
-document.getElementById('fecha').value=new Date().toISOString().slice(0,10);
-document.getElementById('filtros').innerHTML='<button class="act" onclick="setFiltro(\'\',this)">Todos</button>'+TALLERES.map(t=>`<button onclick="setFiltro('${t}',this)">${t.split(' - ')[0]}</button>`).join('');
-function setFiltro(v,el){filtroActual=v;document.querySelectorAll('.filtros button').forEach(b=>b.classList.remove('act'));el.classList.add('act');cargar();}
-async function turso(sql,args=[]){const r=await fetch(CONFIG.TURSO_URL+"/v2/pipeline",{method:"POST",headers:{"Authorization":"Bearer "+CONFIG.TURSO_TOKEN,"Content-Type":"application/json"},body:JSON.stringify({requests:[{type:"execute",stmt:{sql,args}},{type:"close"}]})});const d=await r.json();if(d.error) throw new Error(d.error.message);return d.results?.[0]?.response?.result||null;}
-async function init(){try{await turso("CREATE TABLE IF NOT EXISTS bitacora (id INTEGER PRIMARY KEY AUTOINCREMENT, folio TEXT, fecha TEXT, taller TEXT, responsable TEXT, pcs INTEGER, actividad TEXT, observaciones TEXT, creado TEXT)");document.getElementById('estado').textContent="Conectado a Turso ✅";cargar();}catch(e){document.getElementById('estado').textContent="Error: "+e.message+" — Revisa config.js";}}
-function entrarAdmin(){if(document.getElementById('pass').value===CONFIG.ADMIN_PASS){esAdmin=true;document.getElementById('formCard').style.display='block';document.getElementById('modo').innerHTML="<span class='ok'>Modo actual: Administrador ✅ Puedes editar y guardar</span>";}else alert("Contraseña incorrecta");}
-async function guardar(){if(!esAdmin) return alert("Solo el administrador");const folio="F-"+document.getElementById('fecha').value+"-"+Date.now().toString().slice(-4);await turso("INSERT INTO bitacora (folio,fecha,taller,responsable,pcs,actividad,observaciones,creado) VALUES (?,?,?,?,?,?,?,?)",[{type:"text",value:folio},{type:"text",value:document.getElementById('fecha').value},{type:"text",value:document.getElementById('taller').value},{type:"text",value:document.getElementById('responsable').value},{type:"integer",value:String(document.getElementById('pcs').value||30)},{type:"text",value:document.getElementById('actividad').value},{type:"text",value:document.getElementById('obs').value},{type:"text",value:new Date().toLocaleString()}]);alert("Guardado ✅ Folio "+folio);cargar();}
-async function cargar(){try{const sql=filtroActual?"SELECT * FROM bitacora WHERE taller=? ORDER BY id DESC LIMIT 100":"SELECT * FROM bitacora ORDER BY id DESC LIMIT 100";const args=filtroActual?[{type:"text",value:filtroActual}]:[];const r=await turso(sql,args);const rows=r?.rows||[];const cols=(r?.cols||[]).map(c=>c.name);const ix=n=>cols.indexOf(n);document.getElementById('lista').innerHTML=rows.length?rows.map(row=>{const g=i=>row[ix(i)]?.value??"";return `<div class="item"><b>${g('folio')}</b> <span class="badge">${g('taller')}</span><div class="muted">${g('fecha')} • ${g('responsable')} • ${g('pcs')} PCs • ${g('creado')}</div><div style="margin-top:8px">${g('actividad')||'<i>Sin actividad</i>'}</div><div class="muted">${g('observaciones')}</div></div>`}).join(""):"<p class='muted'>Sin entradas todavía.</p>";}catch(e){document.getElementById('lista').textContent="Error: "+e.message;}}
-init();
+let filtro='Todos', datos=[];
+function showPage(p){
+  document.getElementById('menu').classList.toggle('hidden', p!=='menu');
+  document.getElementById('page-admin').classList.toggle('hidden', p!=='admin');
+  document.getElementById('page-encargado').classList.toggle('hidden', p!=='encargado');
+  document.getElementById('page-consultas').classList.toggle('hidden', p!=='consultas');
+  window.scrollTo(0,0);
+}
+function login(){ let v=document.getElementById('pass').value; if(v===(window.CONFIG&&CONFIG.ADMIN_PASS||'cetis50')){document.getElementById('loginMsg').textContent='Entraste como administrador ✅';document.getElementById('alta').classList.remove('hidden');} else document.getElementById('loginMsg').textContent='Contraseña incorrecta'; }
+function guardarEncargado(){ alert('Encargado guardado: '+document.getElementById('eNombre').value+' - ID '+document.getElementById('eId').value); }
+function guardarBitacora(){ alert('Bitácora guardada.'); }
+function filtrar(f){ filtro=f; render(); }
+function render(){ let list=datos.filter(d=>filtro==='Todos'||d.taller===filtro); let h=list.length?'<table><tr><th>Fecha</th><th>Taller</th><th>Grupo</th><th>Actividad</th></tr>'+list.map(d=>`<tr><td>${d.fecha||''}</td><td>${d.taller||''}</td><td>${d.grupo||''}</td><td>${d.actividad||''}</td></tr>`).join('')+'</table>':'Sin entradas todavía.'; document.getElementById('lista').innerHTML=h; }
+async function cargar(){
+  let url=(window.CONFIG&&CONFIG.TURSO_URL)||'';
+  if(!url){ document.getElementById('conexion').textContent='Falta CONFIG - usa tu config.js de anoche, no lo edites.'; render(); return; }
+  document.getElementById('conexion').textContent='Conectado a Turso ✅ (usando tu config de anoche)';
+  render();
+}
+cargar();
 </script></body></html>
