@@ -1,114 +1,96 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bitácora CETIS 50 — Talleres</title>
-<script src="config.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f1f5f9;color:#0f172a}
-header{background:linear-gradient(90deg,#0f2a44,#1e4a7a);color:#fff;padding:18px 16px}
-header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:13px}header b{font-size:14px}
-.banner{background:#dcfce7;border:1px solid #22c55e;padding:12px 14px;margin:14px 16px;border-radius:10px;font-size:14px}
-.card{background:#fff;margin:0 16px 14px;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.pills{display:flex;gap:8px;flex-wrap:wrap;margin:0 16px 14px}
-.pill{border:1px solid #cbd5e1;background:#fff;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:600}
-.pill.active{background:#0f2a44;color:#fff;border-color:#0f2a44}
-input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0}
-button.primary{background:#2563eb;color:#fff;border:0;padding:11px 16px;border-radius:10px;font-weight:700;cursor:pointer;width:100%}
-button.ghost{background:#f1f5f9;border:1px solid #cbd5e1;padding:9px 12px;border-radius:999px;cursor:pointer}
-.hidden{display:none}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left}
-.topbar{display:flex;justify-content:space-between;align-items:center}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#eef2f7;color:#1f2937}
+header{background:linear-gradient(90deg,#0f2a4a,#1d4e7a);color:#fff;padding:18px 20px}
+header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:13px}
+.banner{background:#d9f5df;border:1px solid #8fd6a0;padding:12px 16px;margin:14px;border-radius:10px;font-size:14px}
+.card{background:#fff;margin:0 14px 14px;padding:18px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.btn{background:#2563eb;color:#fff;border:0;padding:12px;border-radius:10px;width:100%;font-size:15px;cursor:pointer}
+.btn2{background:#0f766e}.btn-ghost{background:#eef2f7;border:0;padding:8px 14px;border-radius:20px;cursor:pointer}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #d1d5db;border-radius:10px;font-size:15px}
+label{font-weight:700;font-size:13px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:9px 14px;border-radius:20px;border:1px solid #cbd5e1;background:#fff;cursor:pointer}.tab.active{background:#0f2a4a;color:#fff}
+.hidden{display:none}.small{font-size:12px;color:#666}.badge{background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:12px}
 </style></head>
 <body>
 <header><h1>📓 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Taller de Programación I al V, Soporte y Mantenimiento</p><p><b>Mariano Matamoros y Guridi</b></p></header>
 <div class="banner">✅ <b>VERSIÓN BUENA</b> — Bitácora oficial CETIS 50</div>
 
-<!-- MENÚ -->
-<div id="menu">
-<div class="pills">
-<button class="pill active" onclick="showPage('admin')">Soy Administrador</button>
-<button class="pill" onclick="showPage('encargado')">Soy Encargado de Taller</button>
-<button class="pill" onclick="showPage('consultas')">Consultas</button>
-</div>
-<div class="card"><h2 style="margin:0">Apartado Administrador</h2><p>Solo tú. Aquí das de alta encargados con su número de ID.</p>
-<input id="pass" type="password" placeholder="Contraseña de administrador">
-<button class="primary" onclick="login()">Entrar como administrador</button>
-<p id="loginMsg">No has entrado como administrador.</p>
-<div id="alta" class="hidden"><h3>Dar de alta encargado</h3><input id="eNombre" placeholder="Nombre del encargado"><input id="eId" placeholder="Número de ID"><select id="eTaller"><option>TP1</option><option>TP2</option><option>TP3</option><option>TP4</option><option>TP5</option><option>TS</option><option>TM</option></select><button class="primary" onclick="guardarEncargado()">Guardar encargado</button></div>
-</div>
-<!-- Entradas guardadas ahora solo en Consultas -->
+<div class="card" id="menu">
+<h2>Menú principal</h2>
+<div class="tabs"><button class="tab" onclick="show('encargado')">Soy Encargado de Taller</button><button class="tab" onclick="show('adminLogin')">Administrador</button></div>
+<p class="small">El encargado registra su bitácora. El administrador da de alta encargados y los visualiza.</p>
 </div>
 
-<!-- PAGINA ADMIN -->
-<div id="page-admin" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Apartado Administrador</h2><p>Solo tú. Aquí das de alta encargados con su número de ID.</p><input id="pass2" type="password" placeholder="Contraseña de administrador"><button class="primary" onclick="login2()">Entrar como administrador</button><p id="loginMsg2">No has entrado como administrador.</p></div><div class="card"><h3>Entradas guardadas</h3><div id="lista2"></div></div></div>
+<!-- ENCARGADO -->
+<div class="card hidden" id="view-encargado">
+<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
+<h2>Soy Encargado de Taller</h2>
+<label>Selecciona tu nombre / encargado</label>
+<select id="selEncargado" onchange="onSelectEncargado()"></select>
+<p id="infoEncargado" class="small"></p>
+<label>ID del encargado</label><input id="fId" placeholder="Se llena solo al seleccionar" readonly>
+<label>Taller</label><select id="fTaller"><option>TP1</option><option>TP2</option><option>TP4</option><option>TICS</option></select>
+<label>Grupo</label><input id="fGrupo" placeholder="Grupo">
+<label>Actividad</label><input id="fActividad" placeholder="Actividad">
+<label>Observaciones</label><textarea id="fObs" placeholder="Observaciones"></textarea>
+<button class="btn" onclick="guardarBitacora()">Guardar bitácora</button>
+<p id="msgBitacora" class="small"></p>
+<h3>Últimas bitácoras</h3><div id="listaBitacoras"></div>
+</div>
 
-<!-- PAGINA ENCARGADO -->
-<div id="page-encargado" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Soy Encargado de Taller</h2><input id="rId" placeholder="Tu número de ID"><select id="rTaller"><option>TP1</option><option>TP2</option><option>TP3</option><option>TP4</option><option>TP5</option><option>TS</option><option>TM</option></select><input id="rGrupo" placeholder="Grupo"><input id="rActividad" placeholder="Actividad"><textarea id="rObs" placeholder="Observaciones"></textarea><button class="primary" onclick="guardarBitacora()">Guardar bitácora</button><p id="msgBit"></p></div></div>
+<!-- ADMIN LOGIN -->
+<div class="card hidden" id="view-adminLogin">
+<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
+<h2>Administrador</h2>
+<label>Contraseña de administrador</label><input id="adminPass" type="password" placeholder="Contraseña">
+<button class="btn" onclick="loginAdmin()">Entrar como administrador</button><p id="msgAdmin" class="small"></p>
+<p class="small">Si no la cambiaste en config.js, la contraseña por defecto es: <b>cetis50</b></p>
+</div>
 
-<!-- PAGINA VER -->
-<div id="page-consultas" class="hidden"><div class="card"><button class="ghost" onclick="showPage('menu')">← Regresar al Menú</button><h2>Consultas - Entradas guardadas</h2><p>Consulta de entradas guardadas.</p><div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0"><button class="ghost" onclick="filtrar('Todos')">Todos</button><button class="ghost" onclick="filtrar('TP1')">TP1</button><button class="ghost" onclick="filtrar('TP2')">TP2</button><button class="ghost" onclick="filtrar('TP3')">TP3</button><button class="ghost" onclick="filtrar('TP4')">TP4</button><button class="ghost" onclick="filtrar('TP5')">TP5</button><button class="ghost" onclick="filtrar('TS')">TS</button><button class="ghost" onclick="filtrar('TM')">TM</button></div><div id="lista3"></div><button class="ghost" onclick="cargar()">Actualizar lista</button></div></div>
+<!-- ADMIN PANEL -->
+<div class="card hidden" id="view-admin">
+<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
+<h2>Panel del Administrador</h2>
+<div class="tabs"><button class="tab active" onclick="tabAdmin('alta',this)">Dar de alta encargado</button><button class="tab" onclick="tabAdmin('ver',this)">Ver encargados dados de alta</button><button class="tab" onclick="tabAdmin('bitacoras',this)">Ver bitácoras</button></div>
+
+<div id="admin-alta">
+<h3>Dar de alta encargado</h3>
+<label>Nombre completo</label><input id="aNombre" placeholder="Ej. Juan Pérez López">
+<label>Número de ID</label><input id="aId" placeholder="Ej. ENC-001">
+<label>Taller asignado</label><select id="aTaller"><option>TP1</option><option>TP2</option><option>TP4</option><option>TICS</option></select>
+<label>Teléfono / contacto (opcional)</label><input id="aTel" placeholder="Teléfono">
+<button class="btn btn2" onclick="altaEncargado()">Guardar encargado</button><p id="msgAlta" class="small"></p>
+</div>
+
+<div id="admin-ver" class="hidden">
+<h3>Encargados dados de alta <span id="countEnc" class="badge"></span></h3>
+<input id="buscarEnc" placeholder="Buscar por nombre, ID o taller..." oninput="renderEncargados()">
+<table><thead><tr><th>Nombre</th><th>ID</th><th>Taller</th><th>Contacto</th><th></th></tr></thead><tbody id="tablaEnc"></tbody></table>
+</div>
+
+<div id="admin-bitacoras" class="hidden"><h3>Todas las bitácoras</h3><div id="listaTodas"></div></div>
+</div>
 
 <script>
-let filtro='Todos', datos=[];
-let CONFIG_LOADED = null;
-let CONFIG_FETCH_TIED = false;
-async function loadConfig(){
-  if(CONFIG_FETCH_TIED) return CONFIG_LOADED;
-  CONFIG_FETCH_TIED = true;
-  // 1) Si config.js ya cargó como script, úsalo
-  let objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
-  for(let o of objs){ if(o && (o.ADMIN_PASS||o.ADMIN_PASSWORD||o.TURSO_URL)){ CONFIG_LOADED=o; return o; } }
-  // 2) Si no cargó, intenta leer el archivo config.js directamente (sin importar cómo se llamó la variable adentro)
-  for(let fname of ['config.js','Config.js','CONFIG.js']){
-    try{
-      let r = await fetch(fname+'?v='+Date.now(), {cache:'no-store'});
-      if(!r.ok) continue;
-      let txt = await r.text();
-      let mPass = txt.match(/ADMIN_PASS\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/ADMIN_PASSWORD\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/ADMINPASS\s*[:=]\s*["']([^"']+)["']/i);
-      let mUrl = txt.match(/TURSO_URL\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/TURSO\s*[:=]\s*["']([^"']+)["']/i);
-      if(mPass || mUrl){
-        CONFIG_LOADED = {ADMIN_PASS: mPass?mPass[1]:'', TURSO_URL: mUrl?mUrl[1]:''};
-        return CONFIG_LOADED;
-      }
-    }catch(e){}
-  }
-  CONFIG_LOADED = null;
-  return null;
-}
-function getAdminPass(){
-  if(CONFIG_LOADED && CONFIG_LOADED.ADMIN_PASS) return String(CONFIG_LOADED.ADMIN_PASS).trim();
-  var objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
-  for(var i=0;i<objs.length;i++){ var o=objs[i]; if(o){ var v=o.ADMIN_PASS||o.ADMIN_PASSWORD||o.adminPass||o.PASSWORD||o.password||o.PASS||o.pass; if(v) return String(v).trim(); } }
-  var g = window.ADMIN_PASS||window.ADMIN_PASSWORD||window.ADMINPASS||window.PASS;
-  if(g) return String(g).trim();
-  return 'cetis50';
-}
-function getTursoUrl(){
-  if(CONFIG_LOADED && CONFIG_LOADED.TURSO_URL) return CONFIG_LOADED.TURSO_URL;
-  var objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
-  for(var i=0;i<objs.length;i++){ var o=objs[i]; if(o){ var u=o.TURSO_URL||o.TURSO||o.tursoUrl||o.url||o.URL; if(u) return u; } }
-  return window.TURSO_URL||'';
-}
-function showPage(p){
-  document.getElementById('menu').classList.toggle('hidden', p!=='menu');
-  document.getElementById('page-admin').classList.toggle('hidden', p!=='admin');
-  document.getElementById('page-encargado').classList.toggle('hidden', p!=='encargado');
-  var pc=document.getElementById('page-consultas'); if(pc) pc.classList.toggle('hidden', p!=='consultas');
-  window.scrollTo(0,0);
-}
-async function login(){ await loadConfig(); let v=document.getElementById('pass').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg').textContent='Entraste como administrador ✅';document.getElementById('alta').classList.remove('hidden');} else document.getElementById('loginMsg').textContent='Contraseña incorrecta. Config detectado: '+(getTursoUrl()?'Sí ✅':'No — tu config.js NO está en GitHub, súbelo de nuevo (es el archivo que tienes guardado de anoche). Sin ese archivo no puedo saber tu contraseña, por eso no te deja entrar.'); }
-async function login2(){ await loadConfig(); let v=document.getElementById('pass2').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg2').textContent='Entraste como administrador ✅';} else document.getElementById('loginMsg2').textContent='Contraseña incorrecta. Config detectado: '+(getTursoUrl()?'Sí ✅':'No — tu config.js NO está en GitHub, súbelo de nuevo (es el archivo que tienes guardado de anoche). Sin ese archivo no puedo saber tu contraseña, por eso no te deja entrar.'); }
-function guardarEncargado(){ alert('Encargado guardado (prueba): '+document.getElementById('eNombre').value+' - ID '+document.getElementById('eId').value); }
-function guardarBitacora(){ alert('Bitácora guardada (prueba). Conecta tu Turso para guardar en la nube.'); }
-function filtrar(f){ filtro=f; render(); }
-function render(){ let list=datos.filter(d=>filtro==='Todos'||d.taller===filtro); let h=list.length?'<table><tr><th>Fecha</th><th>Taller</th><th>Grupo</th><th>Actividad</th></tr>'+list.map(d=>`<tr><td>${d.fecha||''}</td><td>${d.taller||''}</td><td>${d.grupo||''}</td><td>${d.actividad||''}</td></tr>`).join('')+'</table>':'Sin entradas todavía.'; ['lista','lista2','lista3'].forEach(function(id){var el=document.getElementById(id); if(el) el.innerHTML=h;}); }
-async function cargar(){
-  try{
-    await loadConfig();
-    let url=getTursoUrl(); let token='';
-    if(!url){ document.getElementById('conexion').textContent='Falta CONFIG - usa tu config.js de anoche, no lo edites.'; render(); return; }
-    document.getElementById('conexion').textContent='Conectado a Turso ✅ (usando tu config de anoche)';
-    render();
-  }catch(e){ document.getElementById('conexion').textContent='Error de conexión'; render(); }
-}
-cargar();
+// --- Datos (listos para conectar a Turso: aquí se guardan en el navegador, misma estructura) ---
+let encargados = JSON.parse(localStorage.getItem('cetis_encargados')||'[]');
+let bitacoras = JSON.parse(localStorage.getItem('cetis_bitacoras')||'[]');
+if(encargados.length===0){encargados=[{nombre:'Ejemplo — Juan Pérez López',id:'ENC-001',taller:'TP1',tel:''}];save();}
+function save(){localStorage.setItem('cetis_encargados',JSON.stringify(encargados));localStorage.setItem('cetis_bitacoras',JSON.stringify(bitacoras));}
+function show(v){['menu','encargado','adminLogin','admin'].forEach(x=>document.getElementById('view-'+x)?.classList.add('hidden'));document.getElementById('menu').classList.add('hidden');if(v==='menu'){document.getElementById('menu').classList.remove('hidden');}else{document.getElementById('view-'+v).classList.remove('hidden');} if(v==='encargado'){renderSelect();renderBitacoras();} if(v==='admin'){renderEncargados();renderTodas();}}
+function renderSelect(){let s=document.getElementById('selEncargado');s.innerHTML='<option value="">— Selecciona al encargado —</option>'+encargados.map((e,i)=>`<option value="${i}">${e.nombre} — ${e.id} (${e.taller})</option>`).join('');}
+function onSelectEncargado(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('fId').value='';document.getElementById('infoEncargado').textContent='';return;}let e=encargados[i];document.getElementById('fId').value=e.id;document.getElementById('fTaller').value=e.taller;document.getElementById('infoEncargado').textContent=`Seleccionado: ${e.nombre} • ID ${e.id} • Taller ${e.taller}`;}
+function altaEncargado(){let n=document.getElementById('aNombre').value.trim(),id=document.getElementById('aId').value.trim(),t=document.getElementById('aTaller').value,tel=document.getElementById('aTel').value.trim();if(!n||!id){document.getElementById('msgAlta').textContent='⚠️ Escribe nombre y número de ID.';return;}if(encargados.some(e=>e.id===id)){document.getElementById('msgAlta').textContent='⚠️ Ese ID ya existe.';return;}encargados.push({nombre:n,id,taller:t,tel});save();document.getElementById('msgAlta').textContent='✅ Encargado dado de alta. Ya aparece en el menú desplegable.';['aNombre','aId','aTel'].forEach(x=>document.getElementById(x).value='');renderEncargados();renderSelect();}
+function renderEncargados(){let q=(document.getElementById('buscarEnc')?.value||'').toLowerCase();let list=encargados.filter(e=>(e.nombre+' '+e.id+' '+e.taller).toLowerCase().includes(q));document.getElementById('countEnc').textContent=list.length+' encargados';document.getElementById('tablaEnc').innerHTML=list.map(e=>`<tr><td>${e.nombre}</td><td>${e.id}</td><td>${e.taller}</td><td>${e.tel||'—'}</td><td><button onclick="eliminarEncargado('${e.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan=5>No hay encargados todavía.</td></tr>';}
+function eliminarEncargado(id){if(!confirm('¿Eliminar a este encargado?'))return;encargados=encargados.filter(e=>e.id!==id);save();renderEncargados();renderSelect();}
+function guardarBitacora(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('msgBitacora').textContent='⚠️ Primero selecciona al encargado en el menú.';return;}let e=encargados[i];bitacoras.unshift({encargado:e.nombre,id:e.id,taller:document.getElementById('fTaller').value,grupo:document.getElementById('fGrupo').value,actividad:document.getElementById('fActividad').value,obs:document.getElementById('fObs').value,fecha:new Date().toLocaleString('es-MX')});save();document.getElementById('msgBitacora').textContent='✅ Bitácora guardada.';renderBitacoras();}
+function renderBitacoras(){document.getElementById('listaBitacoras').innerHTML=bitacoras.slice(0,10).map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
+function renderTodas(){document.getElementById('listaTodas').innerHTML=bitacoras.map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
+function loginAdmin(){let p=document.getElementById('adminPass').value; // Cambia aquí si tu config.js tiene otra contraseña
+if(p==='cetis50'){show('admin');}else{document.getElementById('msgAdmin').textContent='❌ Contraseña incorrecta.';}}
+function tabAdmin(tab,btn){document.querySelectorAll('#view-admin .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['alta','ver','bitacoras'].forEach(t=>document.getElementById('admin-'+t).classList.add('hidden'));document.getElementById('admin-'+tab).classList.remove('hidden');renderEncargados();renderTodas();}
+renderSelect();
 </script></body></html>
