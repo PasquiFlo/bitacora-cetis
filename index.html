@@ -1,96 +1,107 @@
-<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bitácora CETIS 50 — Talleres</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#eef2f7;color:#1f2937}
-header{background:linear-gradient(90deg,#0f2a4a,#1d4e7a);color:#fff;padding:18px 20px}
-header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:13px}
+<style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#eef2f7;color:#1f2937}
+header{background:linear-gradient(90deg,#0f2a4a,#1d4e7a);color:#fff;padding:18px 20px}header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:13px}
 .banner{background:#d9f5df;border:1px solid #8fd6a0;padding:12px 16px;margin:14px;border-radius:10px;font-size:14px}
 .card{background:#fff;margin:0 14px 14px;padding:18px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.btn{background:#2563eb;color:#fff;border:0;padding:12px;border-radius:10px;width:100%;font-size:15px;cursor:pointer}
-.btn2{background:#0f766e}.btn-ghost{background:#eef2f7;border:0;padding:8px 14px;border-radius:20px;cursor:pointer}
+.btn{background:#2563eb;color:#fff;border:0;padding:12px;border-radius:10px;width:100%;font-size:15px;cursor:pointer}.btn2{background:#0f766e}.btn-warn{background:#dc2626}.btn-confirm{background:#15803d;font-size:16px;padding:14px}
+.btn-ghost{background:#eef2f7;border:0;padding:8px 14px;border-radius:20px;cursor:pointer}.btn-small{padding:6px 10px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
 input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #d1d5db;border-radius:10px;font-size:15px}
-label{font-weight:700;font-size:13px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
+input[readonly],select:disabled{background:#f3f4f6;color:#374151}label{font-weight:700;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:9px 14px;border-radius:20px;border:1px solid #cbd5e1;background:#fff;cursor:pointer}.tab.active{background:#0f2a4a;color:#fff}
-.hidden{display:none}.small{font-size:12px;color:#666}.badge{background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:12px}
-</style></head>
-<body>
-<header><h1>📓 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Taller de Programación I al V, Soporte y Mantenimiento</p><p><b>Mariano Matamoros y Guridi</b></p></header>
+.hidden{display:none}.small{font-size:12px;color:#666}.badge{background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:12px}.check label{font-weight:400;display:inline-block;margin-right:12px}.alert{background:#fef3c7;border:1px solid #f59e0b;padding:10px;border-radius:10px;margin:8px 0;font-size:14px}
+.lab-row{display:flex;gap:8px;align-items:center}.lab-row input{flex:1}.dirty{background:#fffbeb;border:1px solid #f59e0b;padding:10px;border-radius:10px;font-size:13px}
+</style></head><body>
+<header><h1>📓 Bitácora CETIS 50 — Talleres</h1><p>Servicios Docentes TM • Mariano Matamoros y Guridi</p></header>
 <div class="banner">✅ <b>VERSIÓN BUENA</b> — Bitácora oficial CETIS 50</div>
 
-<div class="card" id="menu">
-<h2>Menú principal</h2>
-<div class="tabs"><button class="tab" onclick="show('encargado')">Soy Encargado de Taller</button><button class="tab" onclick="show('adminLogin')">Administrador</button></div>
-<p class="small">El encargado registra su bitácora. El administrador da de alta encargados y los visualiza.</p>
-</div>
+<div class="card" id="menu"><h2>Menú principal</h2>
+<div class="tabs"><button class="tab" onclick="show('encargado')">Soy Encargado de Taller</button><button class="tab" onclick="show('jefe')">Soy Jefe de Encargados</button><button class="tab" onclick="show('adminLogin')">Administrador</button></div>
+<p class="small">Encargado: registra su taller. Jefe: ve todos los laboratorios. Administrador: da de alta y asigna.</p><div id="avisosMenu"></div></div>
 
-<!-- ENCARGADO -->
-<div class="card hidden" id="view-encargado">
-<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
-<h2>Soy Encargado de Taller</h2>
-<label>Selecciona tu nombre / encargado</label>
-<select id="selEncargado" onchange="onSelectEncargado()"></select>
-<p id="infoEncargado" class="small"></p>
-<label>ID del encargado</label><input id="fId" placeholder="Se llena solo al seleccionar" readonly>
-<label>Taller</label><select id="fTaller"><option>TP1</option><option>TP2</option><option>TP4</option><option>TICS</option></select>
-<label>Grupo</label><input id="fGrupo" placeholder="Grupo">
-<label>Actividad</label><input id="fActividad" placeholder="Actividad">
-<label>Observaciones</label><textarea id="fObs" placeholder="Observaciones"></textarea>
-<button class="btn" onclick="guardarBitacora()">Guardar bitácora</button>
-<p id="msgBitacora" class="small"></p>
-<h3>Últimas bitácoras</h3><div id="listaBitacoras"></div>
-</div>
+<div class="card hidden" id="view-encargado"><button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button><h2>Soy Encargado de Taller</h2>
+<label>Selecciona tu nombre / encargado</label><select id="selEncargado" onchange="onSelectEncargado()"></select><p id="infoEncargado" class="small"></p>
+<label>ID del encargado 🔒 Fijo, no se puede modificar</label><input id="fId" readonly placeholder="Se llena solo al seleccionar">
+<label>Taller 🔒 Fijo según tus laboratorios asignados</label><select id="fTaller"></select><p class="small">Si tienes más de un laboratorio, elige entre los que te asignó el administrador. No puedes escribir otro taller.</p>
+<label>Grupo</label><input id="fGrupo" placeholder="Grupo"><label>Actividad</label><input id="fActividad" placeholder="Actividad"><label>Observaciones</label><textarea id="fObs" placeholder="Observaciones"></textarea>
+<button class="btn" onclick="guardarBitacora()">Guardar bitácora</button><p id="msgBitacora" class="small"></p><h3>Mis últimas bitácoras</h3><div id="listaBitacoras"></div></div>
 
-<!-- ADMIN LOGIN -->
-<div class="card hidden" id="view-adminLogin">
-<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
-<h2>Administrador</h2>
-<label>Contraseña de administrador</label><input id="adminPass" type="password" placeholder="Contraseña">
-<button class="btn" onclick="loginAdmin()">Entrar como administrador</button><p id="msgAdmin" class="small"></p>
-<p class="small">Si no la cambiaste en config.js, la contraseña por defecto es: <b>cetis50</b></p>
-</div>
+<div class="card hidden" id="view-jefe"><button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button><h2>👑 Soy Jefe de Encargados</h2>
+<p class="small">Solo aparece aquí quien el administrador marcó como Jefe. Puede ver <b>todos los laboratorios</b>.</p>
+<label>Selecciona al Jefe de Encargados</label><select id="selJefe" onchange="onSelectJefe()"></select><p id="infoJefe" class="small"></p>
+<label>Filtrar por taller</label><select id="filtroJefe" onchange="renderJefe()"></select>
+<h3>Bitácoras de todos los laboratorios</h3><div id="listaJefe"></div>
+<h3>⚠️ Avisar al administrador de una situación</h3><label>Taller con situación</label><select id="avTaller"></select><textarea id="avTexto" placeholder="Ej. En TP2 faltan 2 equipos, ya lo revisé..."></textarea>
+<button class="btn btn-warn" onclick="enviarAviso()">Enviar aviso al administrador</button><p id="msgAviso" class="small"></p></div>
 
-<!-- ADMIN PANEL -->
-<div class="card hidden" id="view-admin">
-<button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button>
-<h2>Panel del Administrador</h2>
-<div class="tabs"><button class="tab active" onclick="tabAdmin('alta',this)">Dar de alta encargado</button><button class="tab" onclick="tabAdmin('ver',this)">Ver encargados dados de alta</button><button class="tab" onclick="tabAdmin('bitacoras',this)">Ver bitácoras</button></div>
+<div class="card hidden" id="view-adminLogin"><button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button><h2>Administrador</h2><label>Contraseña de administrador</label><input id="adminPass" type="password" placeholder="Contraseña"><button class="btn" onclick="loginAdmin()">Entrar como administrador</button><p id="msgAdmin" class="small"></p><p class="small">Por defecto: <b>cetis50</b> si no la cambiaste en config.js</p></div>
 
-<div id="admin-alta">
-<h3>Dar de alta encargado</h3>
-<label>Nombre completo</label><input id="aNombre" placeholder="Ej. Juan Pérez López">
-<label>Número de ID</label><input id="aId" placeholder="Ej. ENC-001">
-<label>Taller asignado</label><select id="aTaller"><option>TP1</option><option>TP2</option><option>TP4</option><option>TICS</option></select>
+<div class="card hidden" id="view-admin"><button class="btn-ghost" onclick="show('menu')">← Regresar al Menú</button><h2>Panel del Administrador</h2>
+<div class="tabs"><button class="tab active" onclick="tabAdmin('alta',this)">Dar de alta encargado</button><button class="tab" onclick="tabAdmin('ver',this)">Ver encargados</button><button class="tab" onclick="tabAdmin('labs',this)">Laboratorios</button><button class="tab" onclick="tabAdmin('bitacoras',this)">Ver bitácoras</button><button class="tab" onclick="tabAdmin('avisos',this)">Avisos del Jefe ⚠️</button></div>
+
+<div id="admin-alta"><h3>Dar de alta / editar encargado</h3>
+<label>Nombre completo</label><input id="aNombre" placeholder="Ej. MIGUEL MARCIAL GARCIA">
+<label>Número de ID</label><input id="aId" placeholder="Ej. MMG-TP1">
+<label>Laboratorios asignados — puedes palomear más de uno</label><div class="check" id="chkTalleres"></div>
+<label><input type="checkbox" id="aJefe"> 👑 Asignar como Jefe de Encargados — puede visualizar todos los laboratorios</label>
 <label>Teléfono / contacto (opcional)</label><input id="aTel" placeholder="Teléfono">
-<button class="btn btn2" onclick="altaEncargado()">Guardar encargado</button><p id="msgAlta" class="small"></p>
-</div>
+<button class="btn btn2" onclick="altaEncargado()">Guardar encargado</button><p id="msgAlta" class="small"></p></div>
 
-<div id="admin-ver" class="hidden">
-<h3>Encargados dados de alta <span id="countEnc" class="badge"></span></h3>
-<input id="buscarEnc" placeholder="Buscar por nombre, ID o taller..." oninput="renderEncargados()">
-<table><thead><tr><th>Nombre</th><th>ID</th><th>Taller</th><th>Contacto</th><th></th></tr></thead><tbody id="tablaEnc"></tbody></table>
-</div>
+<div id="admin-ver" class="hidden"><h3>Encargados dados de alta <span id="countEnc" class="badge"></span></h3><input id="buscarEnc" placeholder="Buscar por nombre, ID o taller..." oninput="renderEncargados()"><table><thead><tr><th>Nombre</th><th>ID</th><th>Laboratorios</th><th>Rol</th><th></th></tr></thead><tbody id="tablaEnc"></tbody></table></div>
+
+<div id="admin-labs" class="hidden"><h3>Gestionar Laboratorios / Talleres</h3>
+<p class="small">Aquí puedes <b>agregar</b> un laboratorio, <b>quitarlo</b> o <b>cambiarle el nombre</b>. Nada se guarda hasta que pulses <b>Confirmar cambios</b>.</p>
+<div id="labsList"></div>
+<label>Agregar nuevo laboratorio</label><input id="nuevoLab" placeholder="Ej. TP5, Taller de Redes, etc.">
+<button class="btn" onclick="agregarLabBorrador()">+ Agregar laboratorio a la lista</button>
+<div id="labsDirty" class="dirty hidden">⚠️ Tienes cambios sin guardar. Revisa la lista y pulsa Confirmar.</div>
+<p id="msgLabs" class="small"></p>
+<button class="btn btn-confirm" onclick="confirmarLabs()">✅ Confirmar y guardar cambios</button>
+<button class="btn-ghost" onclick="cancelarLabs()" style="width:100%;margin-top:8px">Cancelar cambios</button>
+<p class="small">Si cambias el nombre de un laboratorio, también se actualiza en los encargados y en las bitácoras ya guardadas. Si quitas un laboratorio, se quita de la asignación de los encargados, pero las bitácoras viejas se conservan.</p></div>
 
 <div id="admin-bitacoras" class="hidden"><h3>Todas las bitácoras</h3><div id="listaTodas"></div></div>
-</div>
+<div id="admin-avisos" class="hidden"><h3>Avisos del Jefe de Encargados</h3><div id="listaAvisos"></div></div></div>
 
 <script>
-// --- Datos (listos para conectar a Turso: aquí se guardan en el navegador, misma estructura) ---
-let encargados = JSON.parse(localStorage.getItem('cetis_encargados')||'[]');
-let bitacoras = JSON.parse(localStorage.getItem('cetis_bitacoras')||'[]');
-if(encargados.length===0){encargados=[{nombre:'Ejemplo — Juan Pérez López',id:'ENC-001',taller:'TP1',tel:''}];save();}
-function save(){localStorage.setItem('cetis_encargados',JSON.stringify(encargados));localStorage.setItem('cetis_bitacoras',JSON.stringify(bitacoras));}
-function show(v){['menu','encargado','adminLogin','admin'].forEach(x=>document.getElementById('view-'+x)?.classList.add('hidden'));document.getElementById('menu').classList.add('hidden');if(v==='menu'){document.getElementById('menu').classList.remove('hidden');}else{document.getElementById('view-'+v).classList.remove('hidden');} if(v==='encargado'){renderSelect();renderBitacoras();} if(v==='admin'){renderEncargados();renderTodas();}}
-function renderSelect(){let s=document.getElementById('selEncargado');s.innerHTML='<option value="">— Selecciona al encargado —</option>'+encargados.map((e,i)=>`<option value="${i}">${e.nombre} — ${e.id} (${e.taller})</option>`).join('');}
-function onSelectEncargado(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('fId').value='';document.getElementById('infoEncargado').textContent='';return;}let e=encargados[i];document.getElementById('fId').value=e.id;document.getElementById('fTaller').value=e.taller;document.getElementById('infoEncargado').textContent=`Seleccionado: ${e.nombre} • ID ${e.id} • Taller ${e.taller}`;}
-function altaEncargado(){let n=document.getElementById('aNombre').value.trim(),id=document.getElementById('aId').value.trim(),t=document.getElementById('aTaller').value,tel=document.getElementById('aTel').value.trim();if(!n||!id){document.getElementById('msgAlta').textContent='⚠️ Escribe nombre y número de ID.';return;}if(encargados.some(e=>e.id===id)){document.getElementById('msgAlta').textContent='⚠️ Ese ID ya existe.';return;}encargados.push({nombre:n,id,taller:t,tel});save();document.getElementById('msgAlta').textContent='✅ Encargado dado de alta. Ya aparece en el menú desplegable.';['aNombre','aId','aTel'].forEach(x=>document.getElementById(x).value='');renderEncargados();renderSelect();}
-function renderEncargados(){let q=(document.getElementById('buscarEnc')?.value||'').toLowerCase();let list=encargados.filter(e=>(e.nombre+' '+e.id+' '+e.taller).toLowerCase().includes(q));document.getElementById('countEnc').textContent=list.length+' encargados';document.getElementById('tablaEnc').innerHTML=list.map(e=>`<tr><td>${e.nombre}</td><td>${e.id}</td><td>${e.taller}</td><td>${e.tel||'—'}</td><td><button onclick="eliminarEncargado('${e.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan=5>No hay encargados todavía.</td></tr>';}
+let labs=JSON.parse(localStorage.getItem('cetis_labs')||'["TP1","TP2","TP4","TICS"]');
+let draftLabs=[...labs];
+let encargados=JSON.parse(localStorage.getItem('cetis_encargados')||'[]');
+let bitacoras=JSON.parse(localStorage.getItem('cetis_bitacoras')||'[]');
+let avisos=JSON.parse(localStorage.getItem('cetis_avisos')||'[]');
+encargados=encargados.map(e=>({...e,talleres:e.talleres||(e.taller?[e.taller]:[labs[0]]),jefe:!!e.jefe}));
+function save(){localStorage.setItem('cetis_labs',JSON.stringify(labs));localStorage.setItem('cetis_encargados',JSON.stringify(encargados));localStorage.setItem('cetis_bitacoras',JSON.stringify(bitacoras));localStorage.setItem('cetis_avisos',JSON.stringify(avisos));}
+function show(v){['menu','encargado','jefe','adminLogin','admin'].forEach(x=>document.getElementById('view-'+x)?.classList.add('hidden'));document.getElementById('menu').classList.add('hidden');if(v==='menu'){document.getElementById('menu').classList.remove('hidden');renderAvisosMenu();}else{document.getElementById('view-'+v).classList.remove('hidden');}if(v==='encargado'){renderSelect();renderBitacoras();}if(v==='jefe'){renderJefeSelect();renderJefe();renderLabSelects();}if(v==='admin'){renderEncargados();renderTodas();renderAvisos();renderLabs();renderChkTalleres();}}
+function renderLabSelects(){let opts=labs.map(l=>`<option>${l}</option>`).join('');document.getElementById('filtroJefe').innerHTML='<option value="">Todos los laboratorios</option>'+opts;document.getElementById('avTaller').innerHTML=opts;}
+function renderChkTalleres(){document.getElementById('chkTalleres').innerHTML=labs.map(l=>`<label><input type="checkbox" value="${l}" class="chkTaller"> ${l}</label>`).join('');}
+function renderAvisosMenu(){document.getElementById('avisosMenu').innerHTML=avisos.slice(0,3).map(a=>`<div class="alert">⚠️ <b>${a.jefe}</b> — ${a.taller}: ${a.texto}<br><span class="small">${a.fecha}</span></div>`).join('');}
+function renderSelect(){let s=document.getElementById('selEncargado');s.innerHTML='<option value="">— Selecciona al encargado —</option>'+encargados.map((e,i)=>`<option value="${i}">${e.nombre} — ${e.id} (${e.talleres.join(', ')})${e.jefe?' 👑 JEFE':''}</option>`).join('');document.getElementById('fTaller').innerHTML='';}
+function onSelectEncargado(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('fId').value='';document.getElementById('infoEncargado').textContent='';return;}let e=encargados[i];document.getElementById('fId').value=e.id;let sel=document.getElementById('fTaller');sel.innerHTML=e.talleres.map(t=>`<option>${t}</option>`).join('');sel.disabled=e.talleres.length===1;document.getElementById('infoEncargado').textContent=`Seleccionado: ${e.nombre} • ID ${e.id} • Laboratorios: ${e.talleres.join(', ')}${e.jefe?' • 👑 JEFE DE ENCARGADOS':''}`;renderBitacoras();}
+function altaEncargado(){let n=document.getElementById('aNombre').value.trim(),id=document.getElementById('aId').value.trim(),tel=document.getElementById('aTel').value.trim(),jefe=document.getElementById('aJefe').checked;let talleres=[...document.querySelectorAll('.chkTaller:checked')].map(c=>c.value);if(!n||!id){document.getElementById('msgAlta').textContent='⚠️ Escribe nombre y número de ID.';return;}if(talleres.length===0){document.getElementById('msgAlta').textContent='⚠️ Palomea al menos un laboratorio.';return;}if(jefe){encargados.forEach(e=>e.jefe=false);}let ex=encargados.findIndex(e=>e.id===id);if(ex>=0){encargados[ex]={nombre:n,id,talleres,tel,jefe};}else{encargados.push({nombre:n,id,talleres,tel,jefe});}save();document.getElementById('msgAlta').textContent='✅ Guardado. Ya aparece en el menú y con sus laboratorios asignados.';['aNombre','aId','aTel'].forEach(x=>document.getElementById(x).value='');document.getElementById('aJefe').checked=false;document.querySelectorAll('.chkTaller').forEach(c=>c.checked=false);renderEncargados();renderSelect();}
+function renderEncargados(){let q=(document.getElementById('buscarEnc')?.value||'').toLowerCase();let list=encargados.filter(e=>(e.nombre+' '+e.id+' '+e.talleres.join(' ')).toLowerCase().includes(q));document.getElementById('countEnc').textContent=list.length+' encargados';document.getElementById('tablaEnc').innerHTML=list.map(e=>`<tr><td>${e.nombre}</td><td>${e.id}</td><td>${e.talleres.join(', ')}</td><td>${e.jefe?'👑 JEFE':'Encargado'}</td><td><button onclick="eliminarEncargado('${e.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan=5>No hay encargados todavía.</td></tr>';}
 function eliminarEncargado(id){if(!confirm('¿Eliminar a este encargado?'))return;encargados=encargados.filter(e=>e.id!==id);save();renderEncargados();renderSelect();}
-function guardarBitacora(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('msgBitacora').textContent='⚠️ Primero selecciona al encargado en el menú.';return;}let e=encargados[i];bitacoras.unshift({encargado:e.nombre,id:e.id,taller:document.getElementById('fTaller').value,grupo:document.getElementById('fGrupo').value,actividad:document.getElementById('fActividad').value,obs:document.getElementById('fObs').value,fecha:new Date().toLocaleString('es-MX')});save();document.getElementById('msgBitacora').textContent='✅ Bitácora guardada.';renderBitacoras();}
-function renderBitacoras(){document.getElementById('listaBitacoras').innerHTML=bitacoras.slice(0,10).map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
+function guardarBitacora(){let i=document.getElementById('selEncargado').value;if(i===''){document.getElementById('msgBitacora').textContent='⚠️ Primero selecciona al encargado.';return;}let e=encargados[i];bitacoras.unshift({encargado:e.nombre,id:e.id,taller:document.getElementById('fTaller').value,grupo:document.getElementById('fGrupo').value,actividad:document.getElementById('fActividad').value,obs:document.getElementById('fObs').value,fecha:new Date().toLocaleString('es-MX')});save();document.getElementById('msgBitacora').textContent='✅ Bitácora guardada.';renderBitacoras();}
+function renderBitacoras(){let i=document.getElementById('selEncargado').value;let list=i===''?bitacoras:bitacoras.filter(b=>b.id===encargados[i]?.id);document.getElementById('listaBitacoras').innerHTML=list.slice(0,10).map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
 function renderTodas(){document.getElementById('listaTodas').innerHTML=bitacoras.map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
-function loginAdmin(){let p=document.getElementById('adminPass').value; // Cambia aquí si tu config.js tiene otra contraseña
-if(p==='cetis50'){show('admin');}else{document.getElementById('msgAdmin').textContent='❌ Contraseña incorrecta.';}}
-function tabAdmin(tab,btn){document.querySelectorAll('#view-admin .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['alta','ver','bitacoras'].forEach(t=>document.getElementById('admin-'+t).classList.add('hidden'));document.getElementById('admin-'+tab).classList.remove('hidden');renderEncargados();renderTodas();}
-renderSelect();
+function renderJefeSelect(){let jefes=encargados.filter(e=>e.jefe);let s=document.getElementById('selJefe');s.innerHTML=jefes.length?'<option value="">— Selecciona al Jefe —</option>'+jefes.map(e=>`<option value="${encargados.indexOf(e)}">${e.nombre} — ${e.id}</option>`).join(''):'<option value="">— Aún no hay Jefe asignado —</option>';}
+function onSelectJefe(){let i=document.getElementById('selJefe').value;if(i==='')return;let e=encargados[i];document.getElementById('infoJefe').textContent=`Jefe: ${e.nombre} • Puede ver todos los laboratorios.`;renderJefe();}
+function renderJefe(){let f=document.getElementById('filtroJefe').value;let list=f?bitacoras.filter(b=>b.taller===f):bitacoras;document.getElementById('listaJefe').innerHTML=list.map(b=>`<p><b>${b.encargado}</b> (${b.id}) • ${b.taller} • ${b.grupo||''} • ${b.fecha}<br>${b.actividad||''} — ${b.obs||''}</p>`).join('')||'<p class="small">Sin bitácoras todavía.</p>';}
+function enviarAviso(){let i=document.getElementById('selJefe').value;if(i===''){document.getElementById('msgAviso').textContent='⚠️ Primero selecciona al Jefe.';return;}let e=encargados[i];let t=document.getElementById('avTexto').value.trim();if(!t){document.getElementById('msgAviso').textContent='⚠️ Escribe la situación.';return;}avisos.unshift({jefe:e.nombre,taller:document.getElementById('avTaller').value,texto:t,fecha:new Date().toLocaleString('es-MX')});save();document.getElementById('msgAviso').textContent='✅ Aviso enviado al administrador.';document.getElementById('avTexto').value='';renderAvisos();}
+function renderAvisos(){document.getElementById('listaAvisos').innerHTML=avisos.map(a=>`<div class="alert">⚠️ <b>${a.jefe}</b> — ${a.taller}<br>${a.texto}<br><span class="small">${a.fecha}</span></div>`).join('')||'<p class="small">Sin avisos todavía.</p>';}
+// --- LABORATORIOS ---
+function renderLabs(){document.getElementById('labsList').innerHTML=draftLabs.map((l,i)=>`<div class="lab-row"><span class="small">${i+1}.</span><input id="lab-${i}" value="${l}" oninput="marcarSucio()" placeholder="Nombre del laboratorio"><button class="btn-small" onclick="quitarLabBorrador(${i})">Quitar ✕</button></div>`).join('')||'<p class="small">No hay laboratorios. Agrega uno abajo.</p>';}
+function marcarSucio(){document.getElementById('labsDirty').classList.remove('hidden');}
+function agregarLabBorrador(){let v=document.getElementById('nuevoLab').value.trim();if(!v){document.getElementById('msgLabs').textContent='⚠️ Escribe el nombre del nuevo laboratorio.';return;}if(draftLabs.some(x=>x.toLowerCase()===v.toLowerCase())){document.getElementById('msgLabs').textContent='⚠️ Ese laboratorio ya existe.';return;}draftLabs.push(v);document.getElementById('nuevoLab').value='';renderLabs();marcarSucio();}
+function quitarLabBorrador(i){if(!confirm('¿Quitar "'+draftLabs[i]+'" de la lista? Todavía no se guarda hasta que confirmes.'))return;draftLabs.splice(i,1);renderLabs();marcarSucio();}
+function cancelarLabs(){draftLabs=[...labs];document.getElementById('msgLabs').textContent='Cambios cancelados.';document.getElementById('labsDirty').classList.add('hidden');renderLabs();}
+function confirmarLabs(){let nuevos=draftLabs.map((_,i)=>document.getElementById('lab-'+i).value.trim()).filter(Boolean);if(nuevos.length===0){document.getElementById('msgLabs').textContent='⚠️ Debe quedar al menos un laboratorio.';return;}if(new Set(nuevos.map(x=>x.toLowerCase())).size!==nuevos.length){document.getElementById('msgLabs').textContent='⚠️ Hay nombres repetidos.';return;}if(!confirm('¿Confirmar y guardar los cambios de laboratorios?\n\nAntes: '+labs.join(', ')+'\nAhora: '+nuevos.join(', '))){return;}
+// Renombrar: actualizar encargados y bitácoras por posición (si el orden se mantuvo) o por coincidencia
+let viejos=[...labs];labs=[...nuevos];draftLabs=[...nuevos];
+encargados.forEach(e=>{e.talleres=e.talleres.map(t=>{let idx=viejos.indexOf(t);return idx>=0&&labs[idx]?labs[idx]:t;}).filter(t=>labs.includes(t));if(e.talleres.length===0)e.talleres=[labs[0]];});
+bitacoras.forEach(b=>{let idx=viejos.indexOf(b.taller);if(idx>=0&&labs[idx])b.taller=labs[idx];});
+save();document.getElementById('labsDirty').classList.add('hidden');document.getElementById('msgLabs').textContent='✅ Cambios guardados. Laboratorios actuales: '+labs.join(', ');renderLabs();renderChkTalleres();renderLabSelects();renderEncargados();renderSelect();}
+function loginAdmin(){let p=document.getElementById('adminPass').value;if(p==='cetis50'){show('admin');}else{document.getElementById('msgAdmin').textContent='❌ Contraseña incorrecta.';}}
+function tabAdmin(tab,btn){document.querySelectorAll('#view-admin .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['alta','ver','labs','bitacoras','avisos'].forEach(t=>document.getElementById('admin-'+t).classList.add('hidden'));document.getElementById('admin-'+tab).classList.remove('hidden');renderEncargados();renderTodas();renderAvisos();renderLabs();renderChkTalleres();}
+renderSelect();renderAvisosMenu();renderLabSelects();
 </script></body></html>
