@@ -49,16 +49,41 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px
 
 <script>
 let filtro='Todos', datos=[];
+let CONFIG_LOADED = null;
+let CONFIG_FETCH_TIED = false;
+async function loadConfig(){
+  if(CONFIG_FETCH_TIED) return CONFIG_LOADED;
+  CONFIG_FETCH_TIED = true;
+  // 1) Si config.js ya cargó como script, úsalo
+  let objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
+  for(let o of objs){ if(o && (o.ADMIN_PASS||o.ADMIN_PASSWORD||o.TURSO_URL)){ CONFIG_LOADED=o; return o; } }
+  // 2) Si no cargó, intenta leer el archivo config.js directamente (sin importar cómo se llamó la variable adentro)
+  for(let fname of ['config.js','Config.js','CONFIG.js']){
+    try{
+      let r = await fetch(fname+'?v='+Date.now(), {cache:'no-store'});
+      if(!r.ok) continue;
+      let txt = await r.text();
+      let mPass = txt.match(/ADMIN_PASS\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/ADMIN_PASSWORD\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/ADMINPASS\s*[:=]\s*["']([^"']+)["']/i);
+      let mUrl = txt.match(/TURSO_URL\s*[:=]\s*["']([^"']+)["']/i) || txt.match(/TURSO\s*[:=]\s*["']([^"']+)["']/i);
+      if(mPass || mUrl){
+        CONFIG_LOADED = {ADMIN_PASS: mPass?mPass[1]:'', TURSO_URL: mUrl?mUrl[1]:''};
+        return CONFIG_LOADED;
+      }
+    }catch(e){}
+  }
+  CONFIG_LOADED = null;
+  return null;
+}
 function getAdminPass(){
-  // Busca la contraseña en TODOS los nombres posibles que pudo usar tu config de anoche, sin que tengas que editarlo
-  var cands = [];
-  var objs = [window.CONFIG, window.config, window.APP_CONFIG, window.CONFIGS, window.SETTINGS, window.settings, window.AppConfig];
-  for (var i=0;i<objs.length;i++){ var o=objs[i]; if(o){ cands.push(o.ADMIN_PASS, o.ADMIN_PASSWORD, o.adminPass, o.admin_pass, o.PASSWORD, o.password, o.PASS, o.pass); } }
-  cands.push(window.ADMIN_PASS, window.ADMIN_PASSWORD, window.ADMINPASS, window.PASS);
-  for (var j=0;j<cands.length;j++){ if(cands[j] && String(cands[j]).trim()) return String(cands[j]).trim(); }
+  if(CONFIG_LOADED && CONFIG_LOADED.ADMIN_PASS) return String(CONFIG_LOADED.ADMIN_PASS).trim();
+  var objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
+  for(var i=0;i<objs.length;i++){ var o=objs[i]; if(o){ var v=o.ADMIN_PASS||o.ADMIN_PASSWORD||o.adminPass||o.PASSWORD||o.password||o.PASS||o.pass; if(v) return String(v).trim(); } }
+  var g = window.ADMIN_PASS||window.ADMIN_PASSWORD||window.ADMINPASS||window.PASS;
+  if(g) return String(g).trim();
   return 'cetis50';
 }
 function getTursoUrl(){
+  if(CONFIG_LOADED && CONFIG_LOADED.TURSO_URL) return CONFIG_LOADED.TURSO_URL;
   var objs=[window.CONFIG, window.config, window.APP_CONFIG, window.SETTINGS, window.settings];
   for(var i=0;i<objs.length;i++){ var o=objs[i]; if(o){ var u=o.TURSO_URL||o.TURSO||o.tursoUrl||o.url||o.URL; if(u) return u; } }
   return window.TURSO_URL||'';
@@ -70,14 +95,15 @@ function showPage(p){
   var pc=document.getElementById('page-consultas'); if(pc) pc.classList.toggle('hidden', p!=='consultas');
   window.scrollTo(0,0);
 }
-function login(){ let v=document.getElementById('pass').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg').textContent='Entraste como administrador ✅';document.getElementById('alta').classList.remove('hidden');} else document.getElementById('loginMsg').textContent='Contraseña incorrecta — revisa que no tenga espacio al final. Config detectado: '+(getTursoUrl()?'Sí ✅':'No'); }
-function login2(){ let v=document.getElementById('pass2').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg2').textContent='Entraste como administrador ✅';} else document.getElementById('loginMsg2').textContent='Contraseña incorrecta — revisa que no tenga espacio al final. Config detectado: '+(getTursoUrl()?'Sí ✅':'No'); }
+async function login(){ await loadConfig(); let v=document.getElementById('pass').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg').textContent='Entraste como administrador ✅';document.getElementById('alta').classList.remove('hidden');} else document.getElementById('loginMsg').textContent='Contraseña incorrecta. Config detectado: '+(getTursoUrl()?'Sí ✅':'No — tu config.js NO está en GitHub, súbelo de nuevo (es el archivo que tienes guardado de anoche). Sin ese archivo no puedo saber tu contraseña, por eso no te deja entrar.'); }
+async function login2(){ await loadConfig(); let v=document.getElementById('pass2').value.trim(); let ok=getAdminPass(); if(v===ok){document.getElementById('loginMsg2').textContent='Entraste como administrador ✅';} else document.getElementById('loginMsg2').textContent='Contraseña incorrecta. Config detectado: '+(getTursoUrl()?'Sí ✅':'No — tu config.js NO está en GitHub, súbelo de nuevo (es el archivo que tienes guardado de anoche). Sin ese archivo no puedo saber tu contraseña, por eso no te deja entrar.'); }
 function guardarEncargado(){ alert('Encargado guardado (prueba): '+document.getElementById('eNombre').value+' - ID '+document.getElementById('eId').value); }
 function guardarBitacora(){ alert('Bitácora guardada (prueba). Conecta tu Turso para guardar en la nube.'); }
 function filtrar(f){ filtro=f; render(); }
 function render(){ let list=datos.filter(d=>filtro==='Todos'||d.taller===filtro); let h=list.length?'<table><tr><th>Fecha</th><th>Taller</th><th>Grupo</th><th>Actividad</th></tr>'+list.map(d=>`<tr><td>${d.fecha||''}</td><td>${d.taller||''}</td><td>${d.grupo||''}</td><td>${d.actividad||''}</td></tr>`).join('')+'</table>':'Sin entradas todavía.'; ['lista','lista2','lista3'].forEach(function(id){var el=document.getElementById(id); if(el) el.innerHTML=h;}); }
 async function cargar(){
   try{
+    await loadConfig();
     let url=getTursoUrl(); let token='';
     if(!url){ document.getElementById('conexion').textContent='Falta CONFIG - usa tu config.js de anoche, no lo edites.'; render(); return; }
     document.getElementById('conexion').textContent='Conectado a Turso ✅ (usando tu config de anoche)';
