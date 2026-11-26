@@ -3,8 +3,13 @@
 <title>Bitácora CETIS No. 050 - Versión Buena</title>
 <style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0} .badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold} .wrap{max-width:1100px;margin:auto;padding:14px} .tabs{display:flex;flex-wrap:wrap;gap:8px} .tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer} .tab.active{background:#0b3d91;color:#fff} .card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)} .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px} .pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center} .Libre{border-color:#22c55e} .Ocupado{border-color:#f59e0b;background:#fffbeb} .Mantenimiento{border-color:#ef4444;background:#fef2f2} button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold} .b1{background:#0b3d91;color:#fff} .b2{background:#e2e8f0} .b3{background:#dc2626;color:#fff} .b4{background:#16a34a;color:#fff} table{width:100%;border-collapse:collapse} td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px} input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0} .row{display:flex;gap:8px;flex-wrap:wrap} .row>*{flex:1} small{color:#64748b}</style></head>
 <body><header><h1>CETIS No. 050 - Mariano Matamoros y Guridi</h1><p>Bitácora de Laboratorios / Talleres</p><span class="badge">VERSIÓN BUENA - OFICIAL</span><p><small>Bitácora Buena - Versión Oficial CETIS No. 050</small></p></header>
-<div class="wrap"><div class="tabs" id="tabs"></div><div id="app"></div>
-<div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div><p><small>Versión GitHub Pages - SIN Meta AI. Los datos se guardan en el navegador de cada dispositivo (localStorage). Para que TODOS vean lo mismo en tiempo real, activa la base compartida con el paso 3 de las instrucciones de abajo (Turso gratis, 10 minutos). Mientras tanto usa Exportar / Importar para pasar el respaldo entre dispositivos.</small></p></div>
+<div class="wrap">
+<div class="card" style="background:#e0f2fe;border:2px solid #0b3d91;text-align:center">
+<button class="b1" style="font-size:17px;padding:14px 20px;width:100%" onclick="actualizarDesdeTurso()">🔄 Actualizar desde Turso</button>
+<p style="margin:8px 0 0"><small id="estadoTurso">Pulsa para traer lo último que guardó otro celular.</small></p>
+</div>
+<div class="tabs" id="tabs"></div><div id="app"></div>
+<div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div><p><small>Versión GitHub Pages - SIN Meta AI. Los datos se guardan en el navegador de cada dispositivo (localStorage). Para que TODOS vean lo mismo, pulsa el botón azul de arriba 🔄 Actualizar desde Turso con el paso 3 de las instrucciones de abajo (Turso gratis, 10 minutos). Mientras tanto usa Exportar / Importar para pasar el respaldo entre dispositivos.</small></p></div>
 <div class="card"><h3>Respaldo - Para Drive y para compartir entre dispositivos</h3>
     <div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
     <p><small>Exportar te descarga un archivo bitacora-respaldo.json. Guárdalo en Drive. En otro celular, abre esta misma página y dale Importar para ver lo mismo. Es el puente mientras activas la base compartida.</small></p>
@@ -34,7 +39,7 @@ function archivar(){let anio=document.getElementById("anio").value||new Date().g
 
 // ===== TURSO - BASE COMPARTIDA - SOLO 1 VEZ =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io"; // <-- PEGA AQUÍ TU URL DE TURSO, SOLO AQUÍ
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU1NzE0NDAsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.RGWRB_VCfvZ1eNhJh922_637UGvINZx4S_TkPoyXDdG17tyVPCL8KJ1Fa1YoPgqMjlAQqNQafKXVN4jIJpmsCA"; // <-- PEGA AQUÍ TU TOKEN DE TURSO, SOLO AQUÍ
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzYwNDEsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.tadK6vR3-4w_THioBINxnR0ZPdb8PtxcAsWYpB8D7uFadS8dhvNMgYCEhBbWsgAOlvaMXNoHhgyNRY401eliDg"; // <-- PEGA AQUÍ TU TOKEN DE TURSO, SOLO AQUÍ
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
@@ -56,6 +61,20 @@ async function tursoCargar(){
   }catch(e){}
   return false;
 }
+
+async function actualizarDesdeTurso(){
+  let el = document.getElementById("estadoTurso");
+  if(!tursoActivo){ if(el) el.textContent = "⚠️ Turso no está conectado todavía. Falta pegar URL y Token en el código."; alert("Turso no está conectado todavía. Falta pegar URL y Token en el código."); return; }
+  if(el) el.textContent = "⏳ Actualizando desde Turso...";
+  let ok = await tursoCargar();
+  if(el) el.textContent = ok ? "✅ Actualizado desde Turso - " + new Date().toLocaleTimeString() : "⚠️ No había nada nuevo en Turso, se quedó lo que ya tenías.";
+  if(ok) alert("✅ Actualizado desde Turso");
+}
+function actualizarEstadoTurso(){
+  let el = document.getElementById("estadoTurso");
+  if(el) el.textContent = tursoActivo ? "✅ Conectado a Turso. Pulsa para traer lo último." : "⚠️ Turso no conectado. Pega URL y Token en el código.";
+}
+window.addEventListener("load", ()=>{ setTimeout(actualizarEstadoTurso, 500); });
 let _saveOriginal = save;
 save = function(){ _saveOriginal(); tursoGuardar(); };
 window.addEventListener("load", async ()=>{ if(tursoActivo){ await tursoCargar(); }});
