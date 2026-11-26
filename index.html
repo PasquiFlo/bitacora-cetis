@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bitácora CETIS No. 050 - Versión Buena</title>
-<style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0} .badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold} .wrap{max-width:1100px;margin:auto;padding:14px} .tabs{display:flex;flex-wrap:wrap;gap:8px} .tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer} .tab.active{background:#0b3d91;color:#fff} .card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)} .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px} .pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center} .Libre{border-color:#22c55e} .Ocupado{border-color:#f59e0b;background:#fffbeb} .Mantenimiento{border-color:#ef4444;background:#fef2f2} button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold} .b1{background:#0b3d91;color:#fff} .b2{background:#e2e8f0} .b3{background:#dc2626;color:#fff} .b4{background:#16a34a;color:#fff} table{width:100%;border-collapse:collapse} td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px} input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0} .row{display:flex;gap:8px;flex-wrap:wrap} .row>*{flex:1} small{color:#64748b}</style></head>
-<body><header><h1>CETIS No. 050 - Mariano Matamoros y Guridi</h1><p>Bitácora de Laboratorios / Talleres</p><span class="badge">VERSIÓN BUENA - OFICIAL</span><p><small>Bitácora Buena - Versión Oficial CETIS No. 050</small></p></header>
+<style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0}.badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold}.wrap{max-width:1100px;margin:auto;padding:14px}.tabs{display:flex;flex-wrap:wrap;gap:8px}.tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer}.tab.active{background:#0b3d91;color:#fff}.card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}.Libre{border-color:#22c55e}.Ocupado{border-color:#f59e0b;background:#fffbeb}.Mantenimiento{border-color:#ef4444;background:#fef2f2}button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold}.b1{background:#0b3d91;color:#fff}.b2{background:#e2e8f0}.b3{background:#dc2626;color:#fff}.b4{background:#16a34a;color:#fff}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px}input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}small{color:#64748b}</style></head>
+<body><header><h1>CETIS No. 050 - Mariano Matamoros y Guridi</h1><p>Bitácora de Laboratorios / Talleres</p><span class="badge">VERSIÓN BUENA - OFICIAL</span></header>
 <div class="wrap">
 <div class="card" style="background:#e0f2fe;border:2px solid #0b3d91;text-align:center">
 <button class="b1" style="font-size:17px;padding:14px 20px;width:100%" onclick="actualizarDesdeTurso()">🔄 Actualizar desde Turso</button>
 <p style="margin:8px 0 0"><small id="estadoTurso">Pulsa para traer lo último que guardó otro celular.</small></p>
 </div>
 <div class="tabs" id="tabs"></div><div id="app"></div>
-<div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div><p><small>Versión GitHub Pages - SIN Meta AI. Los datos se guardan en el navegador de cada dispositivo (localStorage). Para que TODOS vean lo mismo, pulsa el botón azul de arriba 🔄 Actualizar desde Turso con el paso 3 de las instrucciones de abajo (Turso gratis, 10 minutos). Mientras tanto usa Exportar / Importar para pasar el respaldo entre dispositivos.</small></p></div>
-<div class="card"><h3>Respaldo - Para Drive y para compartir entre dispositivos</h3>
-    <div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
-    <p><small>Exportar te descarga un archivo bitacora-respaldo.json. Guárdalo en Drive. En otro celular, abre esta misma página y dale Importar para ver lo mismo. Es el puente mientras activas la base compartida.</small></p>
-    <h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div></div>
-    <div class="card"><h3>¿Cómo hacerla 100% compartida en GitHub sin Meta AI?</h3><ol style="font-size:14px;line-height:1.6"><li>Crea cuenta gratis en <b>turso.tech</b></li><li>Crea una base llamada <b>bitacora-cetis</b> y copia su URL y su Token</li><li>En este archivo busca <b>TURSO_URL</b> y <b>TURSO_TOKEN</b> y pégalos ahí</li><li>Sube el archivo a GitHub. Listo, todos ven lo mismo, sin Meta AI.</li></ol><p><small>Si prefieres, dime “ayúdame a conectar Turso” y lo hacemos paso a paso con tus datos, sin que compartas tu contraseña aquí en el chat público.</small></p></div>
-    <div class="card"><h3>Administrador</h3><p>Para borrar un taller o editar horario se pide confirmación + contraseña. Contraseña demo: <b>cetis50</b> (cámbiala en el código buscando cetis50).</p><label>Número de PCs del taller actual</label><input id="npc" type="number" min="1" max="60"><button class="b1" onclick="setPCs()">Guardar número de PCs</button></div></div>
+<div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div></div>
+<div class="card"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
+<h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div></div>
+</div>
 <script>
 const HORARIOS={
 "Programación 1":[{d:"Lunes",h:"7:00-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1E"}],
@@ -27,19 +24,95 @@ const HORARIOS={
 "TICS":[{d:"Lunes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Lunes",h:"8:40-10:15",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Lunes",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Martes",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Martes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Martes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Preciado García Julio",g:"1J"},{d:"Miércoles",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"9:30-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Viernes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"}],
 "Programación 3":[]};
 let talleres=["Programación 1","Programación 2","Programación 3","Programación 4","Programación 5","Redes","Soporte","TICS"];
-let state=JSON.parse(localStorage.getItem("bitacora_buena")||"null")||{}; talleres.forEach(t=>{if(!state[t]) state[t]={pcs:30,m:{},log:[]};});
-let cur=talleres[0]; function save(){localStorage.setItem("bitacora_buena",JSON.stringify(state));}
-function renderTabs(){document.getElementById("tabs").innerHTML=talleres.map(t=>`<div class="tab ${t===cur?"active":""}" onclick="cur='${t}';render()">${t}${t==="Programación 3"?" ⛔":""}</div>`).join("");}
-function render(){renderTabs(); let s=state[cur]; let h=HORARIOS[cur]||[]; let maint=Object.values(s.m).filter(v=>v==="Mantenimiento").length; let html=""; if(cur==="Programación 3"){html+=`<div class="card"><b>EN MANTENIMIENTO - SIN HORARIO</b><p>Este taller está en mantenimiento, por ahora no tiene horario asignado.</p><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div>`;}
-else{html+=`<div class="card"><h2>Taller de ${cur}</h2><p><b>Clase actual:</b> ${h[0]?h[0].m+" - "+h[0].doc+" - "+h[0].g+" - "+h[0].h:"Sin clase en este momento"} &nbsp; | &nbsp; En mantenimiento: ${maint} bloqueadas</p><div class="row"><button class="b1" onclick="ocuparTodas()">Ocupar todas</button><button class="b2" onclick="liberarTodas()">Liberar todas</button><button class="b3" onclick="termino()">⏹ Término de clase</button></div><p><small>Término de clase libera TODAS las ocupadas, excepto las en mantenimiento.</small></p><h3>Horario del taller</h3><table><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>${h.map(x=>`<tr><td>${x.d}</td><td>${x.h}</td><td>${x.m}</td><td>${x.doc}</td><td>${x.g}</td></tr>`).join("")}</table><h3>Máquinas (PC-01 a PC-${String(s.pcs).padStart(2,"0")})</h3><div class="grid">${Array.from({length:s.pcs},(_,i)=>{let id="PC-"+String(i+1).padStart(2,"0"); let st=s.m[id]||"Libre"; return `<div class="pc ${st}"><b>${id}</b><br>${st==="Mantenimiento"?"EN MANTENIMIENTO - NO USAR":st}<br><button class="b1" onclick="setPC('${id}','Ocupado')">Ocupado</button> <button class="b2" onclick="setPC('${id}','Libre')">Libre</button><br><button class="b3" style="margin-top:6px" onclick="falla('${id}')">Reportar falla</button></div>`}).join("")}</div><h3>Registrar asistencia del docente</h3><div class="row"><select id="claseSel">${h.map((x,i)=>`<option value="${i}">${x.d} ${x.h} - ${x.m} - ${x.doc} - ${x.g}</option>`).join("")}<option value="libre">Uso libre / Otro docente</option></select><button class="b4" onclick="registrar()">Registrar entrada del docente</button></div></div>`;}
-document.getElementById("app").innerHTML=html; document.getElementById("npc").value=s.pcs; document.getElementById("log").innerHTML=`<table><tr><th>Fecha</th><th>Taller</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>${talleres.flatMap(t=>state[t].log.map(l=>`<tr><td>${l.fecha}</td><td>${t}</td><td>${l.entrada}</td><td>${l.salida||"-"}</td><td>${l.m}</td><td>${l.doc}</td><td>${l.g}</td></tr>`)).join("")||"<tr><td colspan=7>Sin registros aún</td></tr>"}</table>`;}
-function setPC(id,st){if(state[cur].m[id]==="Mantenimiento"&&st==="Ocupado"){alert("No se puede ocupar, está en mantenimiento.");return;} if(st==="Ocupado"){let h=HORARIOS[cur]?.[0]; if(h&&!confirm(`Hoy toca: ${h.m} - ${h.doc} - Grupo ${h.g} - ${h.h}\n¿Sí, es esta clase?`)){return;}} state[cur].m[id]=st; save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-
-// ===== TURSO - BASE COMPARTIDA - SOLO 1 VEZ =====
-let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io"; // <-- PEGA AQUÍ TU URL DE TURSO, SOLO AQUÍ
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzY3NDMsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.g59BVu1umga8Ot3Bg6gZVyoGO5T64zHIA0uIdcK_vHIgkw7QKA0ZVz8G2jsvwGmjhz5t1U_bWeS4VrNOKMjJBA"; // <-- PEGA AQUÍ TU TOKEN DE TURSO, SOLO AQUÍ
+let state=JSON.parse(localStorage.getItem("bitacora_buena")||"null")||{};
+talleres.forEach(function(t){ if(!state[t]) state[t]={pcs:30,m:{},log:[]}; });
+// Programación 3 en mantenimiento por defecto si está vacío
+if(state["Programación 3"] && Object.keys(state["Programación 3"].m||{}).length===0){ for(let i=1;i<=30;i++){ state["Programación 3"].m["PC-"+String(i).padStart(2,"0")]="Mantenimiento"; } }
+let cur=talleres[0];
+function save(){ localStorage.setItem("bitacora_buena", JSON.stringify(state)); }
+function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ return '<div class="tab '+(t===cur?"active":"")+'" onclick="cambiarTaller(\''+t+'\')">'+t+'</div>'; }).join(""); }
+function cambiarTaller(t){ cur=t; render(); }
+function render(){
+  renderTabs();
+  let s = state[cur];
+  let h = HORARIOS[cur] || [];
+  let horarioHtml = h.length ? "<h3>Horario - "+cur+"</h3><table><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>"+h.map(function(x){ return "<tr><td>"+x.d+"</td><td>"+x.h+"</td><td>"+x.m+"</td><td>"+x.doc+"</td><td>"+x.g+"</td></tr>"; }).join("")+"</table>" : "<p><small>"+(cur==="Programación 3" ? "Taller en mantenimiento, sin horario por ahora." : "Sin horario asignado.")+"</small></p>";
+  let pcsHtml = "";
+  for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; pcsHtml += '<div class="pc '+st+'"><b>'+id+'</b><br><small>'+st+'</small><br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> <button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button><br><button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button></div>'; }
+  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+'<div class="row" style="margin-top:10px"><label>Número de PCs <input id="npc" type="number" value="'+s.pcs+'"></label><button class="b1" onclick="setPCs()">Guardar número de PCs</button></div><div class="row"><button class="b1" onclick="ocuparTodas()">Ocupar todas</button><button class="b2" onclick="liberarTodas()">Liberar todas</button><button class="b3" onclick="termino()">⏹ Término de clase</button><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div><div class="grid" style="margin-top:12px">'+pcsHtml+'</div><h3>Registrar entrada del docente</h3><div class="row"><input id="doc" placeholder="Docente"><input id="mat" placeholder="Materia"><input id="gru" placeholder="Grupo"></div><button class="b4" onclick="registrar()">Registrar entrada del docente</button></div>';
+  let logs = [];
+  talleres.forEach(function(t){ (state[t].log||[]).forEach(function(l){ logs.push("<tr><td>"+l.fecha+"</td><td>"+t+"</td><td>"+l.entrada+"</td><td>"+(l.salida||"-")+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td></tr>"); }); });
+  document.getElementById("log").innerHTML = "<table><tr><th>Fecha</th><th>Taller</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>"+(logs.join("")||"<tr><td colspan=7>Sin registros aún</td></tr>")+"</table>";
+}
+function setPC(id, st){
+  if(state[cur].m[id]==="Mantenimiento" && st==="Ocupado"){ alert("No se puede ocupar, está en mantenimiento."); return; }
+  if(st==="Ocupado"){ let h=(HORARIOS[cur]||[])[0]; if(h && !confirm("Hoy toca: "+h.m+" - "+h.doc+" - Grupo "+h.g+" - "+h.h+"\n¿Sí, es esta clase?")){ return; } }
+  state[cur].m[id]=st; save(); tursoGuardar(); render();
+}
+function ocuparTodas(){
+  if(!confirm("¿Ocupar todas las PCs libres de "+cur+"? Las de mantenimiento NO se tocan.")) return;
+  for(let i=1;i<=state[cur].pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Ocupado"; }
+  save(); tursoGuardar(); render();
+}
+function liberarTodas(){
+  for(let i=1;i<=state[cur].pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Libre"; }
+  save(); tursoGuardar(); render();
+}
+function termino(){
+  if(!confirm("¿Término de clase? Se liberan todas menos las de mantenimiento y se registra la salida del docente.")) return;
+  liberarTodas();
+  let logs = state[cur].log||[];
+  if(logs.length && !logs[logs.length-1].salida){ logs[logs.length-1].salida = new Date().toLocaleTimeString(); save(); tursoGuardar(); }
+  alert("Término de clase registrado. PCs liberadas, menos las de mantenimiento.");
+  render();
+}
+function falla(id){
+  let f = prompt("¿Qué falla tiene "+id+"? Ej: teclado, ratón, monitor, CPU, no enciende");
+  if(!f) return;
+  state[cur].m[id]="Mantenimiento";
+  if(!state[cur].fallas) state[cur].fallas={};
+  state[cur].fallas[id]=f+" - "+new Date().toLocaleString();
+  alert(id+" quedó en mantenimiento por: "+f);
+  save(); tursoGuardar(); render();
+}
+function registrar(){
+  let doc=document.getElementById("doc").value, m=document.getElementById("mat").value, g=document.getElementById("gru").value;
+  if(!doc){ alert("Escribe el nombre del docente"); return; }
+  state[cur].log.push({fecha:new Date().toLocaleDateString(), entrada:new Date().toLocaleTimeString(), salida:"", m:m, doc:doc, g:g});
+  alert("Docente registrado: "+doc);
+  save(); tursoGuardar(); render();
+}
+function setPCs(){
+  let n=parseInt(document.getElementById("npc").value);
+  if(!n) return;
+  state[cur].pcs=n; save(); tursoGuardar(); render();
+}
+function reactivar(){
+  if(!confirm("¿Reactivar Programación 3? Se liberan sus PCs.")) return;
+  for(let i=1;i<=30;i++){ state["Programación 3"].m["PC-"+String(i).padStart(2,"0")]="Libre"; }
+  save(); tursoGuardar(); render();
+}
+function exportar(){
+  let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+}
+function importar(e){
+  let f=e.target.files[0]; if(!f) return;
+  let r=new FileReader();
+  r.onload=function(){ try{ state=JSON.parse(r.result); save(); render(); alert("Respaldo importado."); }catch(err){ alert("Archivo no válido"); } };
+  r.readAsText(f);
+}
+function archivar(){
+  let anio=document.getElementById("anio").value||new Date().getFullYear();
+  let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");
+  arch[anio]=JSON.parse(JSON.stringify(state));
+  localStorage.setItem("bitacora_archivo", JSON.stringify(arch));
+  document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";
+  alert("Año "+anio+" archivado.");
+}
+// ===== TURSO - SOLO 1 VEZ, TODO EN NIVEL SUPERIOR =====
+let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io";
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzY3NDMsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.g59BVu1umga8Ot3Bg6gZVyoGO5T64zHIA0uIdcK_vHIgkw7QKA0ZVz8G2jsvwGmjhz5t1U_bWeS4VrNOKMjJBA";
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
@@ -52,12 +125,12 @@ async function tursoQuery(sql, args){
 }
 function extraerValorTurso(j){
   try{
-    let res = j?.results?.[0]?.response?.result || j?.results?.[0]?.result;
-    let rows = res?.rows || [];
+    let res = j && j.results && j.results[0] && (j.results[0].response ? j.results[0].response.result : j.results[0].result);
+    let rows = res ? res.rows || [] : [];
     if(!rows.length) return null;
     let celda = rows[0][0];
-    if(celda && typeof celda === "object") return celda.value ?? celda.text ?? null;
-    return celda ?? null;
+    if(celda && typeof celda === "object") return celda.value != null ? celda.value : celda.text;
+    return celda;
   }catch(e){ return null; }
 }
 async function tursoGuardar(){
@@ -70,11 +143,10 @@ async function tursoCargar(){
   let j = await tursoQuery("SELECT value FROM records WHERE collection='bitacora' AND id='estado'");
   try{
     let val = extraerValorTurso(j);
-    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacoraCETIS", JSON.stringify(state)); render(); return true; } }
+    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacora_buena", JSON.stringify(state)); render(); return true; } }
   }catch(e){ window._ultimoErrorTurso = "No se pudo leer lo guardado: " + e.message; }
   return false;
 }
-
 async function actualizarDesdeTurso(){
   let el = document.getElementById("estadoTurso");
   if(!tursoActivo){ if(el) el.textContent = "⚠️ Turso no está conectado todavía. Falta pegar URL y Token en el código."; alert("Turso no está conectado todavía. Falta pegar URL y Token en el código."); return; }
@@ -88,46 +160,7 @@ function actualizarEstadoTurso(){
   let el = document.getElementById("estadoTurso");
   if(el) el.textContent = tursoActivo ? "✅ Conectado a Turso. Pulsa para traer lo último." : "⚠️ Turso no conectado. Pega URL y Token en el código.";
 }
-window.addEventListener("load", ()=>{ setTimeout(actualizarEstadoTurso, 500); });
-let _saveOriginal = save;
-save = function(){ _saveOriginal(); tursoGuardar(); };
-window.addEventListener("load", async ()=>{ if(tursoActivo){ await tursoCargar(); }});
-
-render();}
-function falla(id){let f=prompt("Falla de "+id+" (teclado, mouse, monitor, CPU, etc.):"); if(!f)return; state[cur].m[id]="Mantenimiento"; state[cur].m[id+"_falla"]=f; alert(id+" quedó en mantenimiento por: "+f); save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render();}
-function ocuparTodas(){if(!confirm("¿Ocupar todas las máquinas libres de "+cur+"? Las en mantenimiento NO se ocupan."))return; for(let i=1;i<=state[cur].pcs;i++){let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Ocupado";} save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render();}
-function liberarTodas(){for(let i=1;i<=state[cur].pcs;i++){let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Libre";} save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render();}
-function termino(){let mant=Object.values(state[cur].m).filter(v=>v==="Mantenimiento").length; if(!confirm(`¿Terminó la clase en ${cur}? Se liberarán TODAS las ocupadas, excepto ${mant} en mantenimiento que seguirán bloqueadas.`))return; liberarTodas(); let now=new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"}); state[cur].log.forEach(l=>{if(!l.salida) l.salida=now;}); alert(`Se liberaron todas las computadoras, excepto las que están en mantenimiento (${mant} en mantenimiento siguen bloqueadas). Ahora registra la siguiente clase.`); save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render();}
-function registrar(){let sel=document.getElementById("claseSel").value; let h=HORARIOS[cur]?.[Number(sel)]; let m=h?h.m:"Uso libre", doc=h?h.doc:"Docente", g=h?h.g:"-"; let now=new Date(); state[cur].log.push({fecha:now.toLocaleDateString("es-MX"),entrada:now.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"}),salida:"",m,doc,g}); alert("Docente registrado: "+doc+" - "+m+" - "+g); save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render();}
-function reactivar(){if(prompt("Contraseña de administrador:")!=="cetis50"){alert("Contraseña incorrecta");return;} alert("Programación 3 reactivada. Ahora puedes asignarle horario desde Administrador.");}
-function setPCs(){let n=Number(document.getElementById("npc").value); if(!n)return; state[cur].pcs=n; save(); function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
-render(); alert("Número de PCs guardado: "+n);}
-function exportar(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bitacora-respaldo-"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function importar(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert("Respaldo importado. Ya ves lo mismo que en el otro dispositivo.");}catch(err){alert("Archivo no válido");}};r.readAsText(f);}
-function archivar(){let anio=document.getElementById("anio").value||new Date().getFullYear();let arch=JSON.parse(localStorage.getItem("bitacora_archivo")||"{}");arch[anio]=JSON.parse(JSON.stringify(state));localStorage.setItem("bitacora_archivo",JSON.stringify(arch));document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";alert("Año "+anio+" archivado. Los datos actuales quedan guardados y puedes seguir trabajando.");}
-const TURSO_URL=""; const TURSO_TOKEN="";
 render();
+actualizarEstadoTurso();
+if(tursoActivo){ tursoCargar(); }
 </script></body></html>
