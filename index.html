@@ -39,26 +39,39 @@ function archivar(){let anio=document.getElementById("anio").value||new Date().g
 
 // ===== TURSO - BASE COMPARTIDA - SOLO 1 VEZ =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io"; // <-- PEGA AQUÍ TU URL DE TURSO, SOLO AQUÍ
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzYwNDEsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.tadK6vR3-4w_THioBINxnR0ZPdb8PtxcAsWYpB8D7uFadS8dhvNMgYCEhBbWsgAOlvaMXNoHhgyNRY401eliDg"; // <-- PEGA AQUÍ TU TOKEN DE TURSO, SOLO AQUÍ
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzY3NDMsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.g59BVu1umga8Ot3Bg6gZVyoGO5T64zHIA0uIdcK_vHIgkw7QKA0ZVz8G2jsvwGmjhz5t1U_bWeS4VrNOKMjJBA"; // <-- PEGA AQUÍ TU TOKEN DE TURSO, SOLO AQUÍ
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
   try{
     let r = await fetch(TURSO_URL + "/v2/pipeline", {method:"POST", headers:{"Authorization":"Bearer "+TURSO_TOKEN, "Content-Type":"application/json"}, body: JSON.stringify({requests:[{type:"execute", stmt:{sql:sql, args:args||[]}}, {type:"close"}]})});
-    return await r.json();
-  }catch(e){ console.log("Turso no respondió, sigo con guardado local", e); return null; }
+    let j = await r.json();
+    if(!r.ok){ window._ultimoErrorTurso = "Turso respondió " + r.status + ": " + JSON.stringify(j).slice(0,200); }
+    return j;
+  }catch(e){ window._ultimoErrorTurso = "No se pudo conectar: " + e.message; return null; }
+}
+function extraerValorTurso(j){
+  try{
+    let res = j?.results?.[0]?.response?.result || j?.results?.[0]?.result;
+    let rows = res?.rows || [];
+    if(!rows.length) return null;
+    let celda = rows[0][0];
+    if(celda && typeof celda === "object") return celda.value ?? celda.text ?? null;
+    return celda ?? null;
+  }catch(e){ return null; }
 }
 async function tursoGuardar(){
   if(!tursoActivo) return;
-  await tursoQuery("INSERT INTO records (collection, id, value) VALUES ('bitacora','estado', ?) ON CONFLICT(collection,id) DO UPDATE SET value=excluded.value", [{type:"text", value: JSON.stringify(state)}]);
+  await tursoQuery("CREATE TABLE IF NOT EXISTS records (collection TEXT, id TEXT, value TEXT, PRIMARY KEY (collection, id))");
+  await tursoQuery("INSERT OR REPLACE INTO records (collection, id, value) VALUES ('bitacora','estado', ?)", [{type:"text", value: JSON.stringify(state)}]);
 }
 async function tursoCargar(){
   if(!tursoActivo) return false;
   let j = await tursoQuery("SELECT value FROM records WHERE collection='bitacora' AND id='estado'");
   try{
-    let val = j?.results?.[0]?.response?.result?.rows?.[0]?.[0]?.value;
-    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; save(); render(); return true; } }
-  }catch(e){}
+    let val = extraerValorTurso(j);
+    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacoraCETIS", JSON.stringify(state)); render(); return true; } }
+  }catch(e){ window._ultimoErrorTurso = "No se pudo leer lo guardado: " + e.message; }
   return false;
 }
 
@@ -66,9 +79,10 @@ async function actualizarDesdeTurso(){
   let el = document.getElementById("estadoTurso");
   if(!tursoActivo){ if(el) el.textContent = "⚠️ Turso no está conectado todavía. Falta pegar URL y Token en el código."; alert("Turso no está conectado todavía. Falta pegar URL y Token en el código."); return; }
   if(el) el.textContent = "⏳ Actualizando desde Turso...";
+  window._ultimoErrorTurso = "";
   let ok = await tursoCargar();
-  if(el) el.textContent = ok ? "✅ Actualizado desde Turso - " + new Date().toLocaleTimeString() : "⚠️ No había nada nuevo en Turso, se quedó lo que ya tenías.";
-  if(ok) alert("✅ Actualizado desde Turso");
+  if(ok){ if(el) el.textContent = "✅ Actualizado desde Turso - " + new Date().toLocaleTimeString(); alert("✅ Actualizado desde Turso"); }
+  else { let msg = window._ultimoErrorTurso || "No había nada nuevo en Turso, se quedó lo que ya tenías."; if(el) el.textContent = "⚠️ " + msg; alert("⚠️ No se pudo actualizar:\n" + msg); }
 }
 function actualizarEstadoTurso(){
   let el = document.getElementById("estadoTurso");
