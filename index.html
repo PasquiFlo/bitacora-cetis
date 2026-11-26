@@ -3,14 +3,41 @@
 <title>Bitácora CETIS No. 050 - Versión Buena</title>
 <style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0}.badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold}.wrap{max-width:1100px;margin:auto;padding:14px}.tabs{display:flex;flex-wrap:wrap;gap:8px}.tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer}.tab.active{background:#0b3d91;color:#fff}.card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}.Libre{border-color:#22c55e}.Ocupado{border-color:#f59e0b;background:#fffbeb}.Mantenimiento{border-color:#ef4444;background:#fef2f2}button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold}.b1{background:#0b3d91;color:#fff}.b2{background:#e2e8f0}.b3{background:#dc2626;color:#fff}.b4{background:#16a34a;color:#fff}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px}input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}small{color:#64748b}</style></head>
 <body><header><h1>CETIS No. 050 - Mariano Matamoros y Guridi</h1><p>Bitácora de Laboratorios / Talleres</p><span class="badge">VERSIÓN BUENA - OFICIAL</span></header>
-<div class="wrap">
+<div id="portada" style="position:fixed;inset:0;background:#0b3d91;z-index:9999;overflow:auto;padding:18px 14px 30px;box-sizing:border-box">
+<div style="max-width:760px;margin:0 auto;text-align:center;color:#fff">
+<p style="font-size:14px;letter-spacing:2px;margin:6px 0 0">CETIS No. 050 - MARIANO MATAMOROS Y GURIDI</p>
+<h1 style="font-size:30px;margin:8px 0 4px">Bitácora de Laboratorios</h1>
+<p style="opacity:.9;margin:0 0 18px">Talleres de Programación, Redes, Soporte y TICS - Turno Matutino</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left">
+<div style="background:#fff;color:#1a2333;border-radius:16px;padding:18px">
+<div style="font-size:38px">🔐</div>
+<h2 style="margin:6px 0 4px">Administrador</h2>
+<p style="margin:0 0 10px;color:#64748b;font-size:14px">Ve todo, registra docentes, y además puede ver Respaldo y Archivo por año.</p>
+<input id="passAdmin" type="password" placeholder="Contraseña de administrador" style="width:100%;box-sizing:border-box" onkeydown="if(event.key==='Enter') entrarAdmin()">
+<button class="b1" style="width:100%;margin-top:8px;padding:12px;font-size:16px" onclick="entrarAdmin()">Entrar como Administrador</button>
+<p style="font-size:12px;color:#64748b;margin:8px 0 0">La contraseña se cambia en el código, en la línea de ADMIN_PASS.</p>
+</div>
+<div style="background:#dcfce7;color:#1a2333;border-radius:16px;padding:18px">
+<div style="font-size:38px">🧑‍🏫</div>
+<h2 style="margin:6px 0 4px">Encargado de Taller</h2>
+<p style="margin:0 0 10px;color:#64748b;font-size:14px">Registra docentes, escoge las PCs que van a usar y termina la clase. Sin contraseña.</p>
+<div style="height:42px"></div>
+<button class="b4" style="width:100%;padding:12px;font-size:16px" onclick="entrarEncargado()">Entrar como Encargado</button>
+<p style="font-size:12px;color:#64748b;margin:8px 0 0">No puede ver Respaldo ni Archivo por año.</p>
+</div>
+</div>
+<p style="font-size:13px;opacity:.85;margin:16px 0 0">Elige cómo vas a entrar hoy. Puedes cambiar de acceso con el botón “Cambiar acceso” de arriba.</p>
+</div>
+</div>
+<div class="wrap" id="contenido">
+<div class="row" style="align-items:center"><div><small id="textoRol">Entraste como: —</small></div><button class="b2" style="flex:0 0 auto" onclick="salirRol()">↩ Cambiar acceso</button></div>
 <div class="card" style="background:#e0f2fe;border:2px solid #0b3d91;text-align:center">
-<button class="b1" style="font-size:17px;padding:14px 20px;width:100%" onclick="actualizarDesdeTurso()">🔄 Actualizar desde Turso</button>
+<button class="b1" style="font-size:17px;padding:14px 20px;width:100%" onclick="actualizarDesdeTurso()">🔄 Actualizar</button>
 <p style="margin:8px 0 0"><small id="estadoTurso">Pulsa para traer lo último que guardó otro celular.</small></p>
 </div>
 <div class="tabs" id="tabs"></div><div id="app"></div>
 <div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div></div>
-<div class="card"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
+<div class="card" id="cardRespaldo"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
 <h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div></div>
 </div>
 <script>
@@ -30,7 +57,20 @@ const HORARIOS={
 {d:"Viernes",h:"7:00-8:40",m:"Gestiona el Proceso de Reclutamiento, Selección y Admisión del Talento Humano",doc:"Sánchez Ortiz Jorge Alejandro",g:"3AA"},
 {d:"Viernes",h:"8:40-10:15",m:"Gestiona el Proceso de Reclutamiento, Selección y Admisión del Talento Humano",doc:"Sánchez Ortiz Jorge Alejandro",g:"3BA"}
 ],
-"Programación 2":[{d:"Lunes",h:"7:00-10:15",m:"Programación",doc:"Docente asignado",g:"Grupo"}],
+"Programación 2":[
+{d:"Lunes",h:"7:00-8:40",m:"Implementa Aplicaciones Web",doc:"López Vargas Marco Antonio",g:"5AP"},
+{d:"Lunes",h:"8:40-10:15",m:"Implementa Aplicaciones Web",doc:"López Vargas Marco Antonio",g:"5BP"},
+{d:"Lunes",h:"11:30-14:00",m:"Gestiona los Procesos de Inducción y Permanencia del Talento Humano",doc:"Montero Ávila María del Pilar",g:"3AA"},
+{d:"Martes",h:"7:00-8:40",m:"Implementa Aplicaciones Web",doc:"López Vargas Marco Antonio",g:"5AP"},
+{d:"Martes",h:"8:40-10:15",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5BP"},
+{d:"Martes",h:"11:30-14:00",m:"Gestiona los Procesos de Inducción y Permanencia del Talento Humano",doc:"Montero Ávila María del Pilar",g:"3BA"},
+{d:"Miércoles",h:"7:00-8:40",m:"Implementa Aplicaciones Web",doc:"López Vargas Marco Antonio",g:"5AP"},
+{d:"Miércoles",h:"8:40-10:15",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5BP"},
+{d:"Miércoles",h:"10:45-11:30",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"},
+{d:"Jueves",h:"8:40-11:30",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5BP"},
+{d:"Jueves",h:"11:30-14:00",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"},
+{d:"Viernes",h:"7:50-10:15",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"}
+],
 "Programación 4":[{d:"Lunes",h:"7:00-10:15",m:"Programación",doc:"Docente asignado",g:"Grupo"}],
 "Programación 5":[{d:"Lunes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1E"},{d:"Lunes",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Lunes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Lunes",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Poot López Víctor Manuel",g:"5BA"},{d:"Martes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Martes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Martes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Miércoles",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1D"},{d:"Jueves",h:"7:00-8:40",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"},{d:"Jueves",h:"8:40-10:15",m:"Cultura Digital I",doc:"Preciado García Julio César",g:"1J"},{d:"Jueves",h:"10:45-11:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1F"},{d:"Jueves",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Sánchez Ortiz Jorge Alejandro",g:"5AA"},{d:"Viernes",h:"7:00-7:50",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Viernes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Viernes",h:"10:45-14:00",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"}],
 "Redes":[{d:"Lunes",h:"7:00-9:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Lunes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Lunes",h:"11:30-14:00",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"8:40-9:30",m:"Cultura Digital I",doc:"Carapia Hernández",g:"1C"},{d:"Martes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Miércoles",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Miércoles",h:"8:40-9:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Miércoles",h:"11:30-12:20",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Jueves",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Jueves",h:"8:40-10:15",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Noriega Montaño Jorge Armando",g:"3DS"},{d:"Jueves",h:"10:45-11:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Jueves",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Viernes",h:"8:40-10:15",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Viernes",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"}],
@@ -44,35 +84,108 @@ talleres.forEach(function(t){ if(!state[t]) state[t]={pcs:30,m:{},log:[]}; });
 if(state["Programación 3"] && Object.keys(state["Programación 3"].m||{}).length===0){ for(let i=1;i<=30;i++){ state["Programación 3"].m["PC-"+String(i).padStart(2,"0")]="Mantenimiento"; } }
 let cur=talleres[0];
 function save(){ localStorage.setItem("bitacora_buena", JSON.stringify(state)); }
-function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ return '<div class="tab '+(t===cur?"active":"")+'" onclick="cambiarTaller(\''+t+'\')">'+t+'</div>'; }).join(""); }
-function cambiarTaller(t){ cur=t; render(); }
+function estadoTaller(tn){
+  let st = state[tn]; if(!st) return "libre";
+  let m = st.m || {};
+  let total = st.pcs || 0; let enMant = 0;
+  for(let i=1;i<=total;i++){ let id="PC-"+String(i).padStart(2,"0"); if(m[id]==="Mantenimiento") enMant++; }
+  if(total>0 && enMant===total) return "mantenimiento";
+  let logs = st.log || [];
+  for(let k=logs.length-1;k>=0;k--){ if(!logs[k].salida) return "enuso"; }
+  return "libre";
+}
+function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
+function cambiarTaller(t){ cur=t; window._claseSel=null; window._manual=false; render(); }
 function render(){
   renderTabs();
   let s = state[cur];
   let h = HORARIOS[cur] || [];
-  let horarioHtml = h.length ? "<h3>Horario - "+cur+"</h3><table><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>"+h.map(function(x){ return "<tr><td>"+x.d+"</td><td>"+x.h+"</td><td>"+x.m+"</td><td>"+x.doc+"</td><td>"+x.g+"</td></tr>"; }).join("")+"</table>" : "<p><small>"+(cur==="Programación 3" ? "Taller en mantenimiento, sin horario por ahora." : "Sin horario asignado.")+"</small></p>";
+  let diasSemana = ["Lunes","Martes","Miércoles","Jueves","Viernes"];
+  let diaHoy = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][new Date().getDay()];
+  if(!diasSemana.includes(diaHoy)) diaHoy = "Lunes";
+  let diaSel = window._diaHorario || diaHoy;
+  let hConIdx = h.map(function(x,i){ return {i:i, x:x}; });
+  let hFil = (diaSel === "Todos") ? hConIdx : hConIdx.filter(function(o){ return o.x.d === diaSel; });
+  let botonesDia = ["Todos"].concat(diasSemana).map(function(d){ return '<button class="b'+(d===diaSel?'1':'2')+'" style="padding:7px 10px" onclick="filtrarDiaHorario(\''+d+'\')">'+d+'</button>'; }).join(" ");
+  let cardsHorario = hFil.length ? hFil.map(function(o){ let x=o.x; let sel = (window._claseSel === o.i); return '<div onclick="elegirClase('+o.i+')" style="background:'+(sel ? '#dcfce7' : '#f8fafc')+';border:2px solid '+(sel ? '#16a34a' : '#e2e8f0')+';border-radius:10px;padding:10px;cursor:pointer"><b>'+x.h+'</b><br><b>'+x.m+'</b><br><small>'+x.doc+' - Grupo '+x.g+'</small><br><small style="color:#16a34a"><b>'+(sel ? '✓ Seleccionada - Toca Registrar abajo' : '👆 Toca para registrar esta clase')+'</b></small></div>'; }).join("") : '<p><small>No hay clases este día en este taller.</small></p>';
+  let horarioHtml = '<div><button class="b1" style="width:100%" onclick="toggleHorario()">📅 Ver horario - '+cur+' - '+diaSel+' ⬇</button><div id="horarioBox" style="display:'+(window._horarioAbierto ? 'block' : 'none')+';margin-top:10px"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">'+botonesDia+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">'+cardsHorario+'</div></div></div>';
+  let logsAct = state[cur].log || [];
+  let activa = null;
+  for(let k=logsAct.length-1;k>=0;k--){ if(!logsAct[k].salida){ activa = logsAct[k]; break; } }
+  let registrarHtml = '';
+  if(activa){
+    registrarHtml = '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px;margin-top:20px"><b>🔒 Clase activa en este taller</b><br>Docente: <b>'+activa.doc+'</b><br>Materia: <b>'+activa.m+'</b> - Grupo: <b>'+activa.g+'</b><br><small>Entrada: '+activa.entrada+' - Para registrar otro docente, primero termina esta clase.</small><br><button class="b3" style="margin-top:10px;width:100%" onclick="termino()">⏹ Terminar clase actual</button></div>';
+  } else {
+    let selClase = (window._claseSel != null) ? (HORARIOS[cur] || [])[window._claseSel] : null;
+    let selHtml = '';
+    if(window._manual){
+      selHtml = '<div class="row"><input id="doc" placeholder="Docente"><input id="mat" placeholder="Materia"><input id="gru" placeholder="Grupo"></div><button class="b4" onclick="registrar()">Registrar entrada del docente</button> <button class="b2" onclick="toggleManual()">Cancelar</button>';
+    } else if(selClase){
+      selHtml = '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px"><b>'+selClase.doc+'</b><br>'+selClase.m+' - Grupo '+selClase.g+'<br><small>'+selClase.d+' '+selClase.h+'</small></div><div style="height:10px"></div><button class="b4" style="width:100%" onclick="registrar()">✅ Registrar esta clase</button> <button class="b2" style="margin-top:8px" onclick="limpiarSeleccion()">Cambiar clase</button>';
+    } else {
+      selHtml = '<p><small>👆 Toca una clase del horario de arriba para registrarla.</small></p>';
+    }
+    registrarHtml = '<div style="margin-top:20px"><h3>Registrar entrada del docente</h3>'+selHtml+'<div style="margin-top:10px;text-align:center"><button onclick="toggleManual()" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;text-decoration:underline">¿La clase no está en el horario? Escribir manual</button></div></div>';
+  }
+  let pcsPanelHtml = '';
+  if(window._pendientePCs && window._pendienteTaller === cur && activa){
+    let libres = [];
+    for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if((s.m[id]||"Libre")==="Libre") libres.push(id); }
+    let selCount = (window._pcsSel||[]).length;
+    if(libres.length === 0){
+      pcsPanelHtml = '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:14px;margin-top:20px"><b>⚠ No hay computadoras libres en '+cur+'</b><br><small>Docente: <b>'+activa.doc+'</b> - '+activa.m+' - Grupo '+activa.g+'</small><br><small>Todas están ocupadas o en mantenimiento.</small><br><button class="b1" style="width:100%;margin-top:10px" onclick="confirmarPCs(true)">✅ Confirmar sin computadoras y guardar en bitácora</button></div>';
+    } else {
+      let botonesPC = libres.map(function(id){ let on = (window._pcsSel||[]).indexOf(id) >= 0; return '<button onclick="togglePcSel(\''+id+'\')" style="padding:10px 6px;border-radius:10px;border:2px solid '+(on ? '#16a34a' : '#cbd5e1')+';background:'+(on ? '#dcfce7' : '#fff')+';font-weight:bold;cursor:pointer">'+(on ? '✓ ' : '')+id+'</button>'; }).join("");
+      pcsPanelHtml = '<div style="background:#eff6ff;border:2px solid #2563eb;border-radius:12px;padding:14px;margin-top:20px"><b>🖥 Selecciona las computadoras que va a usar</b><br><small>Docente: <b>'+activa.doc+'</b> - '+activa.m+' - Grupo '+activa.g+'<br>Solo salen las libres. Las de mantenimiento no se pueden escoger.</small><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin:12px 0">'+botonesPC+'</div><small><b>Seleccionadas: '+selCount+' de '+libres.length+' libres</b></small><br><button class="b2" style="margin-top:10px" onclick="seleccionarTodasLibres()">Seleccionar todas las libres</button><br><button class="b1" style="width:100%;margin-top:10px" onclick="confirmarPCs(false)">✅ Confirmar PCs y guardar en bitácora</button></div>';
+    }
+  }
   let pcsHtml = "";
   for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; pcsHtml += '<div class="pc '+st+'"><b>'+id+'</b><br><small>'+st+'</small><br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> <button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button><br><button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button></div>'; }
-  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+'<div class="row" style="margin-top:10px"><label>Número de PCs <input id="npc" type="number" value="'+s.pcs+'"></label><button class="b1" onclick="setPCs()">Guardar número de PCs</button></div><div class="row"><button class="b1" onclick="ocuparTodas()">Ocupar todas</button><button class="b2" onclick="liberarTodas()">Liberar todas</button><button class="b3" onclick="termino()">⏹ Término de clase</button><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div><div class="grid" style="margin-top:12px">'+pcsHtml+'</div><h3>Registrar entrada del docente</h3><div class="row"><input id="doc" placeholder="Docente"><input id="mat" placeholder="Materia"><input id="gru" placeholder="Grupo"></div><button class="b4" onclick="registrar()">Registrar entrada del docente</button></div>';
+  let filaReactivar = (cur === "Programación 3") ? '<div class="row" style="margin-top:6px"><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div>' : '';
+  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+registrarHtml+pcsPanelHtml+'<div style="height:24px"></div>'+filaReactivar+'<div class="grid" style="margin-top:18px">'+pcsHtml+'</div></div>';
   let logs = [];
-  talleres.forEach(function(t){ (state[t].log||[]).forEach(function(l){ logs.push("<tr><td>"+l.fecha+"</td><td>"+t+"</td><td>"+l.entrada+"</td><td>"+(l.salida||"-")+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td></tr>"); }); });
-  document.getElementById("log").innerHTML = "<table><tr><th>Fecha</th><th>Taller</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th></tr>"+(logs.join("")||"<tr><td colspan=7>Sin registros aún</td></tr>")+"</table>";
+  talleres.forEach(function(t2){ (state[t2].log||[]).forEach(function(l){ logs.push("<tr><td>"+l.fecha+"</td><td>"+t2+"</td><td>"+l.entrada+"</td><td>"+(l.salida||"-")+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td><td>"+(l.pcs||"-")+"</td></tr>"); }); });
+  document.getElementById("log").innerHTML = "<table><tr><th>Fecha</th><th>Taller</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>PCs</th></tr>"+(logs.join("")||"<tr><td colspan=8>Sin registros aún</td></tr>")+"</table>";
+}
+function toggleHorario(){ window._horarioAbierto = !window._horarioAbierto; render(); }
+function filtrarDiaHorario(d){ window._diaHorario = d; render(); }
+function elegirClase(i){ window._claseSel = i; window._manual = false; render(); }
+function limpiarSeleccion(){ window._claseSel = null; render(); }
+function toggleManual(){ window._manual = !window._manual; if(window._manual) window._claseSel = null; render(); }
+function togglePcSel(id){ if(!window._pcsSel) window._pcsSel=[]; let k=window._pcsSel.indexOf(id); if(k>=0) window._pcsSel.splice(k,1); else window._pcsSel.push(id); render(); }
+function seleccionarTodasLibres(){ let s2=state[cur]; window._pcsSel=[]; for(let i=1;i<=s2.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if((s2.m[id]||"Libre")==="Libre") window._pcsSel.push(id); } render(); }
+function confirmarPCs(sinPCs){
+  let s2=state[cur]; let libres=[];
+  for(let i=1;i<=s2.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if((s2.m[id]||"Libre")==="Libre") libres.push(id); }
+  if(!sinPCs && libres.length>0 && !(window._pcsSel||[]).length){ alert("Selecciona al menos una computadora."); return; }
+  let pcsTexto = sinPCs ? "Sin computadoras libres" : (window._pcsSel||[]).join(", ");
+  if(!sinPCs){ (window._pcsSel||[]).forEach(function(id){ s2.m[id]="Ocupado"; }); }
+  let logsC = s2.log||[];
+  for(let k=logsC.length-1;k>=0;k--){ if(!logsC[k].salida){ logsC[k].pcs = pcsTexto; break; } }
+  window._pendientePCs = false; window._pcsSel = []; window._pendienteTaller = null;
+  save(); tursoGuardar();
+  alert(sinPCs ? "Registrado en bitácora: Sin computadoras libres." : "Registrado en bitácora con: "+pcsTexto);
+  render();
 }
 function setPC(id, st){
+  if(window._pendientePCs && window._pendienteTaller===cur){ alert("Primero selecciona las computadoras de esta clase arriba y dale Confirmar."); return; }
   if(state[cur].m[id]==="Mantenimiento" && st==="Ocupado"){ alert("No se puede ocupar, está en mantenimiento."); return; }
   if(st==="Ocupado"){ let h=(HORARIOS[cur]||[])[0]; if(h && !confirm("Hoy toca: "+h.m+" - "+h.doc+" - Grupo "+h.g+" - "+h.h+"\n¿Sí, es esta clase?")){ return; } }
   state[cur].m[id]=st; save(); tursoGuardar(); render();
 }
 function ocuparTodas(){
+  if(window._pendientePCs && window._pendienteTaller===cur){ alert("Primero selecciona las computadoras de esta clase arriba y dale Confirmar."); return; }
   if(!confirm("¿Ocupar todas las PCs libres de "+cur+"? Las de mantenimiento NO se tocan.")) return;
   for(let i=1;i<=state[cur].pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Ocupado"; }
   save(); tursoGuardar(); render();
 }
 function liberarTodas(){
+  if(window._pendientePCs && window._pendienteTaller===cur){ alert("Primero selecciona las computadoras de esta clase arriba y dale Confirmar."); return; }
   for(let i=1;i<=state[cur].pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); if(state[cur].m[id]!=="Mantenimiento") state[cur].m[id]="Libre"; }
   save(); tursoGuardar(); render();
 }
 function termino(){
+  window._pendientePCs = false; window._pcsSel = []; window._pendienteTaller = null;
   if(!confirm("¿Término de clase? Se liberan todas menos las de mantenimiento y se registra la salida del docente.")) return;
   liberarTodas();
   let logs = state[cur].log||[];
@@ -89,14 +202,42 @@ function falla(id){
   alert(id+" quedó en mantenimiento por: "+f);
   save(); tursoGuardar(); render();
 }
-function registrar(){
-  let doc=document.getElementById("doc").value, m=document.getElementById("mat").value, g=document.getElementById("gru").value;
-  if(!doc){ alert("Escribe el nombre del docente"); return; }
-  state[cur].log.push({fecha:new Date().toLocaleDateString(), entrada:new Date().toLocaleTimeString(), salida:"", m:m, doc:doc, g:g});
-  alert("Docente registrado: "+doc);
-  save(); tursoGuardar(); render();
+function autocompletarClase(){
+  let sel = document.getElementById("claseSel");
+  let clases = HORARIOS[cur] || [];
+  let docEl = document.getElementById("doc"), matEl = document.getElementById("mat"), gruEl = document.getElementById("gru");
+  let prev = document.getElementById("previewClase");
+  if(sel.value === "otro"){
+    docEl.readOnly = false; matEl.readOnly = false; gruEl.readOnly = false;
+    docEl.value = ""; matEl.value = ""; gruEl.value = "";
+    docEl.placeholder = "Escribe el docente"; matEl.placeholder = "Escribe la materia"; gruEl.placeholder = "Escribe el grupo";
+    if(prev) prev.innerHTML = "Escribe manual docente, materia y grupo.";
+    return;
+  }
+  if(sel.value === ""){ docEl.value=""; matEl.value=""; gruEl.value=""; if(prev) prev.innerHTML = "Escoge una clase arriba para autocompletar."; return; }
+  let x = clases[parseInt(sel.value)];
+  if(!x) return;
+  docEl.value = x.doc; matEl.value = x.m; gruEl.value = x.g;
+  docEl.readOnly = true; matEl.readOnly = true; gruEl.readOnly = true;
+  if(prev) prev.innerHTML = "<b>"+x.d+" "+x.h+"</b><br>Docente: <b>"+x.doc+"</b><br>Materia: <b>"+x.m+"</b><br>Grupo: <b>"+x.g+"</b><br><small>Ya está listo, solo dale Registrar.</small>";
 }
-function setPCs(){
+function registrar(){
+  let logsR = state[cur].log || [];
+  for(let k=logsR.length-1;k>=0;k--){ if(!logsR[k].salida){ alert("Ya hay una clase activa con "+logsR[k].doc+". Primero dale a Terminar clase para registrar otro docente."); return; } }
+  let doc="", m="", g="";
+  if(window._manual){
+    doc=document.getElementById("doc").value; m=document.getElementById("mat").value; g=document.getElementById("gru").value;
+    if(!doc){ alert("Escribe el nombre del docente"); return; }
+  } else if(window._claseSel != null){
+    let x=(HORARIOS[cur]||[])[window._claseSel]; if(!x){ alert("Vuelve a escoger la clase"); return; }
+    doc=x.doc; m=x.m; g=x.g;
+  } else { alert("Primero toca una clase del horario de arriba"); return; }
+  state[cur].log.push({fecha:new Date().toLocaleDateString(), entrada:new Date().toLocaleTimeString(), salida:"", m:m, doc:doc, g:g, pcs:""});
+  window._claseSel = null; window._manual = false;
+  window._pendientePCs = true; window._pendienteTaller = cur; window._pcsSel = [];
+  alert("Docente registrado: "+doc+". Ahora selecciona las computadoras que va a usar.");
+  save(); tursoGuardar(); render();
+}function setPCs(){
   let n=parseInt(document.getElementById("npc").value);
   if(!n) return;
   state[cur].pcs=n; save(); tursoGuardar(); render();
@@ -126,14 +267,14 @@ function archivar(){
 }
 // ===== TURSO - SOLO 1 VEZ, TODO EN NIVEL SUPERIOR =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io";
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU2NzY3NDMsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.g59BVu1umga8Ot3Bg6gZVyoGO5T64zHIA0uIdcK_vHIgkw7QKA0ZVz8G2jsvwGmjhz5t1U_bWeS4VrNOKMjJBA";
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3MjE2MTUsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.kBdKbHox55OevfvXwUEumJPlYTdz7zUg1gGCE3ol4ETZyI7Nly8e7AXMQmIXMozaZX1QF65R3bahsCkMjzjOAQ";
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
   try{
     let r = await fetch(TURSO_URL + "/v2/pipeline", {method:"POST", headers:{"Authorization":"Bearer "+TURSO_TOKEN, "Content-Type":"application/json"}, body: JSON.stringify({requests:[{type:"execute", stmt:{sql:sql, args:args||[]}}, {type:"close"}]})});
     let j = await r.json();
-    if(!r.ok){ window._ultimoErrorTurso = "Turso respondió " + r.status + ": " + JSON.stringify(j).slice(0,200); }
+    if(!r.ok){ window._ultimoErrorTurso = "El servidor respondió " + r.status + ": " + JSON.stringify(j).slice(0,200); }
     return j;
   }catch(e){ window._ultimoErrorTurso = "No se pudo conectar: " + e.message; return null; }
 }
@@ -163,18 +304,37 @@ async function tursoCargar(){
 }
 async function actualizarDesdeTurso(){
   let el = document.getElementById("estadoTurso");
-  if(!tursoActivo){ if(el) el.textContent = "⚠️ Turso no está conectado todavía. Falta pegar URL y Token en el código."; alert("Turso no está conectado todavía. Falta pegar URL y Token en el código."); return; }
-  if(el) el.textContent = "⏳ Actualizando desde Turso...";
+  if(!tursoActivo){ if(el) el.textContent = "⚠️ No conectado"; alert("No conectado"); return; }
+  if(el) el.textContent = "⏳ Actualizando...";
   window._ultimoErrorTurso = "";
   let ok = await tursoCargar();
-  if(ok){ if(el) el.textContent = "✅ Actualizado desde Turso - " + new Date().toLocaleTimeString(); alert("✅ Actualizado desde Turso"); }
-  else { let msg = window._ultimoErrorTurso || "No había nada nuevo en Turso, se quedó lo que ya tenías."; if(el) el.textContent = "⚠️ " + msg; alert("⚠️ No se pudo actualizar:\n" + msg); }
+  if(ok){ if(el) el.textContent = "✅ Actualizado - " + new Date().toLocaleTimeString(); alert("✅ Actualizado"); }
+  else { let msg = window._ultimoErrorTurso || "No había nada nuevo, se quedó lo que ya tenías."; if(el) el.textContent = "⚠️ " + msg; alert("⚠️ No se pudo actualizar:\n" + msg); }
 }
 function actualizarEstadoTurso(){
   let el = document.getElementById("estadoTurso");
-  if(el) el.textContent = tursoActivo ? "✅ Conectado a Turso. Pulsa para traer lo último." : "⚠️ Turso no conectado. Pega URL y Token en el código.";
+  if(el) el.textContent = tursoActivo ? "✅ Conectado. Pulsa para traer lo último." : "⚠️ No conectado";
 }
+let ADMIN_PASS = "Cetis50admin";
+function aplicarRol(){
+  let port = document.getElementById("portada");
+  let resp = document.getElementById("cardRespaldo");
+  let txt = document.getElementById("textoRol");
+  if(!window._rol){ if(port) port.style.display = "block"; if(txt) txt.textContent = "Entraste como: —"; return; }
+  if(port) port.style.display = "none";
+  if(txt) txt.textContent = "Entraste como: " + (window._rol === "admin" ? "Administrador 🔐" : "Encargado de Taller 🧑‍🏫");
+  if(resp) resp.style.display = (window._rol === "admin" ? "block" : "none");
+}
+function entrarAdmin(){
+  let v = document.getElementById("passAdmin").value;
+  if(v !== ADMIN_PASS){ alert("Contraseña incorrecta. Intenta de nuevo."); return; }
+  document.getElementById("passAdmin").value = "";
+  window._rol = "admin"; aplicarRol(); render();
+}
+function entrarEncargado(){ window._rol = "encargado"; aplicarRol(); render(); }
+function salirRol(){ window._rol = null; aplicarRol(); window.scrollTo(0,0); }
 render();
+aplicarRol();
 actualizarEstadoTurso();
 if(tursoActivo){ tursoCargar(); }
 </script></body></html>
