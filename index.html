@@ -11,7 +11,7 @@
 <div style="max-width:760px;margin:0 auto;text-align:center;color:#fff">
 <p style="font-size:14px;letter-spacing:2px;margin:6px 0 0">CETIS No. 050 - MARIANO MATAMOROS Y GURIDI</p>
 <h1 style="font-size:30px;margin:8px 0 4px">Bitácora de Laboratorios</h1>
-<p style="opacity:.9;margin:0 0 18px">Talleres de Programación, Redes, Soporte y TICS - Turno Matutino</p>
+<p style="opacity:.9;margin:0 0 18px">Talleres de Programación, Redes, Soporte y TICS - Turno Matutino y Vespertino</p>
 <div id="alertasPortada" style="text-align:left"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left">
 <div style="background:#fff;color:#1a2333;border-radius:16px;padding:18px">
@@ -20,15 +20,16 @@
 <p style="margin:0 0 10px;color:#64748b;font-size:14px">Ve todo, registra docentes, y además puede ver Respaldo y Archivo por año.</p>
 <input id="passAdmin" type="password" placeholder="Contraseña de administrador" style="width:100%;box-sizing:border-box" onkeydown="if(event.key==='Enter') entrarAdmin()">
 <button class="b1" style="width:100%;margin-top:8px;padding:12px;font-size:16px" onclick="entrarAdmin()">Entrar como Administrador</button>
-<p style="font-size:12px;color:#64748b;margin:8px 0 0">La contraseña se cambia en el código, en la línea de ADMIN_PASS.</p>
+
 </div>
 <div style="background:#dcfce7;color:#1a2333;border-radius:16px;padding:18px">
 <div style="font-size:38px">🧑‍🏫</div>
 <h2 style="margin:6px 0 4px">Encargado de Taller</h2>
 <p style="margin:0 0 10px;color:#64748b;font-size:14px">Registra docentes, escoge las PCs que van a usar y termina la clase. Sin contraseña.</p>
-<div style="height:42px"></div>
+<select id="selEncargado" style="width:100%;box-sizing:border-box;padding:11px;font-size:15px;margin-bottom:8px"></select>
 <button class="b4" style="width:100%;padding:12px;font-size:16px" onclick="entrarEncargado()">Entrar como Encargado</button>
-<p style="font-size:12px;color:#64748b;margin:8px 0 0">No puede ver Respaldo ni Archivo por año.</p>
+<p style="font-size:12px;color:#64748b;margin:8px 0 0">Elige tu nombre: entras solo a tu taller. "Ver todo" es solo para ver, sin hacer cambios.</p>
+
 </div>
 </div>
 <p style="font-size:13px;opacity:.85;margin:16px 0 0">Elige cómo vas a entrar hoy. Puedes cambiar de acceso con el botón “Cambiar acceso” de arriba.</p>
@@ -36,6 +37,7 @@
 </div>
 <div class="wrap" id="contenido">
 <div class="row" style="align-items:center"><div><small id="textoRol">Entraste como: —</small></div><button class="b2" style="flex:0 0 auto" onclick="salirRol()">↩ Cambiar acceso</button></div>
+<div id="bannerSoloVer" style="display:none;background:#fef3c7;border:2px solid #f59e0b;border-radius:10px;padding:10px 12px;margin-top:8px;text-align:center"><b>👁 Estás en "Ver todo" — solo puedes ver.</b><br><small>No puedes registrar, cambiar PCs, reportar ni reparar. Para trabajar, sal y entra con tu nombre.</small></div>
 <div class="card" style="background:#e0f2fe;border:2px solid #0b3d91;text-align:center">
 <button class="b1" style="font-size:17px;padding:14px 20px;width:100%" onclick="actualizarDesdeTurso()">🔄 Actualizar</button>
 <p style="margin:8px 0 0"><small id="estadoTurso">Pulsa para traer lo último que guardó otro celular.</small></p>
@@ -54,8 +56,9 @@
 </div>
 </div>
 <div id="log"></div></div>
-<div class="card" id="cardRespaldo"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
-<h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div></div>
+<div class="card" id="cardRespaldo"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b2" onclick="exportarHistorialExcel()">⬇ Descargar historial en Excel</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
+<h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div>
+<h3>Encargados y talleres</h3><p><small>Registra a cada encargado con su taller. Al entrar con su nombre, cada uno solo verá y trabajará su taller.</small></p><div class="row"><input id="nuevoEncargadoNombre" placeholder="Nombre del encargado" style="flex:2"><select id="nuevoEncargadoTaller" style="flex:1"><option>Programación 1</option><option>Programación 2</option><option>Programación 3</option><option>Programación 4</option><option>Programación 5</option><option>Redes</option><option>Soporte</option><option>TICS</option></select><button class="b1" id="btnAgregarEncargado" onclick="agregarEncargado()">➕ Agregar</button><button class="b2" id="btnCancelarEditarEncargado" style="display:none" onclick="cancelarEditarEncargado()">✖ Cancelar</button></div><div id="listaEncargados"></div></div>
 </div>
 <div id="modalFalla" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
 <div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
@@ -411,11 +414,26 @@ const HORARIOS={
 {d:"Viernes",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3AS"}],
 "Programación 3":[]};
 let talleres=["Programación 1","Programación 2","Programación 3","Programación 4","Programación 5","Redes","Soporte","TICS"];
+let ENCARGADOS_DEF=[
+  {nombre:"Victoria Barrueta Medina", taller:"Programación 1"},
+  {nombre:"Froylan Correa Chalini", taller:"Programación 2"},
+  {nombre:"Claudia Anaya Arellano", taller:"Programación 3"},
+  {nombre:"Adela Carmen Velazquez Gonzalez", taller:"Programación 4"},
+  {nombre:"Maria de la Luz Hernandez Valencia", taller:"Programación 5"},
+  {nombre:"Enrique Chavez Chavez", taller:"Soporte"},
+  {nombre:"Victor Manuel Lopez Vargas", taller:"Redes"},
+  {nombre:"Saul Vargas Bautista", taller:"TICS"}
+];
+function encargadosPorDefecto(){ return ENCARGADOS_DEF.map(function(e){ return {nombre:e.nombre, taller:e.taller}; }); }
 let state=JSON.parse(localStorage.getItem("bitacora_buena")||"null")||{};
 talleres.forEach(function(t){ if(!state[t]) state[t]={pcs:30,m:{},log:[]}; });
+if(!Array.isArray(state.encargados)) state.encargados=encargadosPorDefecto();
 // Programación 3 habilitado con 30 PCs y sin horario (registro manual)
 let cur=talleres[0];
-function save(){ localStorage.setItem("bitacora_buena", JSON.stringify(state)); }
+// ===== SIN CONEXIÓN: cada guardado lleva sello de fecha y equipo =====
+let DEVICE_ID = localStorage.getItem("bitacora_device") || ("PC-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,6));
+localStorage.setItem("bitacora_device", DEVICE_ID);
+function save(){ try{ state._meta = {updatedAt: Date.now(), device: DEVICE_ID}; }catch(e){} localStorage.setItem("bitacora_buena", JSON.stringify(state)); }
 function estadoTaller(tn){
   let st = state[tn]; if(!st) return "libre";
   let m = st.m || {};
@@ -426,9 +444,12 @@ function estadoTaller(tn){
   for(let k=logs.length-1;k>=0;k--){ if(!logs[k].salida) return "enuso"; }
   return "libre";
 }
-function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); let al = contarAlertasTaller(t); let badge = (al.inter || al.pcs.length || al.limp) ? ' ⚠️' : ''; return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+badge+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
-function cambiarTaller(t){ cur=t; window._claseSel=null; window._manual=false; render(); }
+function renderTabs(){ let tabsVisibles = talleres; if(window._rol === "encargado" && !window._soloVer && window._miTaller) tabsVisibles = [window._miTaller]; document.getElementById("tabs").innerHTML = tabsVisibles.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); let al = contarAlertasTaller(t); let badge = (al.inter || al.pcs.length || al.limp) ? ' ⚠️' : ''; return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+badge+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
+function cambiarTaller(t){ if(window._rol === "encargado" && !window._soloVer && window._miTaller && t !== window._miTaller){ alert("Solo puedes entrar a tu taller: " + window._miTaller); return; } cur=t; window._claseSel=null; window._manual=false; render(); }
 function render(){
+  if(!Array.isArray(state.encargados)) state.encargados=encargadosPorDefecto();
+  if(window._rol === "encargado" && !window._soloVer && window._miTaller) cur = window._miTaller;
+  poblarSelEncargado(); renderListaEncargados();
   actualizarAlertasPortada();
   renderTabs();
   let s = state[cur];
@@ -837,6 +858,83 @@ function exportarInventario(){
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
 }
+
+function exportarHistorialExcel(){
+  if(window._rol !== "admin"){ alert("Solo el administrador puede descargar el historial."); return; }
+  function esc(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  let hoy = new Date().toLocaleDateString();
+  let h1 = "<tr><th colspan=\"9\">Historial de clases - Bitácora CETIS No. 050 - " + esc(hoy) + "</th></tr><tr><th>Taller</th><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>Turno</th><th>PCs utilizadas</th></tr>";
+  let n1 = 0;
+  talleres.forEach(function(tn){
+    let s = state[tn] || {};
+    (s.log||[]).forEach(function(l){
+      n1++;
+      h1 += "<tr><td>"+esc(tn)+"</td><td>"+esc(l.fecha)+"</td><td>"+esc(l.entrada)+"</td><td>"+esc(l.salida||"Sin terminar")+"</td><td>"+esc(l.m)+"</td><td>"+esc(l.doc)+"</td><td>"+esc(l.g)+"</td><td>"+esc(l.turno)+"</td><td>"+esc(l.pcs||"")+"</td></tr>";
+    });
+  });
+  if(!n1) h1 += "<tr><td colspan=\"9\">Sin registros aún</td></tr>";
+  let h2 = "<tr><th colspan=\"5\">Reparaciones y fallas pendientes</th></tr><tr><th>Taller</th><th>PC</th><th>Falla</th><th>Solución</th><th>Fecha</th></tr>";
+  let n2 = 0;
+  talleres.forEach(function(tn){
+    let s = state[tn] || {};
+    (s.reparaciones||[]).forEach(function(r){
+      n2++;
+      h2 += "<tr><td>"+esc(tn)+"</td><td>"+esc(r.pc)+"</td><td>"+esc(r.falla)+"</td><td>"+esc(r.solucion)+"</td><td>"+esc(r.solucionada)+"</td></tr>";
+    });
+    let f = s.fallas || {};
+    Object.keys(f).forEach(function(pc){
+      n2++;
+      h2 += "<tr><td>"+esc(tn)+"</td><td>"+esc(pc)+"</td><td>"+esc(f[pc])+"</td><td>Pendiente</td><td></td></tr>";
+    });
+  });
+  if(!n2) h2 += "<tr><td colspan=\"5\">Sin fallas ni reparaciones</td></tr>";
+  let h3 = "<tr><th colspan=\"4\">Reportes de internet</th></tr><tr><th>Taller</th><th>Falla</th><th>Reportada</th><th>Solución / Estado</th></tr>";
+  let n3 = 0;
+  talleres.forEach(function(tn){
+    let s = state[tn] || {};
+    (s.internetHist||[]).forEach(function(x){
+      n3++;
+      h3 += "<tr><td>"+esc(tn)+"</td><td>"+esc(x.falla)+"</td><td>"+esc(x.reportada)+"</td><td>"+esc(x.solucion||"")+" - "+esc(x.solucionada||"")+"</td></tr>";
+    });
+    if(s.internet && s.internet.activa){
+      n3++;
+      h3 += "<tr><td>"+esc(tn)+"</td><td>"+esc(s.internet.falla)+"</td><td>"+esc(s.internet.reportada)+"</td><td>Pendiente</td></tr>";
+    }
+  });
+  if(!n3) h3 += "<tr><td colspan=\"4\">Sin reportes de internet</td></tr>";
+  let h4 = "<tr><th colspan=\"4\">Reportes de limpieza</th></tr><tr><th>Taller</th><th>Motivo</th><th>Reportada</th><th>Hecho / Estado</th></tr>";
+  let n4 = 0;
+  talleres.forEach(function(tn){
+    let s = state[tn] || {};
+    (s.limpiezaHist||[]).forEach(function(x){
+      n4++;
+      h4 += "<tr><td>"+esc(tn)+"</td><td>"+esc(x.motivo)+"</td><td>"+esc(x.reportada)+"</td><td>"+esc(x.hecho||"")+" - "+esc(x.realizada||"")+"</td></tr>";
+    });
+    if(s.limpieza && s.limpieza.activa){
+      n4++;
+      h4 += "<tr><td>"+esc(tn)+"</td><td>"+esc(s.limpieza.motivo)+"</td><td>"+esc(s.limpieza.reportada)+"</td><td>Pendiente</td></tr>";
+    }
+  });
+  if(!n4) h4 += "<tr><td colspan=\"4\">Sin reportes de limpieza</td></tr>";
+  let h5 = "<tr><th colspan=\"6\">Cambios de inventario (series)</th></tr><tr><th>Taller</th><th>PC</th><th>Campo</th><th>Anterior</th><th>Nuevo</th><th>Fecha</th></tr>";
+  let n5 = 0;
+  talleres.forEach(function(tn){
+    let s = state[tn] || {};
+    (s.invCambios||[]).forEach(function(x){
+      n5++;
+      h5 += "<tr><td>"+esc(tn)+"</td><td>"+esc(x.pc)+"</td><td>"+esc(x.campo)+"</td><td>"+esc(x.anterior)+"</td><td>"+esc(x.nuevo)+"</td><td>"+esc(x.fecha)+"</td></tr>";
+    });
+  });
+  if(!n5) h5 += "<tr><td colspan=\"6\">Sin cambios de inventario</td></tr>";
+  let html = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"><head><meta charset=\"utf-8\"></head><body><table border=\"1\">" + h1 + "</table><br><table border=\"1\">" + h2 + "</table><br><table border=\"1\">" + h3 + "</table><br><table border=\"1\">" + h4 + "</table><br><table border=\"1\">" + h5 + "</table></body></html>";
+  let blob = new Blob(["\ufeff"+html], {type:"application/vnd.ms-excel"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Historial_Bitacora_CETIS50_" + hoy.replace(/\//g,"-") + ".xls";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+}
+
 function autocompletarClase(){
   let sel = document.getElementById("claseSel");
   let clases = HORARIOS[cur] || [];
@@ -902,6 +1000,54 @@ function archivar(){
   document.getElementById("archivo").innerHTML="<p><b>Año "+anio+" archivado.</b> Años guardados: "+Object.keys(arch).join(", ")+"</p>";
   alert("Año "+anio+" archivado.");
 }
+// ===== SIN CONEXIÓN: guardado local + sincronización al volver el internet =====
+// Si el estado no tiene nada (recién instalado), JAMÁS debe tapar lo del servidor
+let yaSincronizado = false;
+function estadoVacio(st){
+  try{
+    if(!st || typeof st !== "object") return true;
+    if(st._meta && st._meta.updatedAt) return false;
+    for(let k in st){
+      if(k === "_meta") continue;
+      let w = st[k]; if(!w || typeof w !== "object") continue;
+      if((w.log||[]).length) return false;
+      if((w.invCambios||[]).length) return false;
+      if((w.internetHist||[]).length) return false;
+      if((w.limpiezaHist||[]).length) return false;
+      if(w.internet || w.limpieza) return false;
+      if(w.fallas && Object.keys(w.fallas).length) return false;
+      let m = w.m||{}; for(let pc in m){ if(m[pc] && m[pc] !== "Libre") return false; }
+    }
+    return true;
+  }catch(e){ return false; }
+}
+let syncPendiente = localStorage.getItem("bitacora_pendiente") === "1";
+let sincronizando = false;
+function marcarPendiente(v){ syncPendiente = !!v; localStorage.setItem("bitacora_pendiente", syncPendiente ? "1" : "0"); try{ actualizarEstadoTurso(); }catch(e){} }
+async function sincronizar(){
+  if(!tursoActivo || sincronizando) return;
+  sincronizando = true;
+  try{
+    let j = await tursoQuery("SELECT value FROM records WHERE collection='bitacora' AND id='estado'");
+    let remoto = null;
+    try{ let val = extraerValorTurso(j); if(val) remoto = JSON.parse(val); }catch(e){}
+    let localTs = (state._meta && state._meta.updatedAt) || 0;
+    let remTs = (remoto && remoto._meta && remoto._meta.updatedAt) || 0;
+    let localVacio = estadoVacio(state);
+    let remotoVacio = remoto ? estadoVacio(remoto) : true;
+    if(remoto && (remTs > localTs || (localVacio && !remotoVacio))){
+      state = remoto; save(); render(); actualizarAlertasPortada(); marcarPendiente(false);
+    } else if(!localVacio || remotoVacio){
+      let ok = await tursoGuardar();
+      if(ok) marcarPendiente(false);
+    }
+    yaSincronizado = true;
+  }catch(e){ marcarPendiente(true); yaSincronizado = true; }
+  sincronizando = false;
+  try{ actualizarEstadoTurso(); }catch(e){}
+}
+window.addEventListener("online", function(){ sincronizar(); });
+setInterval(function(){ if(navigator.onLine) sincronizar(); }, 60000);
 // ===== TURSO - SOLO 1 VEZ, TODO EN NIVEL SUPERIOR =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io";
 let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3NjEwNjEsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.edw6vWsQTyedWg6nvVIsIAPEHumm4quOfyBIqLNO_tbPdh52TYCb7YxledxdwSoWjQeB5TPfU8CslNYUYoASDQ";
@@ -926,16 +1072,22 @@ function extraerValorTurso(j){
   }catch(e){ return null; }
 }
 async function tursoGuardar(){
-  if(!tursoActivo) return;
-  await tursoQuery("CREATE TABLE IF NOT EXISTS records (collection TEXT, id TEXT, value TEXT, PRIMARY KEY (collection, id))");
-  await tursoQuery("INSERT OR REPLACE INTO records (collection, id, value) VALUES ('bitacora','estado', ?)", [{type:"text", value: JSON.stringify(state)}]);
+  if(!tursoActivo) return false;
+  if(!yaSincronizado && estadoVacio(state)){ marcarPendiente(true); return false; }
+  try{
+    await tursoQuery("CREATE TABLE IF NOT EXISTS records (collection TEXT, id TEXT, value TEXT, PRIMARY KEY (collection, id))");
+    let r = await tursoQuery("INSERT OR REPLACE INTO records (collection, id, value) VALUES ('bitacora','estado', ?)", [{type:"text", value: JSON.stringify(state)}]);
+    if(!r || !r.results) throw new Error("Sin respuesta del servidor");
+    marcarPendiente(false);
+    return true;
+  }catch(e){ window._ultimoErrorTurso = "Sin conexión: quedó guardado en esta computadora. Se subirá solo al volver el internet."; marcarPendiente(true); return false; }
 }
 async function tursoCargar(){
   if(!tursoActivo) return false;
   let j = await tursoQuery("SELECT value FROM records WHERE collection='bitacora' AND id='estado'");
   try{
     let val = extraerValorTurso(j);
-    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacora_buena", JSON.stringify(state)); render(); actualizarAlertasPortada(); return true; } }
+    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ let localTs = (state._meta && state._meta.updatedAt) || 0; let remTs = (remoto._meta && remoto._meta.updatedAt) || 0; if(syncPendiente && localTs > remTs){ alert("Tienes cambios guardados en esta computadora que son más nuevos que los del servidor. Se conservaron los de aquí y se subirán solos al volver el internet."); marcarPendiente(true); return false; } state = remoto; localStorage.setItem("bitacora_buena", JSON.stringify(state)); render(); actualizarAlertasPortada(); return true; } }
   }catch(e){ window._ultimoErrorTurso = "No se pudo leer lo guardado: " + e.message; }
   return false;
 }
@@ -950,7 +1102,10 @@ async function actualizarDesdeTurso(){
 }
 function actualizarEstadoTurso(){
   let el = document.getElementById("estadoTurso");
-  if(el) el.textContent = tursoActivo ? "✅ Conectado. Pulsa para traer lo último." : "⚠️ No conectado";
+  if(!el) return;
+  if(!tursoActivo){ el.textContent = "⚠️ No conectado"; return; }
+  if(syncPendiente){ el.textContent = "🟡 Sin conexión: guardado en esta computadora. Se subirá solo al volver el internet."; return; }
+  el.textContent = "✅ Conectado. Pulsa para traer lo último.";
 }
 let ADMIN_PASS = "Cetis50admin";
 function contarAlertasTaller(taller){
@@ -981,10 +1136,17 @@ function aplicarRol(){
   let port = document.getElementById("portada");
   let resp = document.getElementById("cardRespaldo");
   let txt = document.getElementById("textoRol");
+  let ban = document.getElementById("bannerSoloVer");
   actualizarAlertasPortada();
+  if(document.body && document.body.classList) document.body.classList.toggle("solo-ver", !!window._soloVer);
+  if(ban) ban.style.display = (window._rol === "encargado" && window._soloVer) ? "block" : "none";
   if(!window._rol){ if(port) port.style.display = "block"; if(txt) txt.textContent = "Entraste como: —"; return; }
   if(port) port.style.display = "none";
-  if(txt) txt.textContent = "Entraste como: " + (window._rol === "admin" ? "Administrador 🔐" : "Encargado de Taller 🧑‍🏫");
+  if(txt){
+    if(window._rol === "admin") txt.textContent = "Entraste como: Administrador 🔐";
+    else if(window._soloVer) txt.textContent = "Entraste como: Encargado — Ver todo (solo ver 👀)";
+    else txt.textContent = "Entraste como: " + (window._encargadoNombre || "Encargado") + " — " + (window._miTaller || "");
+  }
   if(resp) resp.style.display = (window._rol === "admin" ? "block" : "none");
 }
 function entrarAdmin(){
@@ -993,10 +1155,93 @@ function entrarAdmin(){
   document.getElementById("passAdmin").value = "";
   window._rol = "admin"; aplicarRol(); render();
 }
-function entrarEncargado(){ window._rol = "encargado"; aplicarRol(); render(); }
-function salirRol(){ window._rol = null; aplicarRol(); window.scrollTo(0,0); }
+function poblarSelEncargado(){
+  let sel = document.getElementById("selEncargado"); if(!sel) return;
+  let actual = sel.value;
+  let lista = state.encargados || [];
+  let html = '<option value="">— Elige tu nombre —</option>';
+  lista.forEach(function(e,i){ html += '<option value="ENC:'+i+'">'+e.nombre+' — '+e.taller+'</option>'; });
+  html += '<option value="VER_TODO">👁 Ver todo (solo ver)</option>';
+  sel.innerHTML = html;
+  if(actual) sel.value = actual;
+}
+function entrarEncargado(){
+  let sel = document.getElementById("selEncargado");
+  let v = sel ? sel.value : "";
+  if(!v){ alert("Elige tu nombre en el menú. Si tu nombre no aparece, pídele al administrador que te registre."); return; }
+  if(v === "VER_TODO"){
+    window._rol = "encargado"; window._soloVer = true; window._miTaller = null; window._encargadoNombre = "Ver todo";
+  } else {
+    let idx = parseInt(v.replace("ENC:",""), 10);
+    let e = (state.encargados || [])[idx];
+    if(!e){ alert("Ese encargado ya no está registrado. Elige otro."); poblarSelEncargado(); return; }
+    window._rol = "encargado"; window._soloVer = false; window._miTaller = e.taller; window._encargadoNombre = e.nombre;
+    cur = e.taller;
+  }
+  aplicarRol(); render();
+}
+function agregarEncargado(){
+  if(window._rol !== "admin"){ alert("Solo el administrador puede registrar encargados."); return; }
+  let n = (document.getElementById("nuevoEncargadoNombre").value || "").trim();
+  let tl = document.getElementById("nuevoEncargadoTaller").value;
+  if(!n){ alert("Escribe el nombre del encargado"); return; }
+  if(!Array.isArray(state.encargados)) state.encargados = [];
+  if(window._editandoEncargado != null && state.encargados[window._editandoEncargado]){
+    state.encargados[window._editandoEncargado] = {nombre:n, taller:tl};
+  } else {
+    state.encargados.push({nombre:n, taller:tl});
+  }
+  cancelarEditarEncargado();
+  document.getElementById("nuevoEncargadoNombre").value = "";
+  save(); tursoGuardar(); render(); poblarSelEncargado(); renderListaEncargados();
+}
+function editarEncargado(i){
+  if(window._rol !== "admin") return;
+  let e = (state.encargados || [])[i]; if(!e) return;
+  document.getElementById("nuevoEncargadoNombre").value = e.nombre;
+  document.getElementById("nuevoEncargadoTaller").value = e.taller;
+  window._editandoEncargado = i;
+  let b = document.getElementById("btnAgregarEncargado"); if(b) b.textContent = "💾 Guardar cambios";
+  let c = document.getElementById("btnCancelarEditarEncargado"); if(c) c.style.display = "inline-block";
+  document.getElementById("nuevoEncargadoNombre").focus();
+}
+function cancelarEditarEncargado(){
+  window._editandoEncargado = null;
+  let b = document.getElementById("btnAgregarEncargado"); if(b) b.textContent = "➕ Agregar";
+  let c = document.getElementById("btnCancelarEditarEncargado"); if(c) c.style.display = "none";
+}
+function eliminarEncargado(i){
+  if(window._rol !== "admin") return;
+  let e = (state.encargados || [])[i]; if(!e) return;
+  if(!confirm("¿Quitar a " + e.nombre + " (" + e.taller + ") de la lista de encargados?")) return;
+  state.encargados.splice(i, 1);
+  save(); tursoGuardar(); render(); poblarSelEncargado(); renderListaEncargados();
+}
+function renderListaEncargados(){
+  let d = document.getElementById("listaEncargados"); if(!d) return;
+  let lista = state.encargados || [];
+  if(!lista.length){ d.innerHTML = '<p><small>Aún no hay encargados registrados. Agrega el nombre y el taller de cada uno.</small></p>'; return; }
+  d.innerHTML = lista.map(function(e,i){
+    return '<div class="row" style="align-items:center;margin-top:6px"><span style="flex:1"><b>'+e.nombre+'</b> — '+e.taller+'</span><button class="b2" onclick="editarEncargado('+i+')">✏️ Editar</button><button class="b2" onclick="eliminarEncargado('+i+')">🗑 Quitar</button></div>';
+  }).join("");
+}
+function salirRol(){ window._rol = null; window._soloVer = false; window._miTaller = null; window._encargadoNombre = ""; cur = talleres[0]; aplicarRol(); render(); window.scrollTo(0,0); }
 render();
 aplicarRol();
 actualizarEstadoTurso();
-if(tursoActivo){ tursoCargar(); }
+if(tursoActivo){ sincronizar(); }
+document.addEventListener("click", function(e){
+  if(!window._soloVer) return;
+  let t = (e.target && e.target.closest) ? e.target.closest("button, a, input, select, textarea, [onclick]") : null;
+  if(!t) return;
+  if(t.classList && t.classList.contains("tab")) return;
+  if(t.getAttribute && t.getAttribute("onclick") === "salirRol()") return;
+  e.preventDefault(); e.stopPropagation();
+  alert("Estás en 'Ver todo' (solo ver). No puedes hacer cambios. Para trabajar, sal y entra con tu nombre.");
+}, true);
+document.addEventListener("keydown", function(e){
+  if(!window._soloVer) return;
+  let tg = e.target;
+  if(tg && /INPUT|TEXTAREA|SELECT/.test(tg.tagName)) e.preventDefault();
+}, true);
 </script></body></html>
