@@ -8,6 +8,7 @@
 <p style="font-size:14px;letter-spacing:2px;margin:6px 0 0">CETIS No. 050 - MARIANO MATAMOROS Y GURIDI</p>
 <h1 style="font-size:30px;margin:8px 0 4px">Bitácora de Laboratorios</h1>
 <p style="opacity:.9;margin:0 0 18px">Talleres de Programación, Redes, Soporte y TICS - Turno Matutino</p>
+<div id="alertasPortada" style="text-align:left"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left">
 <div style="background:#fff;color:#1a2333;border-radius:16px;padding:18px">
 <div style="font-size:38px">🔐</div>
@@ -36,9 +37,163 @@
 <p style="margin:8px 0 0"><small id="estadoTurso">Pulsa para traer lo último que guardó otro celular.</small></p>
 </div>
 <div class="tabs" id="tabs"></div><div id="app"></div>
-<div class="card"><h3>Registro de profesores que entraron al taller</h3><div id="log"></div></div>
+<div class="card"><h3 id="tituloLog">Registro de profesores que entraron al taller</h3>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px">
+<b>🔎 Filtros - búsqueda personalizada</b>
+<div class="row" style="margin-top:8px">
+<input id="fFecha" type="date" onchange="render()" style="flex:1" title="Fecha">
+<input id="fDocente" placeholder="Docente, ej: Anaya" oninput="render()" style="flex:1">
+<input id="fGrupo" placeholder="Grupo, ej: 3BP" oninput="render()" style="flex:1">
+<button class="b2" onclick="limpiarFiltros()" style="flex:0 0 auto">🧹 Limpiar filtros</button>
+</div>
+<p style="margin:8px 0 0"><small>Este registro es solo del taller que tienes abierto arriba. Escribe y se filtra solo. Puedes combinar fecha + docente + grupo.</small></p>
+</div>
+</div>
+<div id="log"></div></div>
 <div class="card" id="cardRespaldo"><h3>Respaldo</h3><div class="row"><button class="b4" onclick="exportar()">⬇ Exportar respaldo (JSON)</button><button class="b1" onclick="document.getElementById('imp').click()">⬆ Importar respaldo</button><input type="file" id="imp" accept=".json" style="display:none" onchange="importar(event)"></div>
 <h3>Archivo por año</h3><div class="row"><input id="anio" placeholder="Ej: 2026"><button class="b2" onclick="archivar()">Archivar año actual</button></div><div id="archivo"></div></div>
+</div>
+<div id="modalFalla" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">🛠️ Reportar falla</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="fallaTituloPC">PC</b> - escoge qué falla tiene</p>
+<label><small><b>¿Qué tipo de falla quieres registrar?</b></small></label>
+<select id="fallaTipo" style="width:100%;box-sizing:border-box;font-size:15px">
+<option value="">-- Escoge una opción --</option>
+<optgroup label="⌨️ Equipo">
+<option>Teclado no funciona</option>
+<option>Teclado con teclas dañadas / faltantes</option>
+<option>Ratón no funciona</option>
+<option>CPU no enciende</option>
+<option>CPU hace ruido / se apaga solo</option>
+<option>Monitor no da imagen</option>
+<option>Monitor no enciende</option>
+<option>Cables desconectados</option>
+<option>Sin internet / sin red</option>
+<option>La PC está muy lenta</option>
+</optgroup>
+<optgroup label="🖥️ Monitor / pantalla">
+<option>Monitor rayado con tinta</option>
+<option>Monitor con manchas / rayas</option>
+<option>Monitor con pantalla quebrada</option>
+</optgroup>
+<optgroup label="🪑 Mesa / mobiliario">
+<option>Mesa rayada</option>
+<option>Mesa pintada / con tinta</option>
+<option>Mesa dañada / floja</option>
+<option>Silla dañada</option>
+</optgroup>
+<optgroup label="➕ Otro">
+<option>Otra falla del equipo</option>
+<option>Otro detalle de la mesa / mobiliario</option>
+</optgroup>
+</select>
+<label style="display:block;margin-top:12px"><small><b>Comentario o descripción breve <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="fallaComentario" placeholder="Ej: el ratón se traba a ratos..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b3" style="flex:1;padding:12px;font-size:15px" onclick="confirmarFalla()">Reportar falla</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarFalla()">Cancelar</button>
+</div>
+<p style="margin:10px 0 0"><small>La PC queda en Mantenimiento hasta que se repare.</small></p>
+</div>
+</div>
+<div id="modalReparar" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">🔧 Reparar PC</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="repararTituloPC">PC</b></p>
+<p style="margin:0 0 12px;background:#fef2f2;border-radius:10px;padding:8px"><small><b>Falla reportada:</b> <span id="repararFallaTxt"></span></small></p>
+<label><small><b>¿Qué mantenimiento se le dio / cuál fue la solución?</b></small></label>
+<select id="repararSolucion" style="width:100%;box-sizing:border-box;font-size:15px">
+<option value="">-- Escoge una opción --</option>
+<optgroup label="🧹 Mantenimiento dado">
+<option>Se le dio limpieza general</option>
+<option>Se reconectaron / acomodaron los cables</option>
+<option>Se ajustaron tornillos / conexiones</option>
+<option>Se limpió la mesa / el monitor</option>
+</optgroup>
+<optgroup label="🔄 Se cambió pieza">
+<option>Se cambió el teclado</option>
+<option>Se cambió el ratón</option>
+<option>Se cambió el monitor</option>
+<option>Se cambió un cable</option>
+<option>Se cambió otra pieza</option>
+</optgroup>
+<optgroup label="🛒 Se compró pieza nueva">
+<option>Se compró teclado nuevo</option>
+<option>Se compró ratón nuevo</option>
+<option>Se compró monitor nuevo</option>
+<option>Se compró otra pieza nueva</option>
+</optgroup>
+<optgroup label="💻 Software">
+<option>Se reinstaló el sistema / programa</option>
+<option>Se actualizó / configuró</option>
+<option>Se quitaron virus / programas</option>
+</optgroup>
+<optgroup label="🪑 Mesa / mobiliario">
+<option>Se reparó / lijó la mesa</option>
+<option>Se limpió tinta de la mesa / monitor</option>
+</optgroup>
+<optgroup label="➕ Otro">
+<option>Otra solución</option>
+</optgroup>
+</select>
+<label style="display:block;margin-top:12px"><small><b>Comentarios u observaciones <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="repararComentario" placeholder="Ej: se compró teclado nuevo en..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b4" style="flex:1;padding:12px;font-size:15px" onclick="confirmarReparar()">✅ Reparar y dejar Libre</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarReparar()">Cancelar</button>
+</div>
+<p style="margin:10px 0 0"><small>Se registra la fecha y hora en que se solucionó.</small></p>
+</div>
+</div>
+<div id="modalInternet" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">🌐 Reportar falla de internet</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="internetTituloTaller">Taller</b> - toda la sala / taller</p>
+<label><small><b>¿Qué falla tiene el internet del taller?</b></small></label>
+<select id="internetFalla" style="width:100%;box-sizing:border-box;font-size:15px">
+<option value="">-- Escoge una opción --</option>
+<option>Sin internet en todo el taller</option>
+<option>Internet muy lento en todo el taller</option>
+<option>Solo algunas computadoras sin internet</option>
+<option>El internet se cae a cada rato</option>
+<option>No conecta al WiFi / a la red</option>
+<option>El módem / router no enciende</option>
+<option>Otra falla de internet</option>
+</select>
+<label style="display:block;margin-top:12px"><small><b>Comentario o descripción breve <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="internetComentario" placeholder="Ej: desde las 8 de la mañana..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b3" style="flex:1;padding:12px;font-size:15px" onclick="confirmarInternet()">Reportar falla de internet</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarInternet()">Cancelar</button>
+</div>
+</div>
+</div>
+<div id="modalInternetSol" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">✅ Solución al internet</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="internetSolTituloTaller">Taller</b></p>
+<p style="margin:0 0 12px;background:#fee2e2;border-radius:10px;padding:8px"><small><b>Falla reportada:</b> <span id="internetSolFallaTxt"></span></small></p>
+<label><small><b>¿Qué solución se le dio al taller?</b></small></label>
+<select id="internetSolucion" style="width:100%;box-sizing:border-box;font-size:15px">
+<option value="">-- Escoge una opción --</option>
+<option>Se reinició el módem / router</option>
+<option>Se reconectaron los cables de red</option>
+<option>Se revisó / reinició el switch</option>
+<option>Se restableció la red / WiFi</option>
+<option>Se contactó al proveedor / soporte</option>
+<option>Se cambió un cable / equipo de red</option>
+<option>Ya regresó solo el internet</option>
+<option>Otra solución</option>
+</select>
+<label style="display:block;margin-top:12px"><small><b>Comentarios u observaciones <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="internetSolComentario" placeholder="Ej: vino soporte y cambió..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b4" style="flex:1;padding:12px;font-size:15px" onclick="confirmarInternetSol()">✅ Ya se dio solución</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarInternetSol()">Cancelar</button>
+</div>
+<p style="margin:10px 0 0"><small>Se registra la fecha y hora en que se solucionó.</small></p>
+</div>
 </div>
 <script>
 const HORARIOS={
@@ -94,9 +249,10 @@ function estadoTaller(tn){
   for(let k=logs.length-1;k>=0;k--){ if(!logs[k].salida) return "enuso"; }
   return "libre";
 }
-function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
+function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); let al = contarAlertasTaller(t); let badge = (al.inter || al.pcs.length) ? ' ⚠️' : ''; return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+badge+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
 function cambiarTaller(t){ cur=t; window._claseSel=null; window._manual=false; render(); }
 function render(){
+  actualizarAlertasPortada();
   renderTabs();
   let s = state[cur];
   let h = HORARIOS[cur] || [];
@@ -140,13 +296,41 @@ function render(){
     }
   }
   let pcsHtml = "";
-  for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; pcsHtml += '<div class="pc '+st+'"><b>'+id+'</b><br><small>'+st+'</small><br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> <button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button><br><button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button></div>'; }
+  let esAdmin = (window._rol === "admin");
+  for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; let fallaTxt = (s.fallas||{})[id] || ""; let extraFalla = (st==="Mantenimiento" && fallaTxt) ? '<br><small style="color:#7f1d1d;display:block;margin-top:4px">🛠️ '+fallaTxt+'</small>' : ""; let notaCandado = (st==="Mantenimiento" && !esAdmin) ? '<br><small style="color:#92400e;display:block;margin-top:4px">🔒 Solo el administrador puede liberarla</small>' : ""; let btnLibre = (st==="Mantenimiento" && !esAdmin) ? '<button class="b2" style="opacity:.55" onclick="avisoSoloAdmin()">🔒 Libre</button>' : (st==="Mantenimiento" && esAdmin ? '<button class="b2" onclick="abrirReparar(\''+id+'\')">Libre</button>' : '<button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button>'); let btnFalla = (st==="Mantenimiento" && esAdmin) ? '<button class="b4" style="margin-top:6px" onclick="abrirReparar(\''+id+'\')">🔧 Reparar</button>' : '<button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button>'; pcsHtml += '<div class="pc '+st+'"><b>'+id+'</b><br><small>'+st+'</small>'+extraFalla+notaCandado+'<br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> '+btnLibre+'<br>'+btnFalla+'</div>'; }
+  let repHist = (s.reparaciones||[]);
+  let histHtml = "";
+  if(repHist.length){ let filasRep = repHist.slice(-10).reverse().map(function(r){ return "<tr><td>"+(r.pc||"")+"</td><td>"+(r.falla||"")+"</td><td>"+(r.solucion||"")+"</td><td>"+(r.solucionada||"")+"</td></tr>"; }).join(""); histHtml = '<div class="card" style="margin-top:14px"><h3>✅ Fallas ya reparadas - '+cur+'</h3><table><tr><th>PC</th><th>Falla reportada</th><th>Solución / mantenimiento dado</th><th>Fecha y hora de solución</th></tr>'+filasRep+'</table></div>'; }
+  let inter = s.internet || null;
+  let internetHtml = "";
+  if(inter && inter.activa){
+    internetHtml = '<div style="background:#fee2e2;border:2px solid #dc2626;border-radius:12px;padding:12px;margin-top:14px"><b>🌐 SIN INTERNET en '+cur+'</b><br><small style="color:#7f1d1d">🛠️ '+(inter.falla||"")+'</small><br><small>Reportada: '+(inter.reportada||"")+'</small><br><button class="b4" style="margin-top:8px" onclick="abrirInternetSol()">✅ Ya se dio solución al internet</button></div>';
+  } else {
+    internetHtml = '<div style="margin-top:14px"><button class="b3" onclick="abrirInternet()">🌐 Reportar falla de internet en este taller</button></div>';
+  }
+  let interHist = (s.internetHist||[]);
+  if(interHist.length){ let filasInter = interHist.slice(-10).reverse().map(function(r){ return "<tr><td>"+(r.falla||"")+"</td><td>"+(r.solucion||"")+"</td><td>"+(r.reportada||"")+"</td><td>"+(r.solucionada||"")+"</td></tr>"; }).join(""); histHtml += '<div class="card" style="margin-top:14px"><h3>🌐 Fallas de internet ya solucionadas - '+cur+'</h3><table><tr><th>Falla reportada</th><th>Solución dada</th><th>Reportada</th><th>Fecha y hora de solución</th></tr>'+filasInter+'</table></div>'; }
   let filaReactivar = (cur === "Programación 3") ? '<div class="row" style="margin-top:6px"><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div>' : '';
-  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+registrarHtml+pcsPanelHtml+'<div style="height:24px"></div>'+filaReactivar+'<div class="grid" style="margin-top:18px">'+pcsHtml+'</div></div>';
-  let logs = [];
-  talleres.forEach(function(t2){ (state[t2].log||[]).forEach(function(l){ logs.push("<tr><td>"+l.fecha+"</td><td>"+t2+"</td><td>"+l.entrada+"</td><td>"+(l.salida||"-")+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td><td>"+(l.pcs||"-")+"</td></tr>"); }); });
-  document.getElementById("log").innerHTML = "<table><tr><th>Fecha</th><th>Taller</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>PCs</th></tr>"+(logs.join("")||"<tr><td colspan=8>Sin registros aún</td></tr>")+"</table>";
+  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+registrarHtml+pcsPanelHtml+'<div style="height:24px"></div>'+filaReactivar+internetHtml+'<div class="grid" style="margin-top:18px">'+pcsHtml+'</div></div>'+histHtml;
+  let tituloLog = document.getElementById("tituloLog");
+  if(tituloLog) tituloLog.textContent = "Registro de profesores - " + cur;
+  let logs = (state[cur].log||[]).map(function(l){ return {fecha:l.fecha, entrada:l.entrada, salida:(l.salida||"-"), m:l.m, doc:l.doc, g:l.g, pcs:(l.pcs||"-")}; });
+  let totalLogs = logs.length;
+  let fDoc = ((document.getElementById("fDocente")||{}).value||"").toLowerCase().trim();
+  let fFec = (document.getElementById("fFecha")||{}).value||"";
+  let fGru = ((document.getElementById("fGrupo")||{}).value||"").toLowerCase().trim();
+  let fFecTxt = "";
+  if(fFec){ let pp = fFec.split("-"); fFecTxt = pp[2]+"/"+pp[1]+"/"+pp[0]; }
+  logs = logs.filter(function(l){
+    if(fFecTxt && l.fecha !== fFecTxt) return false;
+    if(fGru && (l.g||"").toLowerCase().indexOf(fGru) === -1) return false;
+    if(fDoc && (l.doc||"").toLowerCase().indexOf(fDoc) === -1) return false;
+    return true;
+  });
+  let filas = logs.map(function(l){ return "<tr><td>"+l.fecha+"</td><td>"+l.entrada+"</td><td>"+l.salida+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td><td>"+l.pcs+"</td></tr>"; }).join("");
+  document.getElementById("log").innerHTML = "<p><small>Mostrando <b>"+logs.length+"</b> de <b>"+totalLogs+"</b> registros de <b>"+cur+"</b>"+((fDoc||fFec||fGru) ? " con los filtros puestos" : "")+"</small></p><table><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>PCs</th></tr>"+(filas||"<tr><td colspan=7>Sin registros en este taller con esos filtros</td></tr>")+"</table>";
 }
+function limpiarFiltros(){ ["fDocente","fFecha","fGrupo"].forEach(function(id){ let e=document.getElementById(id); if(e) e.value=""; }); render(); }
 function toggleHorario(){ window._horarioAbierto = !window._horarioAbierto; render(); }
 function filtrarDiaHorario(d){ window._diaHorario = d; render(); }
 function elegirClase(i){ window._claseSel = i; window._manual = false; render(); }
@@ -170,8 +354,22 @@ function confirmarPCs(sinPCs){
 function setPC(id, st){
   if(window._pendientePCs && window._pendienteTaller===cur){ alert("Primero selecciona las computadoras de esta clase arriba y dale Confirmar."); return; }
   if(state[cur].m[id]==="Mantenimiento" && st==="Ocupado"){ alert("No se puede ocupar, está en mantenimiento."); return; }
+  if(state[cur].m[id]==="Mantenimiento" && st==="Libre" && window._rol!=="admin"){ avisoSoloAdmin(); return; }
+  if(state[cur].m[id]==="Mantenimiento" && st==="Libre" && window._rol==="admin"){ abrirReparar(id); return; }
   if(st==="Ocupado"){ let h=(HORARIOS[cur]||[])[0]; if(h && !confirm("Hoy toca: "+h.m+" - "+h.doc+" - Grupo "+h.g+" - "+h.h+"\n¿Sí, es esta clase?")){ return; } }
-  state[cur].m[id]=st; save(); tursoGuardar(); render();
+  let prev = state[cur].m[id];
+  state[cur].m[id]=st;
+  if(prev==="Mantenimiento" && st==="Libre"){ registrarReparacion(id); }
+  save(); tursoGuardar(); render();
+}
+function avisoSoloAdmin(){
+  alert("🔒 Solo el administrador puede dejar Libre una PC en mantenimiento, después de valorar la falla y darle solución o reparación.\n\nSi eres el administrador, sal y entra de nuevo como Administrador con tu contraseña.");
+}
+function registrarReparacion(id, solucion){
+  let f = (state[cur].fallas||{})[id] || "Falla reportada";
+  if(!state[cur].reparaciones) state[cur].reparaciones=[];
+  state[cur].reparaciones.push({pc:id, falla:f, solucion:(solucion||""), solucionada:new Date().toLocaleString()});
+  if(state[cur].fallas) delete state[cur].fallas[id];
 }
 function ocuparTodas(){
   if(window._pendientePCs && window._pendienteTaller===cur){ alert("Primero selecciona las computadoras de esta clase arriba y dale Confirmar."); return; }
@@ -194,12 +392,96 @@ function termino(){
   render();
 }
 function falla(id){
-  let f = prompt("¿Qué falla tiene "+id+"? Ej: teclado, ratón, monitor, CPU, no enciende");
-  if(!f) return;
+  window._fallaId = id;
+  let tit = document.getElementById("fallaTituloPC"); if(tit) tit.textContent = id;
+  let sel = document.getElementById("fallaTipo"); if(sel) sel.value = "";
+  let com = document.getElementById("fallaComentario"); if(com) com.value = "";
+  let mod = document.getElementById("modalFalla"); if(mod) mod.style.display = "block";
+}
+function cerrarFalla(){
+  let mod = document.getElementById("modalFalla"); if(mod) mod.style.display = "none";
+  window._fallaId = null;
+}
+function confirmarFalla(){
+  let id = window._fallaId; if(!id) return;
+  let tipo = (document.getElementById("fallaTipo")||{}).value || "";
+  if(!tipo){ alert("Escoge qué tipo de falla quieres registrar."); return; }
+  let com = ((document.getElementById("fallaComentario")||{}).value || "").trim();
+  let f = tipo + (com ? " - " + com : "");
   state[cur].m[id]="Mantenimiento";
   if(!state[cur].fallas) state[cur].fallas={};
   state[cur].fallas[id]=f+" - "+new Date().toLocaleString();
   alert(id+" quedó en mantenimiento por: "+f);
+  cerrarFalla();
+  save(); tursoGuardar(); render();
+}
+function abrirReparar(id){
+  if(state[cur].m[id]!=="Mantenimiento") return;
+  window._repararId = id;
+  let tit = document.getElementById("repararTituloPC"); if(tit) tit.textContent = id;
+  let ft = document.getElementById("repararFallaTxt"); if(ft) ft.textContent = (state[cur].fallas||{})[id] || "Falla reportada";
+  let sel = document.getElementById("repararSolucion"); if(sel) sel.value = "";
+  let com = document.getElementById("repararComentario"); if(com) com.value = "";
+  let mod = document.getElementById("modalReparar"); if(mod) mod.style.display = "block";
+}
+function cerrarReparar(){
+  let mod = document.getElementById("modalReparar"); if(mod) mod.style.display = "none";
+  window._repararId = null;
+}
+function confirmarReparar(){
+  let id = window._repararId; if(!id) return;
+  let sol = (document.getElementById("repararSolucion")||{}).value || "";
+  if(!sol){ alert("Escoge qué mantenimiento se le dio / cuál fue la solución."); return; }
+  let com = ((document.getElementById("repararComentario")||{}).value || "").trim();
+  let solucionTxt = sol + (com ? " - " + com : "");
+  state[cur].m[id]="Libre";
+  registrarReparacion(id, solucionTxt);
+  cerrarReparar();
+  save(); tursoGuardar(); render();
+}
+function abrirInternet(){
+  if(state[cur].internet && state[cur].internet.activa){ alert("Este taller ya tiene una falla de internet reportada."); return; }
+  let tit = document.getElementById("internetTituloTaller"); if(tit) tit.textContent = cur;
+  let sel = document.getElementById("internetFalla"); if(sel) sel.value = "";
+  let com = document.getElementById("internetComentario"); if(com) com.value = "";
+  let mod = document.getElementById("modalInternet"); if(mod) mod.style.display = "block";
+}
+function cerrarInternet(){
+  let mod = document.getElementById("modalInternet"); if(mod) mod.style.display = "none";
+}
+function confirmarInternet(){
+  let tipo = (document.getElementById("internetFalla")||{}).value || "";
+  if(!tipo){ alert("Escoge qué falla tiene el internet del taller."); return; }
+  let com = ((document.getElementById("internetComentario")||{}).value || "").trim();
+  let f = tipo + (com ? " - " + com : "");
+  state[cur].internet = {activa:true, falla:f, reportada:new Date().toLocaleString()};
+  alert("🌐 Falla de internet reportada en "+cur+": "+f);
+  cerrarInternet();
+  save(); tursoGuardar(); render();
+}
+function abrirInternetSol(){
+  let inter = state[cur].internet;
+  if(!inter || !inter.activa) return;
+  let tit = document.getElementById("internetSolTituloTaller"); if(tit) tit.textContent = cur;
+  let ft = document.getElementById("internetSolFallaTxt"); if(ft) ft.textContent = inter.falla || "";
+  let sel = document.getElementById("internetSolucion"); if(sel) sel.value = "";
+  let com = document.getElementById("internetSolComentario"); if(com) com.value = "";
+  let mod = document.getElementById("modalInternetSol"); if(mod) mod.style.display = "block";
+}
+function cerrarInternetSol(){
+  let mod = document.getElementById("modalInternetSol"); if(mod) mod.style.display = "none";
+}
+function confirmarInternetSol(){
+  let inter = state[cur].internet;
+  if(!inter || !inter.activa) return;
+  let sol = (document.getElementById("internetSolucion")||{}).value || "";
+  if(!sol){ alert("Escoge qué solución se le dio al taller."); return; }
+  let com = ((document.getElementById("internetSolComentario")||{}).value || "").trim();
+  let solucionTxt = sol + (com ? " - " + com : "");
+  if(!state[cur].internetHist) state[cur].internetHist=[];
+  state[cur].internetHist.push({falla:inter.falla, solucion:solucionTxt, reportada:(inter.reportada||""), solucionada:new Date().toLocaleString()});
+  state[cur].internet = null;
+  cerrarInternetSol();
   save(); tursoGuardar(); render();
 }
 function autocompletarClase(){
@@ -267,7 +549,7 @@ function archivar(){
 }
 // ===== TURSO - SOLO 1 VEZ, TODO EN NIVEL SUPERIOR =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io";
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3MzExNTEsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.XfQ86DKUdAnqsGjAr47K1Ct77Lr9Kftdp8vCUOB20ZOb2Xz9zsF0c0XiJqf2uTE9piXJqCJmGe9xVanjUsl2Dg";
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3NDcyNzAsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.Bw3o7jbHSCObaCT23gOWPy0dN1nebHK4D4Xrgd3WHgSopixGgqtumWkauSASM2mbrYlMRVJSCl11CukHXyNlBQ";
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
@@ -298,7 +580,7 @@ async function tursoCargar(){
   let j = await tursoQuery("SELECT value FROM records WHERE collection='bitacora' AND id='estado'");
   try{
     let val = extraerValorTurso(j);
-    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacora_buena", JSON.stringify(state)); render(); return true; } }
+    if(val){ let remoto = JSON.parse(val); if(remoto && Object.keys(remoto).length>0){ state = remoto; localStorage.setItem("bitacora_buena", JSON.stringify(state)); render(); actualizarAlertasPortada(); return true; } }
   }catch(e){ window._ultimoErrorTurso = "No se pudo leer lo guardado: " + e.message; }
   return false;
 }
@@ -316,10 +598,34 @@ function actualizarEstadoTurso(){
   if(el) el.textContent = tursoActivo ? "✅ Conectado. Pulsa para traer lo último." : "⚠️ No conectado";
 }
 let ADMIN_PASS = "Cetis50admin";
+function contarAlertasTaller(taller){
+  let st = state[taller]; if(!st) return {inter:0, pcs:[]};
+  let pcs = [];
+  for(let i=1;i<=(st.pcs||0);i++){ let id="PC-"+String(i).padStart(2,"0"); if((st.m||{})[id]==="Mantenimiento") pcs.push(id); }
+  return {inter: (st.internet && st.internet.activa) ? 1 : 0, pcs: pcs};
+}
+function actualizarAlertasPortada(){
+  let el = document.getElementById("alertasPortada"); if(!el) return;
+  let lineas = [];
+  let totalInter = 0, totalPc = 0;
+  talleres.forEach(function(taller){
+    let a = contarAlertasTaller(taller);
+    totalInter += a.inter; totalPc += a.pcs.length;
+    if(a.inter) lineas.push('<div>🌐 <b>'+taller+'</b>: SIN INTERNET - '+((state[taller].internet||{}).falla||"")+'</div>');
+    if(a.pcs.length) lineas.push('<div>🖥️ <b>'+taller+'</b>: '+a.pcs.length+' en mantenimiento ('+a.pcs.join(", ")+')</div>');
+  });
+  if(!lineas.length){
+    el.innerHTML = '<div style="background:#dcfce7;color:#14532d;border-radius:12px;padding:12px 14px;margin-bottom:14px"><b>✅ Sin fallas pendientes en este momento</b><br><small>Todas las computadoras y el internet de los talleres están bien.</small></div>';
+  } else {
+    let resumen = (totalInter ? totalInter+' de internet ' : '') + ((totalInter && totalPc) ? '• ' : '') + (totalPc ? totalPc+' computadora(s) en mantenimiento' : '');
+    el.innerHTML = '<div style="background:#fee2e2;color:#7f1d1d;border-radius:12px;padding:12px 14px;margin-bottom:14px;border:2px solid #dc2626"><div style="font-size:18px"><b>⚠️ ¡ATENCIÓN! Hay fallas pendientes: '+resumen+'</b></div><div style="margin-top:6px;font-size:14px">'+lineas.join("")+'</div><small style="color:#7f1d1d">Entra a cada taller para ver el detalle y marcar la solución.</small></div>';
+  }
+}
 function aplicarRol(){
   let port = document.getElementById("portada");
   let resp = document.getElementById("cardRespaldo");
   let txt = document.getElementById("textoRol");
+  actualizarAlertasPortada();
   if(!window._rol){ if(port) port.style.display = "block"; if(txt) txt.textContent = "Entraste como: —"; return; }
   if(port) port.style.display = "none";
   if(txt) txt.textContent = "Entraste como: " + (window._rol === "admin" ? "Administrador 🔐" : "Encargado de Taller 🧑‍🏫");
