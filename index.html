@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bitácora CETIS No. 050 - Versión Buena</title>
-<style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0}.badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold}.wrap{max-width:1100px;margin:auto;padding:14px}.tabs{display:flex;flex-wrap:wrap;gap:8px}.tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer}.tab.active{background:#0b3d91;color:#fff}.card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}.Libre{border-color:#22c55e}.Ocupado{border-color:#f59e0b;background:#fffbeb}.Mantenimiento{border-color:#ef4444;background:#fef2f2}button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold}.b1{background:#0b3d91;color:#fff}.b2{background:#e2e8f0}.b3{background:#dc2626;color:#fff}.b4{background:#16a34a;color:#fff}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px}input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}small{color:#64748b}</style></head>
+<style>body{font-family:Arial,sans-serif;margin:0;background:#f3f6fb;color:#1a2333}header{background:#0b3d91;color:#fff;padding:18px;text-align:center}header h1{margin:0;font-size:22px}header p{margin:4px 0}.badge{background:#16a34a;color:#fff;display:inline-block;padding:6px 12px;border-radius:20px;font-weight:bold}.wrap{max-width:1100px;margin:auto;padding:14px}.tabs{display:flex;flex-wrap:wrap;gap:8px}.tab{border:1px solid #cbd5e1;background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer}.tab.active{background:#0b3d91;color:#fff}.card{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.pc{border:2px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center}
+.pc .pc-back{display:none}
+.pc.volteada .pc-front{display:none}
+.pc.volteada .pc-back{display:block}
+.pc.volteada{border-color:#0b3d91;background:#eff6ff}.Libre{border-color:#22c55e}.Ocupado{border-color:#f59e0b;background:#fffbeb}.Mantenimiento{border-color:#ef4444;background:#fef2f2}button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:bold}.b1{background:#0b3d91;color:#fff}.b2{background:#e2e8f0}.b3{background:#dc2626;color:#fff}.b4{background:#16a34a;color:#fff}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e2e8f0;padding:7px;text-align:left;font-size:13px}input,select{padding:8px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:4px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}small{color:#64748b}</style></head>
 <body><header><h1>CETIS No. 050 - Mariano Matamoros y Guridi</h1><p>Bitácora de Laboratorios / Talleres</p><span class="badge">VERSIÓN BUENA - OFICIAL</span></header>
 <div id="portada" style="position:fixed;inset:0;background:#0b3d91;z-index:9999;overflow:auto;padding:18px 14px 30px;box-sizing:border-box">
 <div style="max-width:760px;margin:0 auto;text-align:center;color:#fff">
@@ -42,11 +46,11 @@
 <b>🔎 Filtros - búsqueda personalizada</b>
 <div class="row" style="margin-top:8px">
 <input id="fFecha" type="date" onchange="render()" style="flex:1" title="Fecha">
-<input id="fDocente" placeholder="Docente, ej: Anaya" oninput="render()" style="flex:1">
-<input id="fGrupo" placeholder="Grupo, ej: 3BP" oninput="render()" style="flex:1">
+<select id="fDocente" onchange="render()" style="flex:1"><option value="">Todos los docentes</option></select>
+<select id="fGrupo" onchange="render()" style="flex:1"><option value="">Todos los grupos</option></select>
 <button class="b2" onclick="limpiarFiltros()" style="flex:0 0 auto">🧹 Limpiar filtros</button>
 </div>
-<p style="margin:8px 0 0"><small>Este registro es solo del taller que tienes abierto arriba. Escribe y se filtra solo. Puedes combinar fecha + docente + grupo.</small></p>
+<p style="margin:8px 0 0"><small>Este registro es solo del taller que tienes abierto arriba. Escoge el docente y el grupo del menú, y la fecha si la quieres. Puedes combinar fecha + docente + grupo. Los menús salen de los docentes y grupos ya registrados en la bitácora.</small></p>
 </div>
 </div>
 <div id="log"></div></div>
@@ -195,6 +199,95 @@
 <p style="margin:10px 0 0"><small>Se registra la fecha y hora en que se solucionó.</small></p>
 </div>
 </div>
+<div id="modalPcs" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:520px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">🖥️ Consulta de PCs utilizadas</h3>
+<p style="margin:0 0 12px;color:#64748b" id="pcsModalDetalle"></p>
+<div id="pcsModalChips" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px"></div>
+<p style="margin:12px 0 0"><small id="pcsModalTotal"></small></p>
+<div class="row" style="margin-top:14px"><button class="b1" style="flex:1;padding:12px;font-size:15px" onclick="cerrarPcsUsadas()">Cerrar</button></div>
+</div>
+</div>
+<div id="modalLimpieza" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">🧹 Reportar limpieza</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="limpiezaTituloTaller">Taller</b> - todo el taller</p>
+<label><small><b>¿Por qué se necesita limpieza en el taller?</b></small></label>
+<select id="limpiezaMotivo" style="width:100%;box-sizing:border-box;font-size:15px">
+<option value="">-- Escoge una opción --</option>
+<option>El taller está sucio</option>
+<option>Hay basura en el piso</option>
+<option>Polvo en mesas y equipos</option>
+<option>Bote de basura lleno</option>
+<option>Piso manchado / pegajoso</option>
+<option>Se derramó algo en el taller</option>
+<option>Limpieza de fin de semana / entre clases</option>
+<option>Otra necesidad de limpieza</option>
+</select>
+<label style="display:block;margin-top:12px"><small><b>Comentario o detalle <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="limpiezaComentario" placeholder="Ej: quedó basura después de la clase de..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b2" style="flex:1;padding:12px;font-size:15px;background:#facc15" onclick="confirmarLimpieza()">Reportar limpieza</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarLimpieza()">Cancelar</button>
+</div>
+</div>
+</div>
+<div id="modalLimpiezaHecho" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">✅ Limpieza realizada</h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="limpiezaHechoTituloTaller">Taller</b></p>
+<p style="margin:0 0 12px;background:#fef9c3;border-radius:10px;padding:8px"><small><b>Motivo reportado:</b> <span id="limpiezaHechoMotivoTxt"></span></small></p>
+<label><small><b>Marca todo lo que se realizó:</b></small></label>
+<div id="limpiezaTareas" style="display:grid;gap:6px;margin:8px 0">
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Barrer el taller" style="width:auto;margin:0"> Barrer el taller</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Trapear el piso" style="width:auto;margin:0"> Trapear el piso</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Sacar el bote de basura" style="width:auto;margin:0"> Sacar el bote de basura</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Limpiar las mesas" style="width:auto;margin:0"> Limpiar las mesas</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Limpiar monitores, teclados y ratones" style="width:auto;margin:0"> Limpiar monitores, teclados y ratones</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Sacar el polvo de los equipos" style="width:auto;margin:0"> Sacar el polvo de los equipos</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Acomodar sillas y mesas" style="width:auto;margin:0"> Acomodar sillas y mesas</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Tirar basura / separar reciclaje" style="width:auto;margin:0"> Tirar basura / separar reciclaje</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Limpiar pizarrón / pintarron" style="width:auto;margin:0"> Limpiar pizarrón / pintarron</label>
+<label style="display:flex;gap:8px;align-items:center;background:#f8fafc;border-radius:8px;padding:8px"><input type="checkbox" value="Ventilar el taller" style="width:auto;margin:0"> Ventilar el taller</label>
+</div>
+<label><small><b>Comentarios u observaciones <span style="color:#64748b">(opcional, no obligatorio)</span></b></small></label>
+<input id="limpiezaHechoComentario" placeholder="Ej: se usó cloro en el piso..." style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b4" style="flex:1;padding:12px;font-size:15px" onclick="confirmarLimpiezaHecho()">✅ Ya se hizo la limpieza</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarLimpiezaHecho()">Cancelar</button>
+</div>
+<p style="margin:10px 0 0"><small>Se registra la fecha y hora en que se realizó.</small></p>
+</div>
+</div>
+<div id="modalInventario" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">📋 Inventario - <span id="invTituloPC">PC</span></h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="invTituloTaller">Taller</b> - solo el administrador puede editar</p>
+<label><small><b>🖥️ Número de serie - CPU</b></small></label>
+<input id="invCpu" placeholder="Ej: MXL1234ABC" style="width:100%;box-sizing:border-box;font-size:15px">
+<label style="display:block;margin-top:10px"><small><b>⌨️ Número de serie - Teclado</b></small></label>
+<input id="invTeclado" placeholder="Ej: CN-0ABC123" style="width:100%;box-sizing:border-box;font-size:15px">
+<label style="display:block;margin-top:10px"><small><b>🖱️ Número de serie - Ratón</b></small></label>
+<input id="invRaton" placeholder="Ej: 1234567890" style="width:100%;box-sizing:border-box;font-size:15px">
+<label style="display:block;margin-top:10px"><small><b>🖥️ Número de serie - Monitor</b></small></label>
+<input id="invMonitor" placeholder="Ej: CN-0XYZ987" style="width:100%;box-sizing:border-box;font-size:15px">
+<label style="display:block;margin-top:14px"><small><b>🔒 Contraseña del administrador</b> <span style="color:#64748b">(obligatoria para confirmar el cambio)</span></small></label>
+<input id="invPass" type="password" placeholder="Contraseña del administrador" style="width:100%;box-sizing:border-box;font-size:15px">
+<div class="row" style="margin-top:14px">
+<button class="b1" style="flex:1;padding:12px;font-size:15px" onclick="guardarInventario()">✅ Guardar inventario</button>
+<button class="b2" style="flex:1;padding:12px;font-size:15px" onclick="cerrarInventario()">Cancelar</button>
+</div>
+<p style="margin:10px 0 0"><small>Cada cambio de número de serie queda registrado con fecha y hora.</small></p>
+</div>
+</div>
+<div id="modalInvCambios" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:10000;padding:16px;box-sizing:border-box;overflow:auto">
+<div style="max-width:460px;margin:40px auto;background:#fff;border-radius:16px;padding:18px">
+<h3 style="margin:0 0 4px">📜 Cambios en inventario - <span id="invCambTituloPC">PC</span></h3>
+<p style="margin:0 0 12px;color:#64748b"><b id="invCambTituloTaller">Taller</b></p>
+<div id="invCambLista" style="display:grid;gap:8px"></div>
+<button class="b2" style="width:100%;margin-top:14px;padding:12px;font-size:15px" onclick="cerrarInvCambios()">Cerrar</button>
+</div>
+</div>
 <script>
 const HORARIOS={
 "Programación 1":[
@@ -210,7 +303,17 @@ const HORARIOS={
 {d:"Jueves",h:"7:00-8:40",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Noriega Montaño Jorge Armando",g:"3CS"},
 {d:"Jueves",h:"8:40-11:30",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Flores Bravo Ivan Yubal",g:"3BS"},
 {d:"Viernes",h:"7:00-8:40",m:"Gestiona el Proceso de Reclutamiento, Selección y Admisión del Talento Humano",doc:"Sánchez Ortiz Jorge Alejandro",g:"3AA"},
-{d:"Viernes",h:"8:40-10:15",m:"Gestiona el Proceso de Reclutamiento, Selección y Admisión del Talento Humano",doc:"Sánchez Ortiz Jorge Alejandro",g:"3BA"}
+{d:"Viernes",h:"8:40-10:15",m:"Gestiona el Proceso de Reclutamiento, Selección y Admisión del Talento Humano",doc:"Sánchez Ortiz Jorge Alejandro",g:"3BA"},
+{d:"Lunes",h:"15:40-17:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3AP"},
+{d:"Martes",h:"15:40-17:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3BP"},
+{d:"Miércoles",h:"15:40-17:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3BP"},
+{d:"Jueves",h:"15:40-17:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3BP"},
+{d:"Lunes",h:"17:40-19:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3BP"},
+{d:"Martes",h:"18:30-20:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3AP"},
+{d:"Miércoles",h:"17:40-19:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3AP"},
+{d:"Jueves",h:"17:40-19:20",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Martínez Alfaro Luis Alfonso",g:"3AP"},
+{d:"Lunes",h:"19:20-21:00",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Alejandro Cuevas Saúl Francisco",g:"3CP"},
+{d:"Miércoles",h:"19:20-21:00",m:"Submódulo 1 - Emplea Frameworks para el Desarrollo de Software",doc:"Alejandro Cuevas Saúl Francisco",g:"3CP"}
 ],
 "Programación 2":[
 {d:"Lunes",h:"7:00-8:40",m:"Implementa Aplicaciones Web",doc:"López Vargas Marco Antonio",g:"5AP"},
@@ -224,19 +327,93 @@ const HORARIOS={
 {d:"Miércoles",h:"10:45-11:30",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"},
 {d:"Jueves",h:"8:40-11:30",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5BP"},
 {d:"Jueves",h:"11:30-14:00",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"},
-{d:"Viernes",h:"7:50-10:15",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"}
+{d:"Viernes",h:"7:50-10:15",m:"Construye Aplicaciones Web",doc:"Mireles Montero Vanessa",g:"5AP"},
+{d:"Lunes",h:"15:40-17:20",m:"Cultura Digital I - Ciudadanía Digital",doc:"Ruiz Camarillo Marco Antonio",g:"1BP"},
+{d:"Miércoles",h:"15:40-17:20",m:"Cultura Digital I - Ciudadanía Digital",doc:"Ruiz Camarillo Marco Antonio",g:"1AP"},
+{d:"Jueves",h:"15:40-16:30",m:"Submódulo 2 - Implementa Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Jueves",h:"16:30-17:20",m:"Submódulo 1 - Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Lunes",h:"17:40-19:20",m:"Cultura Digital I - Ciudadanía Digital",doc:"Botello Padilla Raphael",g:"1ES"},
+{d:"Martes",h:"17:40-19:20",m:"Submódulo 2 - Implementa Aplicaciones Web",doc:"Mondragón Norato Lucio",g:"5BP"},
+{d:"Jueves",h:"17:40-19:20",m:"Submódulo 2 - Implementa Aplicaciones Web",doc:"Mondragón Norato Lucio",g:"5BP"}
 ],
-"Programación 4":[{d:"Lunes",h:"7:00-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Lunes",h:"10:45-12:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3AP"},{d:"Lunes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Martes",h:"7:00-8:40",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3AP"},{d:"Martes",h:"8:40-10:15",m:"Mide el Desempeño del Talento Humano",doc:"Velázquez González Adela Carmen",g:"5AA"},{d:"Martes",h:"10:45-12:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Martes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Miércoles",h:"7:00-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Miércoles",h:"10:45-12:20",m:"Mide el Desempeño del Talento Humano",doc:"Velázquez González Adela Carmen",g:"5BA"},{d:"Jueves",h:"8:40-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Jueves",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Viernes",h:"8:40-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Viernes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"}],
-"Programación 5":[{d:"Lunes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1E"},{d:"Lunes",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Lunes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Lunes",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Poot López Víctor Manuel",g:"5BA"},{d:"Martes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Martes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Martes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Miércoles",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1D"},{d:"Jueves",h:"7:00-8:40",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"},{d:"Jueves",h:"8:40-10:15",m:"Cultura Digital I",doc:"Preciado García Julio César",g:"1J"},{d:"Jueves",h:"10:45-11:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1F"},{d:"Jueves",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Sánchez Ortiz Jorge Alejandro",g:"5AA"},{d:"Viernes",h:"7:00-7:50",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Viernes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Viernes",h:"10:45-14:00",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"}],
-"Redes":[{d:"Lunes",h:"7:00-9:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Lunes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Lunes",h:"11:30-14:00",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"8:40-9:30",m:"Cultura Digital I",doc:"Carapia Hernández",g:"1C"},{d:"Martes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Miércoles",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Miércoles",h:"8:40-9:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Miércoles",h:"11:30-12:20",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Jueves",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Jueves",h:"8:40-10:15",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Noriega Montaño Jorge Armando",g:"3DS"},{d:"Jueves",h:"10:45-11:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Jueves",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Viernes",h:"8:40-10:15",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Viernes",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"}],
-"Soporte":[{d:"Lunes",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3AS"},{d:"Lunes",h:"8:40-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Lunes",h:"10:45-11:30",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Lunes",h:"11:30-14:00",m:"Cultura Digital I",doc:"Carapia Hernández",g:"1D"},{d:"Martes",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Martes",h:"8:40-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Martes",h:"10:45-11:30",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Chávez Chávez Enrique",g:"3AS"},{d:"Martes",h:"11:30-14:00",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"},{d:"Miércoles",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Garibaldí García Darío",g:"3AS"},{d:"Jueves",h:"7:00-9:30",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Chávez Chávez Enrique",g:"3AS"},{d:"Jueves",h:"9:30-10:15",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Chávez Chávez Enrique",g:"3BS"},{d:"Jueves",h:"10:45-11:30",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"},{d:"Viernes",h:"7:00-9:30",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3AS"},{d:"Viernes",h:"9:30-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Viernes",h:"10:45-11:30",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Chávez Chávez Enrique",g:"3BS"},{d:"Viernes",h:"11:30-14:00",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"}],
-"TICS":[{d:"Lunes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Lunes",h:"8:40-10:15",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Lunes",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Martes",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Martes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Martes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Preciado García Julio",g:"1J"},{d:"Miércoles",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"9:30-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Viernes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"}],
+"Programación 4":[{d:"Lunes",h:"7:00-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Lunes",h:"10:45-12:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3AP"},{d:"Lunes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Martes",h:"7:00-8:40",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3AP"},{d:"Martes",h:"8:40-10:15",m:"Mide el Desempeño del Talento Humano",doc:"Velázquez González Adela Carmen",g:"5AA"},{d:"Martes",h:"10:45-12:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Martes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Miércoles",h:"7:00-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Martínez Esparza María Aline",g:"3BP"},{d:"Miércoles",h:"10:45-12:20",m:"Mide el Desempeño del Talento Humano",doc:"Velázquez González Adela Carmen",g:"5BA"},{d:"Jueves",h:"8:40-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Jueves",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Viernes",h:"8:40-10:15",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Anaya Arellano Claudia",g:"3CP"},{d:"Viernes",h:"12:20-14:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},
+{d:"Lunes",h:"15:40-17:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3CP"},
+{d:"Lunes",h:"17:40-19:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3AP"},
+{d:"Lunes",h:"19:20-21:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3BP"},
+{d:"Martes",h:"14:00-15:40",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5BP"},
+{d:"Martes",h:"15:40-17:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3CP"},
+{d:"Martes",h:"17:40-19:20",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Martes",h:"19:20-21:00",m:"Implementa Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Miércoles",h:"14:00-15:40",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5BP"},
+{d:"Miércoles",h:"15:40-17:20",m:"Implementa Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Miércoles",h:"17:40-19:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3BP"},
+{d:"Miércoles",h:"19:20-21:00",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Jueves",h:"14:00-15:40",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5BP"},
+{d:"Jueves",h:"15:40-17:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3AP"},
+{d:"Jueves",h:"17:40-19:20",m:"Construye Aplicaciones Web",doc:"Sánchez Rodríguez Arturo",g:"5AP"},
+{d:"Viernes",h:"15:40-17:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3BP"},
+{d:"Viernes",h:"17:40-19:20",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3CP"},
+{d:"Viernes",h:"19:20-21:00",m:"Aplica Metodologías Ágiles para el Desarrollo de Software",doc:"Mondragón Norato Lucio",g:"3AP"}],
+"Programación 5":[{d:"Lunes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1E"},{d:"Lunes",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Lunes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Lunes",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Poot López Víctor Manuel",g:"5BA"},{d:"Martes",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1C"},{d:"Martes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Martes",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1A"},{d:"Miércoles",h:"7:50-10:15",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1B"},{d:"Miércoles",h:"10:45-11:30",m:"Cultura Digital I",doc:"Carapia Hernández César",g:"1D"},{d:"Jueves",h:"7:00-8:40",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"},{d:"Jueves",h:"8:40-10:15",m:"Cultura Digital I",doc:"Preciado García Julio César",g:"1J"},{d:"Jueves",h:"10:45-11:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1F"},{d:"Jueves",h:"11:30-14:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Sánchez Ortiz Jorge Alejandro",g:"5AA"},{d:"Viernes",h:"7:00-7:50",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Viernes",h:"7:50-10:15",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1H"},{d:"Viernes",h:"10:45-14:00",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1I"},
+{d:"Lunes",h:"14:00-15:40",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Gayoso Quiroz Enrique Petronilo",g:"5AA"},
+{d:"Lunes",h:"15:40-17:20",m:"Mide el Desempeño del Talento Humano",doc:"Marcial García Karina",g:"5AA"},
+{d:"Lunes",h:"17:40-19:20",m:"Gestiona los Procesos de Inducción y Permanencia del Talento Humano",doc:"Gayoso Quiroz Enrique Petronilo",g:"3AA"},
+{d:"Lunes",h:"19:20-21:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Marcial García Karina",g:"5BA"},
+{d:"Martes",h:"17:40-19:20",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Marcial García Karina",g:"5BA"},
+{d:"Martes",h:"19:20-21:00",m:"Mide el Desempeño del Talento Humano",doc:"Marcial García Karina",g:"5AA"},
+{d:"Miércoles",h:"14:00-15:40",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Gayoso Quiroz Enrique Petronilo",g:"5AA"},
+{d:"Miércoles",h:"17:40-19:20",m:"Gestiona los Procesos de Inducción y Permanencia del Talento Humano",doc:"Gayoso Quiroz Enrique Petronilo",g:"3AA"},
+{d:"Jueves",h:"14:00-15:40",m:"Mide el Desempeño del Talento Humano",doc:"Gayoso Quiroz Enrique Petronilo",g:"5BA"},
+{d:"Jueves",h:"19:20-21:00",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Gayoso Quiroz Enrique Petronilo",g:"5AA"},
+{d:"Viernes",h:"14:00-15:40",m:"Mide el Desempeño del Talento Humano",doc:"Gayoso Quiroz Enrique Petronilo",g:"5BA"},
+{d:"Viernes",h:"18:30-20:10",m:"Gestiona la Aplicación de la Evaluación del Desempeño",doc:"Marcial García Karina",g:"5BA"}],
+"Redes":[{d:"Lunes",h:"7:00-9:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Lunes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Lunes",h:"11:30-14:00",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Martes",h:"8:40-9:30",m:"Cultura Digital I",doc:"Carapia Hernández",g:"1C"},{d:"Martes",h:"9:30-11:30",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Miércoles",h:"7:00-8:40",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5AS"},{d:"Miércoles",h:"8:40-9:30",m:"Cultura Digital I",doc:"López Vargas Marco Antonio",g:"1G"},{d:"Miércoles",h:"11:30-12:20",m:"Diseña Red LAN",doc:"Ávalos Jauregui Bruno",g:"5BS"},{d:"Jueves",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Jueves",h:"8:40-10:15",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Noriega Montaño Jorge Armando",g:"3DS"},{d:"Jueves",h:"10:45-11:30",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Jueves",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"},{d:"Viernes",h:"8:40-10:15",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Noriega Montaño Jorge Armando",g:"5AS"},{d:"Viernes",h:"11:30-12:20",m:"Diseña Red LAN",doc:"López Montiel Néstor",g:"5BS"},
+{d:"Lunes",h:"14:00-15:40",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Pérez Muñoz Ángel Enrique",g:"3AS"},
+{d:"Lunes",h:"15:40-17:20",m:"Diseña Red LAN",doc:"Escalera Miranda Jorge Alejandro",g:"5AS"},
+{d:"Lunes",h:"17:40-19:20",m:"Diseña Red LAN",doc:"Palacios Martínez Guillermo",g:"5BS"},
+{d:"Lunes",h:"19:20-21:00",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Reyes Carranza Pablo",g:"5BS"},
+{d:"Martes",h:"14:00-15:40",m:"Diseña Red LAN",doc:"Escalera Miranda Jorge Alejandro",g:"5AS"},
+{d:"Martes",h:"15:40-17:20",m:"Aplicaciones del Pensamiento Matemático",doc:"Ruiz Camarillo Marco Antonio",g:"5BS"},
+{d:"Miércoles",h:"14:00-15:40",m:"Pensamiento Matemático III",doc:"Ruiz Camarillo Marco Antonio",g:"3BP"},
+{d:"Miércoles",h:"15:40-17:20",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Pérez Muñoz Ángel Enrique",g:"3AS"},
+{d:"Miércoles",h:"17:40-19:20",m:"Diseña Red LAN",doc:"Palacios Martínez Guillermo",g:"5BS"},
+{d:"Miércoles",h:"19:20-21:00",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Reyes Carranza Pablo",g:"5AS"},
+{d:"Jueves",h:"15:40-17:20",m:"Aplicaciones del Pensamiento Matemático",doc:"Ruiz Camarillo Marco Antonio",g:"5BS"},
+{d:"Jueves",h:"17:40-19:20",m:"Diseña Red LAN",doc:"Palacios Martínez Guillermo",g:"5BS"},
+{d:"Jueves",h:"19:20-21:00",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Reyes Carranza Pablo",g:"5BS"},
+{d:"Viernes",h:"14:00-15:40",m:"Pensamiento Matemático III",doc:"Ruiz Camarillo Marco Antonio",g:"3BP"},
+{d:"Viernes",h:"17:40-19:20",m:"Diseña Red LAN",doc:"Escalera Miranda Jorge Alejandro",g:"5AS"},
+{d:"Viernes",h:"19:20-21:00",m:"Clasifica los Elementos Básicos de la Red LAN",doc:"Reyes Carranza Pablo",g:"5AS"}],
+"Soporte":[{d:"Lunes",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3AS"},{d:"Lunes",h:"8:40-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Lunes",h:"10:45-11:30",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Lunes",h:"11:30-14:00",m:"Cultura Digital I",doc:"Carapia Hernández",g:"1D"},{d:"Martes",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Martes",h:"8:40-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Lugo Sánchez Fernando",g:"3DS"},{d:"Martes",h:"10:45-11:30",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Chávez Chávez Enrique",g:"3AS"},{d:"Martes",h:"11:30-14:00",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"},{d:"Miércoles",h:"7:00-8:40",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Garibaldí García Darío",g:"3AS"},{d:"Jueves",h:"7:00-9:30",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Chávez Chávez Enrique",g:"3AS"},{d:"Jueves",h:"9:30-10:15",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Chávez Chávez Enrique",g:"3BS"},{d:"Jueves",h:"10:45-11:30",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"},{d:"Viernes",h:"7:00-9:30",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3AS"},{d:"Viernes",h:"9:30-10:15",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Garibaldí García Darío",g:"3BS"},{d:"Viernes",h:"10:45-11:30",m:"Realiza Mantenimiento Preventivo a Computadoras",doc:"Chávez Chávez Enrique",g:"3BS"},{d:"Viernes",h:"11:30-14:00",m:"Realiza Mantenimiento Correctivo a Computadoras",doc:"Lugo Sánchez Fernando",g:"3CS"},
+{d:"Lunes",h:"14:00-15:40",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3BS"},
+{d:"Lunes",h:"17:40-19:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3AS"},
+{d:"Martes",h:"14:00-15:40",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Pérez Muñoz Ángel Enrique",g:"3BS"},
+{d:"Martes",h:"15:40-17:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3CS"},
+{d:"Martes",h:"17:40-19:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3AS"},
+{d:"Miércoles",h:"14:00-15:40",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Botello Padilla Raphael",g:"3CS"},
+{d:"Miércoles",h:"15:40-17:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3BS"},
+{d:"Miércoles",h:"17:40-19:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3CS"},
+{d:"Miércoles",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Pérez Muñoz Ángel Enrique",g:"3BS"},
+{d:"Jueves",h:"14:00-15:40",m:"Realiza Mantenimiento Preventivo a Computadoras y Dispositivos Móviles",doc:"Botello Padilla Raphael",g:"3CS"},
+{d:"Jueves",h:"15:40-17:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3AS"},
+{d:"Jueves",h:"17:40-19:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3CS"},
+{d:"Viernes",h:"15:40-17:20",m:"Realiza Mantenimiento Correctivo a Computadoras y Dispositivos Móviles",doc:"Escalera Miranda Jorge Alejandro",g:"3BS"}],
+"TICS":[{d:"Lunes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Lunes",h:"8:40-10:15",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Lunes",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Martes",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Martes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Martes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},{d:"Miércoles",h:"7:00-7:50",m:"Cultura Digital I",doc:"Preciado García Julio",g:"1J"},{d:"Miércoles",h:"8:40-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"9:30-11:30",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Puebla Rancaño Jorge",g:"3DP"},{d:"Jueves",h:"11:30-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"7:00-8:40",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3BP"},{d:"Viernes",h:"11:30-12:20",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3AP"},{d:"Viernes",h:"12:20-14:00",m:"Emplea Frameworks para el Desarrollo de Software",doc:"Preciado García Julio César",g:"3CP"},
+{d:"Lunes",h:"14:00-15:40",m:"Cultura Digital I",doc:"Botello Padilla Raphael",g:"1CP"},
+{d:"Lunes",h:"15:40-17:20",m:"Cultura Digital I",doc:"Botello Padilla Raphael",g:"1FS"},
+{d:"Lunes",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3CS"},
+{d:"Martes",h:"14:00-15:40",m:"Cultura Digital I",doc:"Botello Padilla Raphael",g:"1J-PD"},
+{d:"Martes",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3BS"},
+{d:"Miércoles",h:"15:40-17:20",m:"Cultura Digital I",doc:"Botello Padilla Raphael",g:"1HA"},
+{d:"Jueves",h:"15:40-17:20",m:"Cultura Digital I",doc:"Botello Padilla Raphael",g:"1IA"},
+{d:"Jueves",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3AS"},
+{d:"Viernes",h:"15:40-19:20",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3CS"},
+{d:"Viernes",h:"19:20-21:00",m:"Realiza Mantenimiento Preventivo y Correctivo a Dispositivos de Impresión y Multifuncionales",doc:"Botello Padilla Raphael",g:"3AS"}],
 "Programación 3":[]};
 let talleres=["Programación 1","Programación 2","Programación 3","Programación 4","Programación 5","Redes","Soporte","TICS"];
 let state=JSON.parse(localStorage.getItem("bitacora_buena")||"null")||{};
 talleres.forEach(function(t){ if(!state[t]) state[t]={pcs:30,m:{},log:[]}; });
-// Programación 3 en mantenimiento por defecto si está vacío
-if(state["Programación 3"] && Object.keys(state["Programación 3"].m||{}).length===0){ for(let i=1;i<=30;i++){ state["Programación 3"].m["PC-"+String(i).padStart(2,"0")]="Mantenimiento"; } }
+// Programación 3 habilitado con 30 PCs y sin horario (registro manual)
 let cur=talleres[0];
 function save(){ localStorage.setItem("bitacora_buena", JSON.stringify(state)); }
 function estadoTaller(tn){
@@ -249,7 +426,7 @@ function estadoTaller(tn){
   for(let k=logs.length-1;k>=0;k--){ if(!logs[k].salida) return "enuso"; }
   return "libre";
 }
-function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); let al = contarAlertasTaller(t); let badge = (al.inter || al.pcs.length) ? ' ⚠️' : ''; return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+badge+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
+function renderTabs(){ document.getElementById("tabs").innerHTML = talleres.map(function(t){ let est = estadoTaller(t); let bg = est==="enuso" ? "#dc2626" : (est==="mantenimiento" ? "#64748b" : "#16a34a"); let etiqueta = est==="enuso" ? "🔴 En uso" : (est==="mantenimiento" ? "⚫ Mantenimiento" : "🟢 Libre"); let sel = (t===cur); let al = contarAlertasTaller(t); let badge = (al.inter || al.pcs.length || al.limp) ? ' ⚠️' : ''; return '<div class="tab" style="background:'+bg+';color:#fff;border:2px solid '+(sel ? '#0f172a' : bg)+';box-shadow:'+(sel ? '0 0 0 2px #fff, 0 0 0 4px #0f172a' : 'none')+';font-weight:'+(sel ? '800' : '600')+';cursor:pointer" onclick="cambiarTaller(\''+t+'\')">'+t+badge+'<br><small style="font-size:11px">'+etiqueta+'</small></div>'; }).join(""); }
 function cambiarTaller(t){ cur=t; window._claseSel=null; window._manual=false; render(); }
 function render(){
   actualizarAlertasPortada();
@@ -263,14 +440,14 @@ function render(){
   let hConIdx = h.map(function(x,i){ return {i:i, x:x}; });
   let hFil = (diaSel === "Todos") ? hConIdx : hConIdx.filter(function(o){ return o.x.d === diaSel; });
   let botonesDia = ["Todos"].concat(diasSemana).map(function(d){ return '<button class="b'+(d===diaSel?'1':'2')+'" style="padding:7px 10px" onclick="filtrarDiaHorario(\''+d+'\')">'+d+'</button>'; }).join(" ");
-  let cardsHorario = hFil.length ? hFil.map(function(o){ let x=o.x; let sel = (window._claseSel === o.i); return '<div onclick="elegirClase('+o.i+')" style="background:'+(sel ? '#dcfce7' : '#f8fafc')+';border:2px solid '+(sel ? '#16a34a' : '#e2e8f0')+';border-radius:10px;padding:10px;cursor:pointer"><b>'+x.h+'</b><br><b>'+x.m+'</b><br><small>'+x.doc+' - Grupo '+x.g+'</small><br><small style="color:#16a34a"><b>'+(sel ? '✓ Seleccionada - Toca Registrar abajo' : '👆 Toca para registrar esta clase')+'</b></small></div>'; }).join("") : '<p><small>No hay clases este día en este taller.</small></p>';
-  let horarioHtml = '<div><button class="b1" style="width:100%" onclick="toggleHorario()">📅 Ver horario - '+cur+' - '+diaSel+' ⬇</button><div id="horarioBox" style="display:'+(window._horarioAbierto ? 'block' : 'none')+';margin-top:10px"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">'+botonesDia+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">'+cardsHorario+'</div></div></div>';
+  let cardsHorario = hFil.length ? hFil.map(function(o){ let x=o.x; let sel = (window._claseSel === o.i); let esVesp = parseInt(x.h.split(":")[0],10) >= 14; return '<div onclick="elegirClase('+o.i+')" style="background:'+(sel ? '#dcfce7' : (esVesp ? '#ede9fe' : '#f8fafc'))+';border:2px solid '+(sel ? '#16a34a' : (esVesp ? '#8b5cf6' : '#e2e8f0'))+';border-radius:10px;padding:10px;cursor:pointer"><b>'+x.h+'</b> '+(esVesp ? '<span style="background:#8b5cf6;color:#fff;border-radius:8px;padding:1px 7px;font-size:11px">🌙 Vespertino</span>' : '<span style="background:#f59e0b;color:#fff;border-radius:8px;padding:1px 7px;font-size:11px">☀️ Matutino</span>')+'<br><b>'+x.m+'</b><br><small>'+x.doc+' - Grupo '+x.g+'</small><br><small style="color:#16a34a"><b>'+(sel ? '✓ Seleccionada - Toca Registrar abajo' : '👆 Toca para registrar esta clase')+'</b></small></div>'; }).join("") : '<p><small>No hay clases este día en este taller.</small></p>';
+  let horarioHtml = '<div><div style="background:#0b3d91;color:#fff;border-radius:10px;padding:9px 12px;text-align:center;font-weight:bold">📅 Horario - '+cur+' - '+diaSel+'</div><div style="text-align:center;margin-top:6px"><small><span style="color:#f59e0b">■</span> ☀️ Matutino &nbsp;&nbsp; <span style="color:#8b5cf6">■</span> 🌙 Vespertino</small></div><div id="horarioBox" style="display:block;margin-top:10px"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">'+botonesDia+'</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">'+cardsHorario+'</div></div></div>';
   let logsAct = state[cur].log || [];
   let activa = null;
   for(let k=logsAct.length-1;k>=0;k--){ if(!logsAct[k].salida){ activa = logsAct[k]; break; } }
   let registrarHtml = '';
   if(activa){
-    registrarHtml = '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px;margin-top:20px"><b>🔒 Clase activa en este taller</b><br>Docente: <b>'+activa.doc+'</b><br>Materia: <b>'+activa.m+'</b> - Grupo: <b>'+activa.g+'</b><br><small>Entrada: '+activa.entrada+' - Para registrar otro docente, primero termina esta clase.</small><br><button class="b3" style="margin-top:10px;width:100%" onclick="termino()">⏹ Terminar clase actual</button></div>';
+    registrarHtml = '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px;margin-top:20px"><b>🔒 Clase activa en este taller</b><br>Docente: <b>'+activa.doc+'</b><br>Materia: <b>'+activa.m+'</b> - Grupo: <b>'+activa.g+'</b> - Turno: <b>'+turnoDeLog(activa)+'</b><br><small>Entrada: '+activa.entrada+' - Para registrar otro docente, primero termina esta clase.</small><br><button class="b3" style="margin-top:10px;width:100%" onclick="termino()">⏹ Terminar clase actual</button></div>';
   } else {
     let selClase = (window._claseSel != null) ? (HORARIOS[cur] || [])[window._claseSel] : null;
     let selHtml = '';
@@ -279,7 +456,7 @@ function render(){
     } else if(selClase){
       selHtml = '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px"><b>'+selClase.doc+'</b><br>'+selClase.m+' - Grupo '+selClase.g+'<br><small>'+selClase.d+' '+selClase.h+'</small></div><div style="height:10px"></div><button class="b4" style="width:100%" onclick="registrar()">✅ Registrar esta clase</button> <button class="b2" style="margin-top:8px" onclick="limpiarSeleccion()">Cambiar clase</button>';
     } else {
-      selHtml = '<p><small>👆 Toca una clase del horario de arriba para registrarla.</small></p>';
+      if((HORARIOS[cur]||[]).length===0){ selHtml = '<p><small>📝 Este taller no tiene horario cargado. Registra la clase de forma manual.</small></p><div class="row"><input id="doc" placeholder="Docente"><input id="mat" placeholder="Materia"><input id="gru" placeholder="Grupo"></div><button class="b4" onclick="registrar()">Registrar entrada del docente</button>'; } else { selHtml = '<p><small>👆 Toca una clase del horario de arriba para registrarla.</small></p>'; }
     }
     registrarHtml = '<div style="margin-top:20px"><h3>Registrar entrada del docente</h3>'+selHtml+'<div style="margin-top:10px;text-align:center"><button onclick="toggleManual()" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;text-decoration:underline">¿La clase no está en el horario? Escribir manual</button></div></div>';
   }
@@ -297,10 +474,18 @@ function render(){
   }
   let pcsHtml = "";
   let esAdmin = (window._rol === "admin");
-  for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; let fallaTxt = (s.fallas||{})[id] || ""; let extraFalla = (st==="Mantenimiento" && fallaTxt) ? '<br><small style="color:#7f1d1d;display:block;margin-top:4px">🛠️ '+fallaTxt+'</small>' : ""; let notaCandado = (st==="Mantenimiento" && !esAdmin) ? '<br><small style="color:#92400e;display:block;margin-top:4px">🔒 Solo el administrador puede liberarla</small>' : ""; let btnLibre = (st==="Mantenimiento" && !esAdmin) ? '<button class="b2" style="opacity:.55" onclick="avisoSoloAdmin()">🔒 Libre</button>' : (st==="Mantenimiento" && esAdmin ? '<button class="b2" onclick="abrirReparar(\''+id+'\')">Libre</button>' : '<button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button>'); let btnFalla = (st==="Mantenimiento" && esAdmin) ? '<button class="b4" style="margin-top:6px" onclick="abrirReparar(\''+id+'\')">🔧 Reparar</button>' : '<button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button>'; pcsHtml += '<div class="pc '+st+'"><b>'+id+'</b><br><small>'+st+'</small>'+extraFalla+notaCandado+'<br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> '+btnLibre+'<br>'+btnFalla+'</div>'; }
+  for(let i=1;i<=s.pcs;i++){ let id="PC-"+String(i).padStart(2,"0"); let st=s.m[id]||"Libre"; let fallaTxt = (s.fallas||{})[id] || ""; let extraFalla = (st==="Mantenimiento" && fallaTxt) ? '<br><small style="color:#7f1d1d;display:block;margin-top:4px">🛠️ '+fallaTxt+'</small>' : ""; let notaCandado = (st==="Mantenimiento" && !esAdmin) ? '<br><small style="color:#92400e;display:block;margin-top:4px">🔒 Solo el administrador puede liberarla</small>' : ""; let btnLibre = (st==="Mantenimiento" && !esAdmin) ? '<button class="b2" style="opacity:.55" onclick="avisoSoloAdmin()">🔒 Libre</button>' : (st==="Mantenimiento" && esAdmin ? '<button class="b2" onclick="abrirReparar(\''+id+'\')">Libre</button>' : '<button class="b2" onclick="setPC(\''+id+'\',\'Libre\')">Libre</button>'); let btnFalla = (st==="Mantenimiento" && esAdmin) ? '<button class="b4" style="margin-top:6px" onclick="abrirReparar(\''+id+'\')">🔧 Reparar</button>' : '<button class="b3" style="margin-top:6px" onclick="falla(\''+id+'\')">Reportar falla</button>';
+  let inv = (s.inventario||{})[id] || {};
+  let invHtml = '<b>📋 Inventario - '+id+'</b><br><small>'+cur+'</small><br><div style="text-align:left;font-size:12px;margin-top:6px;line-height:1.8">🖥️ <b>CPU:</b> '+(inv.cpu||'<span style="color:#94a3b8">Sin registrar</span>')+'<br>⌨️ <b>Teclado:</b> '+(inv.teclado||'<span style="color:#94a3b8">Sin registrar</span>')+'<br>🖱️ <b>Ratón:</b> '+(inv.raton||'<span style="color:#94a3b8">Sin registrar</span>')+'<br>🖥️ <b>Monitor:</b> '+(inv.monitor||'<span style="color:#94a3b8">Sin registrar</span>')+'</div>';
+  let btnEditarInv = esAdmin ? '<button class="b1" style="margin-top:6px" onclick="abrirInventario(\''+id+'\')">✏️ Editar inventario</button>' : '<small style="color:#64748b;display:block;margin-top:6px">🔒 Solo el administrador puede editar</small>';
+  pcsHtml += '<div class="pc '+st+'" id="flip-'+id+'"><div class="pc-front"><b>'+id+' <span style="cursor:pointer" title="Ver inventario" onclick="voltearPC(\''+id+'\')">🔄</span></b><br><small>'+st+'</small>'+extraFalla+notaCandado+'<br><button class="b1" onclick="setPC(\''+id+'\',\'Ocupado\')">Ocupado</button> '+btnLibre+'<br>'+btnFalla+'</div><div class="pc-back">'+invHtml+btnEditarInv+'<br><button class="b2" style="margin-top:6px" onclick="verCambiosInventario(\''+id+'\')">📜 Ver cambios</button><br><button class="b2" style="margin-top:6px" onclick="voltearPC(\''+id+'\')">↩ Volver a la tarjeta</button></div></div>';
+  }
+  if(esAdmin){ pcsHtml += '<div style="margin-top:10px;text-align:center"><button class="b4" style="padding:11px 18px;font-size:15px" onclick="exportarInventario()">⬇ Exportar inventario en Excel</button><br><small style="color:#64748b">Descarga el inventario de '+cur+' con los números de serie de CPU, Teclado, Ratón y Monitor.</small></div>'; }
   let repHist = (s.reparaciones||[]);
   let histHtml = "";
   if(repHist.length){ let filasRep = repHist.slice(-10).reverse().map(function(r){ return "<tr><td>"+(r.pc||"")+"</td><td>"+(r.falla||"")+"</td><td>"+(r.solucion||"")+"</td><td>"+(r.solucionada||"")+"</td></tr>"; }).join(""); histHtml = '<div class="card" style="margin-top:14px"><h3>✅ Fallas ya reparadas - '+cur+'</h3><table><tr><th>PC</th><th>Falla reportada</th><th>Solución / mantenimiento dado</th><th>Fecha y hora de solución</th></tr>'+filasRep+'</table></div>'; }
+  let invCamb = (s.invCambios||[]);
+  if(invCamb.length){ let filasInv = invCamb.slice(-15).reverse().map(function(r){ return "<tr><td>"+(r.pc||"")+"</td><td>"+(r.campo||"")+"</td><td>"+(r.anterior||"Sin registrar")+"</td><td>"+(r.nuevo||"")+"</td><td>"+(r.fecha||"")+"</td></tr>"; }).join(""); histHtml += '<div class="card" style="margin-top:14px"><h3>📋 Cambios en inventario - '+cur+'</h3><table><tr><th>PC</th><th>Campo</th><th>Anterior</th><th>Nuevo</th><th>Fecha y hora</th></tr>'+filasInv+'</table></div>'; }
   let inter = s.internet || null;
   let internetHtml = "";
   if(inter && inter.activa){
@@ -310,12 +495,34 @@ function render(){
   }
   let interHist = (s.internetHist||[]);
   if(interHist.length){ let filasInter = interHist.slice(-10).reverse().map(function(r){ return "<tr><td>"+(r.falla||"")+"</td><td>"+(r.solucion||"")+"</td><td>"+(r.reportada||"")+"</td><td>"+(r.solucionada||"")+"</td></tr>"; }).join(""); histHtml += '<div class="card" style="margin-top:14px"><h3>🌐 Fallas de internet ya solucionadas - '+cur+'</h3><table><tr><th>Falla reportada</th><th>Solución dada</th><th>Reportada</th><th>Fecha y hora de solución</th></tr>'+filasInter+'</table></div>'; }
-  let filaReactivar = (cur === "Programación 3") ? '<div class="row" style="margin-top:6px"><button class="b4" onclick="reactivar()">Reactivar Programación 3</button></div>' : '';
-  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+registrarHtml+pcsPanelHtml+'<div style="height:24px"></div>'+filaReactivar+internetHtml+'<div class="grid" style="margin-top:18px">'+pcsHtml+'</div></div>'+histHtml;
+  let limp = s.limpieza || null;
+  let limpiezaHtml = "";
+  if(limp && limp.activa){
+    limpiezaHtml = '<div style="background:#fef9c3;border:2px solid #eab308;border-radius:12px;padding:12px;margin-top:10px"><b>🧹 Limpieza pendiente en '+cur+'</b><br><small style="color:#713f12">🧹 '+(limp.motivo||"")+'</small><br><small>Reportada: '+(limp.reportada||"")+'</small><br><button class="b4" style="margin-top:8px" onclick="abrirLimpiezaHecho()">✅ Ya se hizo la limpieza</button></div>';
+  } else {
+    limpiezaHtml = '<div style="margin-top:10px"><button class="b2" style="background:#facc15" onclick="abrirLimpieza()">🧹 Reportar limpieza en este taller</button></div>';
+  }
+  let limpHist = (s.limpiezaHist||[]);
+  if(limpHist.length){ let filasLimp = limpHist.slice(-10).reverse().map(function(r){ return "<tr><td>"+(r.motivo||"")+"</td><td>"+(r.hecho||"")+"</td><td>"+(r.reportada||"")+"</td><td>"+(r.realizada||"")+"</td></tr>"; }).join(""); histHtml += '<div class="card" style="margin-top:14px"><h3>🧹 Limpiezas realizadas - '+cur+'</h3><table><tr><th>Motivo reportado</th><th>Qué se realizó</th><th>Reportada</th><th>Fecha y hora realizada</th></tr>'+filasLimp+'</table></div>'; }
+  let filaReactivar = '';
+  document.getElementById("app").innerHTML = '<div class="card">'+horarioHtml+registrarHtml+pcsPanelHtml+'<div style="height:24px"></div>'+filaReactivar+internetHtml+limpiezaHtml+'<p style="text-align:center;margin:6px 0 2px"><small style="color:#64748b">👆 Toca el 🔄 junto al nombre de la PC para ver su inventario.</small></p><div class="grid" style="margin-top:18px">'+pcsHtml+'</div></div>'+histHtml;
   let tituloLog = document.getElementById("tituloLog");
   if(tituloLog) tituloLog.textContent = "Registro de profesores - " + cur;
   let logs = (state[cur].log||[]).map(function(l){ return {fecha:l.fecha, entrada:l.entrada, salida:(l.salida||"-"), m:l.m, doc:l.doc, g:l.g, pcs:(l.pcs||"-")}; });
   let totalLogs = logs.length;
+  let docentesUnicos = []; let gruposUnicos = [];
+  logs.forEach(function(l){ if(l.doc && docentesUnicos.indexOf(l.doc)===-1) docentesUnicos.push(l.doc); if(l.g && gruposUnicos.indexOf(l.g)===-1) gruposUnicos.push(l.g); });
+  docentesUnicos.sort(); gruposUnicos.sort();
+  function escOpt(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,""); }
+  function llenarSelect(id, valores, textoTodos){
+    let el = document.getElementById(id); if(!el) return;
+    let actual = el.value || "";
+    el.innerHTML = '<option value="">'+textoTodos+'</option>' + valores.map(function(v){ return '<option value="'+escOpt(v)+'">'+escOpt(v)+'</option>'; }).join("");
+    el.value = actual;
+  }
+  llenarSelect("fDocente", docentesUnicos, "Todos los docentes");
+  llenarSelect("fGrupo", gruposUnicos, "Todos los grupos");
+
   let fDoc = ((document.getElementById("fDocente")||{}).value||"").toLowerCase().trim();
   let fFec = (document.getElementById("fFecha")||{}).value||"";
   let fGru = ((document.getElementById("fGrupo")||{}).value||"").toLowerCase().trim();
@@ -327,8 +534,20 @@ function render(){
     if(fDoc && (l.doc||"").toLowerCase().indexOf(fDoc) === -1) return false;
     return true;
   });
-  let filas = logs.map(function(l){ return "<tr><td>"+l.fecha+"</td><td>"+l.entrada+"</td><td>"+l.salida+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td><td>"+l.pcs+"</td></tr>"; }).join("");
-  document.getElementById("log").innerHTML = "<p><small>Mostrando <b>"+logs.length+"</b> de <b>"+totalLogs+"</b> registros de <b>"+cur+"</b>"+((fDoc||fFec||fGru) ? " con los filtros puestos" : "")+"</small></p><table><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>PCs</th></tr>"+(filas||"<tr><td colspan=7>Sin registros en este taller con esos filtros</td></tr>")+"</table>";
+  window._logsFiltrados = logs;
+  let filas = logs.map(function(l, idx){ let pcsTxt = (l.pcs||"-"); let turnoTxt = turnoDeLog(l); let nPcs = (pcsTxt === "-" || pcsTxt.indexOf("Sin computadoras") >= 0) ? 0 : pcsTxt.split(",").filter(function(x){ return x.trim(); }).length; let celdaPcs = (nPcs === 0) ? pcsTxt : '<button class="b2" style="padding:6px 10px;font-size:12px" onclick="verPcsUsadas('+idx+')">🖥️ Consulta de PCs utilizadas ('+nPcs+')</button>'; return "<tr><td>"+l.fecha+"</td><td>"+l.entrada+"</td><td>"+l.salida+"</td><td>"+l.m+"</td><td>"+l.doc+"</td><td>"+l.g+"</td><td>"+(turnoTxt==="Vespertino" ? "🌙 Vespertino" : "☀️ Matutino")+"</td><td>"+celdaPcs+"</td></tr>"; }).join("");
+  document.getElementById("log").innerHTML = "<p><small>Mostrando <b>"+logs.length+"</b> de <b>"+totalLogs+"</b> registros de <b>"+cur+"</b>"+((fDoc||fFec||fGru) ? " con los filtros puestos" : "")+"</small></p><table><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Materia</th><th>Docente</th><th>Grupo</th><th>Turno</th><th>PCs utilizadas</th></tr>"+(filas||"<tr><td colspan=8>Sin registros en este taller con esos filtros</td></tr>")+"</table>";
+}
+function verPcsUsadas(idx){
+  let l = (window._logsFiltrados||[])[idx]; if(!l) return;
+  let det = document.getElementById("pcsModalDetalle"); if(det) det.innerHTML = "<b>"+(l.doc||"")+"</b> - Grupo "+(l.g||"")+" - Turno "+turnoDeLog(l)+"<br>"+(l.m||"")+"<br>"+(l.fecha||"")+" - Entrada "+(l.entrada||"")+" - Salida "+(l.salida||"");
+  let lista = String(l.pcs||"").split(",").map(function(x){ return x.trim(); }).filter(function(x){ return x; });
+  let chips = document.getElementById("pcsModalChips"); if(chips) chips.innerHTML = lista.map(function(pc){ return '<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:10px 6px;text-align:center;font-weight:bold">'+pc+'</div>'; }).join("");
+  let tot = document.getElementById("pcsModalTotal"); if(tot) tot.textContent = "Total de computadoras utilizadas: " + lista.length;
+  let mod = document.getElementById("modalPcs"); if(mod) mod.style.display = "block";
+}
+function cerrarPcsUsadas(){
+  let mod = document.getElementById("modalPcs"); if(mod) mod.style.display = "none";
 }
 function limpiarFiltros(){ ["fDocente","fFecha","fGrupo"].forEach(function(id){ let e=document.getElementById(id); if(e) e.value=""; }); render(); }
 function toggleHorario(){ window._horarioAbierto = !window._horarioAbierto; render(); }
@@ -484,6 +703,140 @@ function confirmarInternetSol(){
   cerrarInternetSol();
   save(); tursoGuardar(); render();
 }
+function abrirLimpieza(){
+  if(state[cur].limpieza && state[cur].limpieza.activa){ alert("Este taller ya tiene una limpieza pendiente reportada."); return; }
+  let tit = document.getElementById("limpiezaTituloTaller"); if(tit) tit.textContent = cur;
+  let sel = document.getElementById("limpiezaMotivo"); if(sel) sel.value = "";
+  let com = document.getElementById("limpiezaComentario"); if(com) com.value = "";
+  let mod = document.getElementById("modalLimpieza"); if(mod) mod.style.display = "block";
+}
+function cerrarLimpieza(){
+  let mod = document.getElementById("modalLimpieza"); if(mod) mod.style.display = "none";
+}
+function confirmarLimpieza(){
+  let motivo = (document.getElementById("limpiezaMotivo")||{}).value || "";
+  if(!motivo){ alert("Escoge por qué se necesita limpieza en el taller."); return; }
+  let com = ((document.getElementById("limpiezaComentario")||{}).value || "").trim();
+  let m = motivo + (com ? " - " + com : "");
+  state[cur].limpieza = {activa:true, motivo:m, reportada:new Date().toLocaleString()};
+  alert("🧹 Limpieza reportada en "+cur+": "+m);
+  cerrarLimpieza();
+  save(); tursoGuardar(); render();
+}
+function abrirLimpiezaHecho(){
+  let limp = state[cur].limpieza;
+  if(!limp || !limp.activa) return;
+  let tit = document.getElementById("limpiezaHechoTituloTaller"); if(tit) tit.textContent = cur;
+  let mt = document.getElementById("limpiezaHechoMotivoTxt"); if(mt) mt.textContent = limp.motivo || "";
+  let com = document.getElementById("limpiezaHechoComentario"); if(com) com.value = "";
+  let cajas = document.querySelectorAll("#limpiezaTareas input[type=checkbox]"); cajas.forEach(function(c){ c.checked = false; });
+  let mod = document.getElementById("modalLimpiezaHecho"); if(mod) mod.style.display = "block";
+}
+function cerrarLimpiezaHecho(){
+  let mod = document.getElementById("modalLimpiezaHecho"); if(mod) mod.style.display = "none";
+}
+function confirmarLimpiezaHecho(){
+  let limp = state[cur].limpieza;
+  if(!limp || !limp.activa) return;
+  let hechas = [];
+  let cajas = document.querySelectorAll("#limpiezaTareas input[type=checkbox]:checked");
+  cajas.forEach(function(c){ hechas.push(c.value); });
+  if(!hechas.length){ alert("Marca al menos una cosa de lo que se realizó."); return; }
+  let com = ((document.getElementById("limpiezaHechoComentario")||{}).value || "").trim();
+  let hechoTxt = hechas.join(", ") + (com ? " - " + com : "");
+  if(!state[cur].limpiezaHist) state[cur].limpiezaHist=[];
+  state[cur].limpiezaHist.push({motivo:limp.motivo, hecho:hechoTxt, reportada:(limp.reportada||""), realizada:new Date().toLocaleString()});
+  state[cur].limpieza = null;
+  cerrarLimpiezaHecho();
+  save(); tursoGuardar(); render();
+}
+let _invPC = null;
+function voltearPC(id){
+  let el = document.getElementById("flip-"+id);
+  if(el) el.classList.toggle("volteada");
+}
+function abrirInventario(id){
+  if(window._rol !== "admin"){ alert("Solo el administrador puede editar el inventario."); return; }
+  _invPC = id;
+  let inv = ((state[cur].inventario||{})[id]) || {};
+  let tit = document.getElementById("invTituloPC"); if(tit) tit.textContent = id;
+  let tt = document.getElementById("invTituloTaller"); if(tt) tt.textContent = cur;
+  document.getElementById("invCpu").value = inv.cpu || "";
+  document.getElementById("invTeclado").value = inv.teclado || "";
+  document.getElementById("invRaton").value = inv.raton || "";
+  document.getElementById("invMonitor").value = inv.monitor || "";
+  document.getElementById("invPass").value = "";
+  let mod = document.getElementById("modalInventario"); if(mod) mod.style.display = "block";
+}
+function cerrarInventario(){
+  let mod = document.getElementById("modalInventario"); if(mod) mod.style.display = "none";
+  _invPC = null;
+}
+function guardarInventario(){
+  if(window._rol !== "admin"){ alert("Solo el administrador puede editar el inventario."); return; }
+  let pass = (document.getElementById("invPass").value || "");
+  if(pass !== ADMIN_PASS){ alert("Contraseña del administrador incorrecta. No se guardó nada."); return; }
+  if(!_invPC) return;
+  let nuevos = {
+    cpu: (document.getElementById("invCpu").value || "").trim(),
+    teclado: (document.getElementById("invTeclado").value || "").trim(),
+    raton: (document.getElementById("invRaton").value || "").trim(),
+    monitor: (document.getElementById("invMonitor").value || "").trim()
+  };
+  if(!state[cur].inventario) state[cur].inventario = {};
+  let viejos = state[cur].inventario[_invPC] || {};
+  let nombres = {cpu:"CPU", teclado:"Teclado", raton:"Ratón", monitor:"Monitor"};
+  let cambios = 0;
+  if(!state[cur].invCambios) state[cur].invCambios = [];
+  ["cpu","teclado","raton","monitor"].forEach(function(k){
+    let ant = viejos[k] || "", nue = nuevos[k] || "";
+    if(ant !== nue){
+      state[cur].invCambios.push({pc:_invPC, campo:nombres[k], anterior:ant, nuevo:nue, fecha:new Date().toLocaleString()});
+      cambios++;
+    }
+  });
+  state[cur].inventario[_invPC] = nuevos;
+  cerrarInventario();
+  save(); tursoGuardar(); render();
+  alert(cambios ? "📋 Inventario de "+_invPC+" guardado. Se registraron "+cambios+" cambio(s) con fecha y hora." : "📋 Inventario de "+_invPC+" guardado sin cambios.");
+}
+function verCambiosInventario(id){
+  let tit = document.getElementById("invCambTituloPC"); if(tit) tit.textContent = id;
+  let tt = document.getElementById("invCambTituloTaller"); if(tt) tt.textContent = cur;
+  let lista = document.getElementById("invCambLista");
+  let cambios = (state[cur].invCambios||[]).filter(function(r){ return r.pc === id; }).slice(-15).reverse();
+  if(!cambios.length){
+    lista.innerHTML = '<div style="background:#f8fafc;border-radius:10px;padding:10px"><small>Aún no hay cambios registrados en el inventario de esta PC.</small></div>';
+  } else {
+    lista.innerHTML = cambios.map(function(r){
+      return '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px"><b>'+(r.campo||"")+'</b><br><small style="color:#64748b">'+(r.fecha||"")+'</small><br><small>Anterior: <b>'+(r.anterior||"Sin registrar")+'</b></small><br><small>Nuevo: <b>'+(r.nuevo||"")+'</b></small></div>';
+    }).join("");
+  }
+  let mod = document.getElementById("modalInvCambios"); if(mod) mod.style.display = "block";
+}
+function cerrarInvCambios(){
+  let mod = document.getElementById("modalInvCambios"); if(mod) mod.style.display = "none";
+}
+function exportarInventario(){
+  if(window._rol !== "admin"){ alert("Solo el administrador puede exportar el inventario."); return; }
+  let s = state[cur] || {};
+  let inv = s.inventario || {};
+  function esc(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  let filas = "";
+  for(let i=1;i<=(s.pcs||0);i++){
+    let id = "PC-"+String(i).padStart(2,"0");
+    let r = inv[id] || {};
+    let est = (s.m||{})[id] || "Libre";
+    filas += "<tr><td>"+esc(cur)+"</td><td>"+esc(id)+"</td><td>"+esc(est)+"</td><td>"+esc(r.cpu||"Sin registrar")+"</td><td>"+esc(r.teclado||"Sin registrar")+"</td><td>"+esc(r.raton||"Sin registrar")+"</td><td>"+esc(r.monitor||"Sin registrar")+"</td></tr>";
+  }
+  let html = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"><head><meta charset=\"utf-8\"></head><body><table border=\"1\"><tr><th colspan=\"7\">Inventario - "+esc(cur)+" - CETIS No. 050</th></tr><tr><th>Taller</th><th>PC</th><th>Estado</th><th>Serie CPU</th><th>Serie Teclado</th><th>Serie Ratón</th><th>Serie Monitor</th></tr>" + filas + "</table></body></html>";
+  let blob = new Blob(["\ufeff"+html], {type:"application/vnd.ms-excel"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Inventario_"+cur.replace(/[^A-Za-z0-9]+/g,"_")+".xls";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+}
 function autocompletarClase(){
   let sel = document.getElementById("claseSel");
   let clases = HORARIOS[cur] || [];
@@ -503,21 +856,23 @@ function autocompletarClase(){
   docEl.readOnly = true; matEl.readOnly = true; gruEl.readOnly = true;
   if(prev) prev.innerHTML = "<b>"+x.d+" "+x.h+"</b><br>Docente: <b>"+x.doc+"</b><br>Materia: <b>"+x.m+"</b><br>Grupo: <b>"+x.g+"</b><br><small>Ya está listo, solo dale Registrar.</small>";
 }
+function turnoDeLog(l){ if(l.turno) return l.turno; let e = String(l.entrada||""); let hh = parseInt(e.split(":")[0],10); if(/p\.?\s*m/i.test(e) && hh < 12) hh += 12; return (hh >= 14 ? "Vespertino" : "Matutino"); }
 function registrar(){
   let logsR = state[cur].log || [];
   for(let k=logsR.length-1;k>=0;k--){ if(!logsR[k].salida){ alert("Ya hay una clase activa con "+logsR[k].doc+". Primero dale a Terminar clase para registrar otro docente."); return; } }
-  let doc="", m="", g="";
+  let doc="", m="", g="", turno="Matutino";
   if(window._manual){
     doc=document.getElementById("doc").value; m=document.getElementById("mat").value; g=document.getElementById("gru").value;
     if(!doc){ alert("Escribe el nombre del docente"); return; }
+    turno = (new Date().getHours() >= 14 ? "Vespertino" : "Matutino");
   } else if(window._claseSel != null){
     let x=(HORARIOS[cur]||[])[window._claseSel]; if(!x){ alert("Vuelve a escoger la clase"); return; }
-    doc=x.doc; m=x.m; g=x.g;
+    doc=x.doc; m=x.m; g=x.g; turno = (parseInt(x.h.split(":")[0],10) >= 14 ? "Vespertino" : "Matutino");
   } else { alert("Primero toca una clase del horario de arriba"); return; }
-  state[cur].log.push({fecha:new Date().toLocaleDateString(), entrada:new Date().toLocaleTimeString(), salida:"", m:m, doc:doc, g:g, pcs:""});
+  state[cur].log.push({fecha:new Date().toLocaleDateString(), entrada:new Date().toLocaleTimeString(), salida:"", m:m, doc:doc, g:g, turno:turno, pcs:""});
   window._claseSel = null; window._manual = false;
   window._pendientePCs = true; window._pendienteTaller = cur; window._pcsSel = [];
-  alert("Docente registrado: "+doc+". Ahora selecciona las computadoras que va a usar.");
+  alert("Docente registrado: "+doc+" ("+turno+"). Ahora selecciona las computadoras que va a usar.");
   save(); tursoGuardar(); render();
 }function setPCs(){
   let n=parseInt(document.getElementById("npc").value);
@@ -549,7 +904,7 @@ function archivar(){
 }
 // ===== TURSO - SOLO 1 VEZ, TODO EN NIVEL SUPERIOR =====
 let TURSO_URL = "https://bitacora-cetis50-tm-pasquiflo.aws-us-east-1.turso.io";
-let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3NDcyNzAsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.Bw3o7jbHSCObaCT23gOWPy0dN1nebHK4D4Xrgd3WHgSopixGgqtumWkauSASM2mbrYlMRVJSCl11CukHXyNlBQ";
+let TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTU3NjEwNjEsImlkIjoiMDFhMjBmNjctYjYwMS03ODBjLWFkMjgtOTFjYmQ4OTc2OTMwIiwia2lkIjoiUmg5WVQ1TE5NOGVnZ2ZQYnpKenlWSC1BQWp6RzUxbVk2Q19OVU1KdUJwMCIsInJpZCI6IjljNGJlZTYyLWMzMDUtNGYwMi05OTk1LTE1YjA5ZTM0ODRlYSJ9.edw6vWsQTyedWg6nvVIsIAPEHumm4quOfyBIqLNO_tbPdh52TYCb7YxledxdwSoWjQeB5TPfU8CslNYUYoASDQ";
 let tursoActivo = !!(TURSO_URL && TURSO_TOKEN);
 async function tursoQuery(sql, args){
   if(!tursoActivo) return null;
@@ -602,22 +957,23 @@ function contarAlertasTaller(taller){
   let st = state[taller]; if(!st) return {inter:0, pcs:[]};
   let pcs = [];
   for(let i=1;i<=(st.pcs||0);i++){ let id="PC-"+String(i).padStart(2,"0"); if((st.m||{})[id]==="Mantenimiento") pcs.push(id); }
-  return {inter: (st.internet && st.internet.activa) ? 1 : 0, pcs: pcs};
+  return {inter: (st.internet && st.internet.activa) ? 1 : 0, pcs: pcs, limp: (st.limpieza && st.limpieza.activa) ? 1 : 0};
 }
 function actualizarAlertasPortada(){
   let el = document.getElementById("alertasPortada"); if(!el) return;
   let lineas = [];
-  let totalInter = 0, totalPc = 0;
+  let totalInter = 0, totalPc = 0, totalLimp = 0;
   talleres.forEach(function(taller){
     let a = contarAlertasTaller(taller);
-    totalInter += a.inter; totalPc += a.pcs.length;
+    totalInter += a.inter; totalPc += a.pcs.length; totalLimp += a.limp;
     if(a.inter) lineas.push('<div>🌐 <b>'+taller+'</b>: SIN INTERNET - '+((state[taller].internet||{}).falla||"")+'</div>');
     if(a.pcs.length) lineas.push('<div>🖥️ <b>'+taller+'</b>: '+a.pcs.length+' en mantenimiento ('+a.pcs.join(", ")+')</div>');
+    if(a.limp) lineas.push('<div>🧹 <b>'+taller+'</b>: Limpieza pendiente - '+((state[taller].limpieza||{}).motivo||"")+'</div>');
   });
   if(!lineas.length){
     el.innerHTML = '<div style="background:#dcfce7;color:#14532d;border-radius:12px;padding:12px 14px;margin-bottom:14px"><b>✅ Sin fallas pendientes en este momento</b><br><small>Todas las computadoras y el internet de los talleres están bien.</small></div>';
   } else {
-    let resumen = (totalInter ? totalInter+' de internet ' : '') + ((totalInter && totalPc) ? '• ' : '') + (totalPc ? totalPc+' computadora(s) en mantenimiento' : '');
+    let resumen = (totalInter ? totalInter+' de internet ' : '') + ((totalInter && (totalPc || totalLimp)) ? '• ' : '') + (totalPc ? totalPc+' computadora(s) en mantenimiento ' : '') + (((totalInter || totalPc) && totalLimp) ? '• ' : '') + (totalLimp ? totalLimp+' limpieza(s) pendiente(s)' : '');
     el.innerHTML = '<div style="background:#fee2e2;color:#7f1d1d;border-radius:12px;padding:12px 14px;margin-bottom:14px;border:2px solid #dc2626"><div style="font-size:18px"><b>⚠️ ¡ATENCIÓN! Hay fallas pendientes: '+resumen+'</b></div><div style="margin-top:6px;font-size:14px">'+lineas.join("")+'</div><small style="color:#7f1d1d">Entra a cada taller para ver el detalle y marcar la solución.</small></div>';
   }
 }
